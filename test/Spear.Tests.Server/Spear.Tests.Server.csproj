@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
+    <ProjectReference Include="..\..\src\Spear.DotNetty\Spear.DotNetty.csproj" />
+  </ItemGroup>
+
+</Project>
