@@ -1,13 +1,14 @@
-﻿using Acb.Core.Dependency;
-using Acb.Core.Extensions;
-using Acb.Core.Logging;
-using Spear.Core.Message;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
+using Acb.Core.Dependency;
+using Acb.Core.Extensions;
+using Acb.Core.Logging;
+using Spear.Core.Message;
+using Spear.Core.Message.Implementation;
 
-namespace Spear.Core.Micro
+namespace Spear.Core.Micro.Implementation
 {
     /// <inheritdoc />
     /// <summary> 默认服务执行者 </summary>
@@ -67,7 +68,7 @@ namespace Spear.Core.Micro
             }
         }
 
-        private async Task SendResult(IMicroSender sender, string messageId, ResultMessage result)
+        private async Task SendResult(IMessageSender sender, string messageId, ResultMessage result)
         {
             try
             {
@@ -79,7 +80,7 @@ namespace Spear.Core.Micro
             }
         }
 
-        public async Task Execute(IMicroSender sender, MicroMessage message)
+        public async Task Execute(IMessageSender sender, MicroMessage message)
         {
             if (!message.IsInvoke)
                 return;

@@ -19,32 +19,32 @@ namespace Spear.DotNetty.Adapter
             _logger = LogManager.Logger<ServerHandler>();
         }
 
-        //public override Task ConnectAsync(IChannelHandlerContext context, EndPoint remoteAddress, EndPoint localAddress)
-        //{
-        //    _logger.Debug("ConnectAsync");
-        //    return Task.CompletedTask;
-        //}
+        public override Task ConnectAsync(IChannelHandlerContext context, EndPoint remoteAddress, EndPoint localAddress)
+        {
+            _logger.Debug($"ConnectAsync,client:{remoteAddress},server:{localAddress}");
+            return Task.CompletedTask;
+        }
 
-        //public override Task DisconnectAsync(IChannelHandlerContext context)
-        //{
-        //    _logger.Debug("DisconnectAsync");
-        //    return Task.CompletedTask;
-        //}
+        public override Task DisconnectAsync(IChannelHandlerContext context)
+        {
+            _logger.Debug("DisconnectAsync");
+            return Task.CompletedTask;
+        }
 
-        //public override void ChannelActive(IChannelHandlerContext context)
-        //{
-        //    _logger.Debug($"ChannelActive:{context.Channel.RemoteAddress}");
-        //}
+        public override void ChannelActive(IChannelHandlerContext context)
+        {
+            _logger.Debug($"ChannelActive:{context.Channel.RemoteAddress}");
+        }
 
-        //public override void ChannelInactive(IChannelHandlerContext context)
-        //{
-        //    _logger.Debug($"ChannelInactive:{context.Channel.RemoteAddress}");
-        //}
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            _logger.Debug($"ChannelInactive:{context.Channel.RemoteAddress}");
+        }
 
-        //public override void ChannelRegistered(IChannelHandlerContext context)
-        //{
-        //    _logger.Debug($"ChannelRegistered:{context.Channel.RemoteAddress}");
-        //}
+        public override void ChannelRegistered(IChannelHandlerContext context)
+        {
+            _logger.Debug($"ChannelRegistered:{context.Channel.RemoteAddress}");
+        }
 
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {

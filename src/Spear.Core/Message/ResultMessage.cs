@@ -1,4 +1,4 @@
-﻿namespace Spear.Core.Message
+﻿namespace Spear.Core.Message.Implementation
 {
     /// <summary> 调用结果消息 </summary>
     public class ResultMessage

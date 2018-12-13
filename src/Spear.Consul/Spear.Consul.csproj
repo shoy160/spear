@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acb.Core" Version="1.5.5" />
+    <PackageReference Include="Consul" Version="0.7.2.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spear.Core\Spear.Core.csproj" />
   </ItemGroup>
 
 </Project>

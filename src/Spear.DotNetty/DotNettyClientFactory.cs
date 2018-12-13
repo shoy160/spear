@@ -1,4 +1,5 @@
-﻿using Acb.Core.Logging;
+﻿using Acb.Core.Dependency;
+using Acb.Core.Logging;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Common.Utilities;
@@ -7,6 +8,7 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Spear.Core.Message;
 using Spear.Core.Micro;
+using Spear.Core.Micro.Implementation;
 using Spear.DotNetty.Adapter;
 using System;
 using System.Collections.Concurrent;
@@ -28,8 +30,8 @@ namespace Spear.DotNetty
         private static readonly AttributeKey<EndPoint> OrigEndPointKey =
             AttributeKey<EndPoint>.ValueOf(typeof(DotNettyClientFactory), nameof(EndPoint));
 
-        private static readonly AttributeKey<IMicroSender> SenderKey = AttributeKey<IMicroSender>.ValueOf(typeof(DotNettyClientFactory), nameof(IMicroSender));
-        private static readonly AttributeKey<IMicroListener> ListenerKey = AttributeKey<IMicroListener>.ValueOf(typeof(DotNettyClientFactory), nameof(IMicroListener));
+        private static readonly AttributeKey<IMessageSender> SenderKey = AttributeKey<IMessageSender>.ValueOf(typeof(DotNettyClientFactory), nameof(IMessageSender));
+        private static readonly AttributeKey<IMessageListener> ListenerKey = AttributeKey<IMessageListener>.ValueOf(typeof(DotNettyClientFactory), nameof(IMessageListener));
 
         public DotNettyClientFactory(IMessageCoderFactory coderFactory, IMicroExecutor executor = null)
         {
@@ -82,7 +84,7 @@ namespace Spear.DotNetty
                         _logger.Debug($"准备为服务端地址：{key}创建客户端。");
                         var bootstrap = _bootstrap;
                         var channel = bootstrap.ConnectAsync(k).Result;
-                        var listener = new MicroListener();
+                        var listener = new MessageListener();
                         var sender = new DotNettyClientSender(_coderFactory.GetEncoder(), channel);
                         channel.GetAttribute(OrigEndPointKey).Set(k);
                         channel.GetAttribute(ListenerKey).Set(listener);

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Spear.Core.Micro.Services
 {
     public interface IServiceFinder
     {
-        IEnumerable<string> Find(Type serviceType);
+        Task<List<ServiceAddress>> Find(Type serviceType);
     }
 }

@@ -12,14 +12,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acb.Framework" Version="1.3.10" />
+    <PackageReference Include="Acb.Framework" Version="1.5.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Spear.Consul\Spear.Consul.csproj" />
     <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
     <ProjectReference Include="..\..\src\Spear.DotNetty\Spear.DotNetty.csproj" />
     <ProjectReference Include="..\Spear.Tests.Contracts\Spear.Tests.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

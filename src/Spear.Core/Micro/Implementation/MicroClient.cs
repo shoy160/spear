@@ -1,24 +1,25 @@
 ﻿using Acb.Core.Exceptions;
 using Acb.Core.Logging;
 using Spear.Core.Message;
+using Spear.Core.Message.Implementation;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Spear.Core.Micro
+namespace Spear.Core.Micro.Implementation
 {
     /// <summary> 默认服务客户端 </summary>
     public class MicroClient : IMicroClient, IDisposable
     {
-        private readonly IMicroSender _sender;
-        private readonly IMicroListener _listener;
+        private readonly IMessageSender _sender;
+        private readonly IMessageListener _listener;
         private readonly IMicroExecutor _executor;
         private readonly ILogger _logger;
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>> _resultDictionary =
             new ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>>();
 
-        public MicroClient(IMicroSender sender, IMicroListener listener, IMicroExecutor executor)
+        public MicroClient(IMessageSender sender, IMessageListener listener, IMicroExecutor executor)
         {
             _sender = sender;
             _listener = listener;
@@ -27,7 +28,7 @@ namespace Spear.Core.Micro
             listener.Received += ListenerOnReceived;
         }
 
-        private async Task ListenerOnReceived(IMicroSender sender, MicroMessage message)
+        private async Task ListenerOnReceived(IMessageSender sender, MicroMessage message)
         {
             if (!_resultDictionary.TryGetValue(message.Id, out var task))
                 return;

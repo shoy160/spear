@@ -1,32 +1,34 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Reflection;
-using Acb.Core;
+﻿using Acb.Core;
 using Acb.Core.Dependency;
 using Acb.Core.Logging;
 using Acb.Core.Reflection;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
-namespace Spear.Core.Micro
+namespace Spear.Core.Micro.Implementation
 {
     public class MicroEntryFactory : IMicroEntryFactory
     {
         private readonly ILogger _logger;
+        private readonly ITypeFinder _typeFinder;
         private readonly ConcurrentDictionary<string, MethodInfo> _methods;
 
         public MicroEntryFactory()
         {
             _logger = LogManager.Logger<MicroEntryFactory>();
             _methods = new ConcurrentDictionary<string, MethodInfo>();
+            _typeFinder = CurrentIocManager.Resolve<ITypeFinder>();
             InitServices();
         }
 
         /// <summary> 初始化服务 </summary>
         private void InitServices()
         {
-            var finder = CurrentIocManager.Resolve<ITypeFinder>();
-            if (finder == null) return;
-            var services = finder
+            if (_typeFinder == null) return;
+            var services = _typeFinder
                 .Find(t => typeof(IMicroService).IsAssignableFrom(t) && t.IsInterface && t != typeof(IMicroService))
                 .ToList();
             foreach (var service in services)
@@ -60,6 +62,20 @@ namespace Spear.Core.Micro
             return id;
         }
 
+
+        public IEnumerable<Assembly> GetServices()
+        {
+            var list = new List<Assembly>();
+            foreach (var methodInfo in _methods.Values)
+            {
+                var ass = methodInfo.DeclaringType?.Assembly;
+                if (ass == null || list.Contains(ass))
+                    continue;
+                list.Add(ass);
+            }
+
+            return list;
+        }
 
         public string GetServiceId(MethodInfo method)
         {

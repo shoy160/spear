@@ -10,6 +10,6 @@ namespace Spear.Core.Micro
         /// <param name="sender"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        Task Execute(IMicroSender sender, MicroMessage message);
+        Task Execute(IMessageSender sender, MicroMessage message);
     }
 }

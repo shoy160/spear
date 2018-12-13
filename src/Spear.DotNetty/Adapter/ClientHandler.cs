@@ -2,6 +2,7 @@
 using DotNetty.Transport.Channels;
 using Spear.Core.Message;
 using System;
+using Spear.Core.Message.Implementation;
 
 namespace Spear.DotNetty.Adapter
 {

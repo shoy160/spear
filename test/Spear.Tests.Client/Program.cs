@@ -1,8 +1,9 @@
 ﻿using Acb.Core.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Logging;
 using Spear.Core.Proxy;
-using Spear.Core.ServiceHosting;
 using Spear.DotNetty;
 using Spear.Tests.Contracts;
 using System;
@@ -15,19 +16,22 @@ namespace Spear.Tests.Client
         private static void Main(string[] args)
         {
             LogManager.AddAdapter(new ConsoleAdapter());
-            LogManager.SetLevel(LogLevel.Info);
+            LogManager.LogLevel(LogLevel.Debug);
             var logger = LogManager.Logger<Program>();
-            var builder = new ServiceHostBuilder()
-                .UseJsonCoder()
-                .UseDotNetty()
-                .UseClient();
-            var host = builder.Build();
+            var servers = new ServiceCollection()
+                .AddJsonCoder()
+                .AddDotNetty()
+                .AddConsul("http://192.168.0.252:8500")
+                .AddClient();
+            var provider = servers.BuildServiceProvider();
+            provider.UseClient();
+            Console.WriteLine("请输入消息");
             while (true)
             {
                 var message = Console.ReadLine();
                 Task.Run(async () =>
                 {
-                    var proxy = MicroServices.GetService<IClientProxy>();
+                    var proxy = provider.GetService<IClientProxy>();
                     var service = proxy.Create<ITestContract>();
                     var t = await service.Get(message);
                     logger.Info(t);

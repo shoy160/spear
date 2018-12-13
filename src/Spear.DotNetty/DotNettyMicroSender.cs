@@ -26,7 +26,7 @@ namespace Spear.DotNetty
     /// <summary>
     /// 基于DotNetty客户端的消息发送者。
     /// </summary>
-    public class DotNettyClientSender : DotNettyMicroSender, IMicroSender, IDisposable
+    public class DotNettyClientSender : DotNettyMicroSender, IMessageSender, IDisposable
     {
         private readonly IChannel _channel;
 
@@ -60,11 +60,12 @@ namespace Spear.DotNetty
     /// <summary>
     /// 基于DotNetty服务端的消息发送者。
     /// </summary>
-    public class DotNettyServerSender : DotNettyMicroSender, IMicroSender
+    public class DotNettyServerSender : DotNettyMicroSender, IMessageSender
     {
         private readonly IChannelHandlerContext _context;
 
-        public DotNettyServerSender(IMessageEncoder messageEncoder, IChannelHandlerContext context) : base(messageEncoder)
+        public DotNettyServerSender(IMessageEncoder messageEncoder, IChannelHandlerContext context)
+            : base(messageEncoder)
         {
             _context = context;
         }

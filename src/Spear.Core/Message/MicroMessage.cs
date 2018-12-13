@@ -1,5 +1,6 @@
 ﻿using System;
 using Acb.Core.Helper;
+using Spear.Core.Message.Implementation;
 
 namespace Spear.Core.Message
 {

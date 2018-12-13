@@ -4,7 +4,9 @@ using Acb.Core.Extensions;
 using Acb.Core.Logging;
 using Polly;
 using Spear.Core.Message;
+using Spear.Core.Message.Implementation;
 using Spear.Core.Micro;
+using Spear.Core.Micro.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,27 +23,24 @@ namespace Spear.Core.Proxy
         private readonly ILogger _logger;
 
         private IMicroClientFactory _clientFactory;
+        private readonly IServiceFinder _serviceFinder;
 
         /// <inheritdoc />
         /// <summary> 构造函数 </summary>
         public ClientProxy()
         {
-            _clientFactory = MicroServices.GetService<IMicroClientFactory>();
-            _logger = LogManager.Logger(typeof(ClientProxy));
+            _logger = LogManager.Logger<ClientProxy>();
+            _clientFactory = ClientContext.Resolve<IMicroClientFactory>();
+            _serviceFinder = ClientContext.Resolve<IServiceFinder>();
         }
 
-        private static List<EndPoint> GetTypeService()
+        private async Task<ResultMessage> BaseInvoke(MethodInfo targetMethod, object[] args)
         {
-            return new List<EndPoint> { new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5002) };
-        }
-
-        private Task<ResultMessage> BaseInvoke(MethodInfo targetMethod, object[] args)
-        {
-            var services = GetTypeService();
+            var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>()).ToList();
             var invokeMessage = Create(targetMethod, args);
-            EndPoint service = null;
+            ServiceAddress service = null;
             var builder = Policy
-                .Handle<SocketException>() //服务器异常
+                .Handle<Exception>(ex => ex.GetBaseException() is SocketException) //服务器异常
                 .OrResult<ResultMessage>(r => r.Code != 200); //服务未找到
             //熔断,3次异常,熔断5分钟
             var breaker = builder.CircuitBreakerAsync(3, TimeSpan.FromMinutes(5));
@@ -56,15 +55,16 @@ namespace Spear.Core.Proxy
 
             var policy = Policy.WrapAsync(retry, breaker);
 
-            return policy.ExecuteAsync(async () =>
+            return await policy.ExecuteAsync(async () =>
             {
                 if (!services.Any())
                 {
                     throw ErrorCodes.NoService.CodeException();
                 }
-                service = services.First();
 
-                return await InvokeAsync(service, invokeMessage);
+                service = services.RandomSort().First();
+
+                return await InvokeAsync(service.ToEndPoint(), invokeMessage);
             });
         }
 

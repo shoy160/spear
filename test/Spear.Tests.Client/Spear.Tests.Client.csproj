@@ -6,10 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Spear.Consul\Spear.Consul.csproj" />
     <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
     <ProjectReference Include="..\..\src\Spear.DotNetty\Spear.DotNetty.csproj" />
     <ProjectReference Include="..\Spear.Tests.Contracts\Spear.Tests.Contracts.csproj" />

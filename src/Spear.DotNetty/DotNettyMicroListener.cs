@@ -5,10 +5,10 @@ using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Spear.Core.Message;
-using Spear.Core.Micro;
+using Spear.Core.Micro.Implementation;
+using Spear.Core.Micro.Services;
 using Spear.DotNetty.Adapter;
 using System;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Spear.DotNetty
@@ -16,18 +16,18 @@ namespace Spear.DotNetty
     public class DotNettyMicroListener : MicroListener, IDisposable
     {
         private IChannel _channel;
-        //private readonly ILogger _logger;
+        private readonly ILogger _logger;
         private readonly IMessageCoderFactory _coderFactory;
 
         public DotNettyMicroListener(IMessageCoderFactory coderFactory)
         {
-            //_logger = LogManager.Logger<DotNettyMicroListener>();
+            _logger = LogManager.Logger<DotNettyMicroListener>();
             _coderFactory = coderFactory;
         }
 
-        public async Task Start(EndPoint endPoint)
+        public override async Task Start(ServiceAddress serviceAddress)
         {
-            //_logger.Debug($"准备启动服务主机，监听地址：{endPoint}。");
+            _logger.Debug($"准备启动服务主机，监听地址：{serviceAddress}。");
             var bossGroup = new MultithreadEventLoopGroup(1);
             var workerGroup = new MultithreadEventLoopGroup();//Default eventLoopCount is Environment.ProcessorCount * 2
             var bootstrap = new ServerBootstrap();
@@ -48,16 +48,18 @@ namespace Spear.DotNetty
                         await OnReceived(sender, message);
                     }));
                 }));
+            var endPoint = serviceAddress.ToEndPoint();
             _channel = await bootstrap.BindAsync(endPoint);
-            //_logger.Info($"服务主机启动成功，监听地址：{endPoint}。");
+            _logger.Info($"服务主机启动成功，监听地址：{serviceAddress}。");
         }
 
-        public Task Close()
+        public override Task Stop()
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
-                await _channel.EventLoop.ShutdownGracefullyAsync();
-                await _channel.CloseAsync();
+                Dispose();
+                //await _channel.EventLoop.ShutdownGracefullyAsync();
+                //await _channel.CloseAsync();
             });
         }
 

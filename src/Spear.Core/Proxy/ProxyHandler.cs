@@ -460,18 +460,19 @@ namespace Spear.Core.Proxy
                     args[i] = _fields[i].FieldType;
                 }
 
-                ConstructorBuilder cb = _tb.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, args);
-                ILGenerator il = cb.GetILGenerator();
+                var cb = _tb.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, args);
+                var il = cb.GetILGenerator();
 
                 // chained ctor call
-                ConstructorInfo baseCtor = _proxyBaseType.GetTypeInfo().DeclaredConstructors.SingleOrDefault(c => c.IsPublic && c.GetParameters().Length == 0);
+                var baseCtor = _proxyBaseType.GetTypeInfo().DeclaredConstructors
+                    .SingleOrDefault(c => c.IsPublic && c.GetParameters().Length == 0);
                 Debug.Assert(baseCtor != null);
 
                 il.Emit(OpCodes.Ldarg_0);
                 il.Emit(OpCodes.Call, baseCtor);
 
                 // store all the fields
-                for (int i = 0; i < args.Length; i++)
+                for (var i = 0; i < args.Length; i++)
                 {
                     il.Emit(OpCodes.Ldarg_0);
                     il.Emit(OpCodes.Ldarg, i + 1);

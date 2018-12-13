@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Spear.Core.Message;
+using Spear.Core.Message.Implementation;
 
 namespace Spear.Core.Micro
 {
@@ -11,6 +12,9 @@ namespace Spear.Core.Micro
         /// <returns>远程调用消息的传输消息。</returns>
         Task<T> Send<T>(object message);
 
+        /// <summary> 发送消息 </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         Task<ResultMessage> Send(InvokeMessage message);
     }
 }
