@@ -10,6 +10,8 @@ using System.Reflection;
 
 namespace Spear.Core.Micro.Implementation
 {
+    /// <summary>/// 本地服务工厂
+    /// </summary>
     public class MicroEntryFactory : IMicroEntryFactory
     {
         private readonly ILogger _logger;
@@ -61,8 +63,7 @@ namespace Spear.Core.Micro.Implementation
             _logger.Debug($"为方法：{method}生成服务Id：{id}。");
             return id;
         }
-
-
+        
         public IEnumerable<Assembly> GetServices()
         {
             var list = new List<Assembly>();

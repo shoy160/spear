@@ -88,6 +88,9 @@ namespace Spear.Core.Micro.Implementation
             var result = new ResultMessage();
             if (invokeMessage.IsNotice)
             {
+                //向客户端发送结果
+                await SendResult(sender, message.Id, result);
+
                 //确保新起一个线程执行，不堵塞当前线程
                 await Task.Factory.StartNew(async () =>
                 {

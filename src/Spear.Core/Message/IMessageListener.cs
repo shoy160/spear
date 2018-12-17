@@ -1,7 +1,8 @@
-﻿using Spear.Core.Message;
+﻿using Spear.Core.Message.Implementation;
+using Spear.Core.Micro;
 using System.Threading.Tasks;
 
-namespace Spear.Core.Micro
+namespace Spear.Core.Message
 {
     /// <summary> 接受到消息的委托 </summary>
     /// <param name="sender">消息发送者。</param>

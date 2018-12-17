@@ -1,15 +1,17 @@
-﻿using System;
-using Acb.Core.Helper;
-using Spear.Core.Message.Implementation;
+﻿using Acb.Core.Helper;
+using System;
 
-namespace Spear.Core.Message
+namespace Spear.Core.Message.Implementation
 {
     public class MicroMessage : IMicroMessage
     {
+        /// <inheritdoc />
         /// <summary> 消息ID </summary>
         public string Id { get; set; }
+
         /// <summary> 内容类型 </summary>
         public string ContentType { get; set; }
+
         /// <summary> 消息内容 </summary>
         public object Content { get; set; }
 

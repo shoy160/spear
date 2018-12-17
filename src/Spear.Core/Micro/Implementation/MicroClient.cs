@@ -16,8 +16,7 @@ namespace Spear.Core.Micro.Implementation
         private readonly IMicroExecutor _executor;
         private readonly ILogger _logger;
 
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>> _resultDictionary =
-            new ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>>();
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>> _resultDictionary;
 
         public MicroClient(IMessageSender sender, IMessageListener listener, IMicroExecutor executor)
         {
@@ -25,6 +24,7 @@ namespace Spear.Core.Micro.Implementation
             _listener = listener;
             _executor = executor;
             _logger = LogManager.Logger<MicroClient>();
+            _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>>();
             listener.Received += ListenerOnReceived;
         }
 
@@ -51,6 +51,7 @@ namespace Spear.Core.Micro.Implementation
 
         private async Task<T> RegistCallbackAsync<T>(string messageId)
         {
+            _logger.Debug($"准备获取Id为：{messageId}的响应内容。");
             var task = new TaskCompletionSource<MicroMessage>();
             _resultDictionary.TryAdd(messageId, task);
             try

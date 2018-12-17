@@ -1,10 +1,15 @@
-﻿using Spear.Core.Micro;
-
-namespace Spear.Core.Proxy
+﻿namespace Spear.Core.Proxy
 {
     public interface IClientProxy
     {
-        void SetClient(IMicroClientFactory clientFactory);
-        T Create<T>();
+        T Create<T>(string name);
+    }
+
+    public static class ClientProxyExtensions
+    {
+        public static T Create<T>(this IClientProxy proxy)
+        {
+            return proxy.Create<T>(string.Empty);
+        }
     }
 }

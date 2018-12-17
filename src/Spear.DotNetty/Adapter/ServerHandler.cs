@@ -4,6 +4,7 @@ using Spear.Core.Message;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Spear.Core.Message.Implementation;
 
 namespace Spear.DotNetty.Adapter
 {

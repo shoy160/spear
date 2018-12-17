@@ -4,14 +4,13 @@ using Acb.Core.Serialize;
 using Acb.Core.Timing;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Spear.Core.Logging
 {
     public class ConsoleLog : LogBase
     {
-        private static readonly object LockObj = new object();
-
-        private readonly Dictionary<LogLevel, ConsoleColor> _logColors = new Dictionary<LogLevel, ConsoleColor>
+        private static readonly Dictionary<LogLevel, ConsoleColor> LogColors = new Dictionary<LogLevel, ConsoleColor>
         {
             {LogLevel.Trace, ConsoleColor.DarkGray},
             {LogLevel.Debug, ConsoleColor.Gray},
@@ -21,36 +20,42 @@ namespace Spear.Core.Logging
             {LogLevel.Fatal, ConsoleColor.Magenta}
         };
 
+        private static void Write(string msg, LogLevel level)
+        {
+            var hasColor = LogColors.ContainsKey(level);
+            if (hasColor)
+                Console.ForegroundColor = LogColors[level];
+            Console.WriteLine(msg);
+            if (hasColor)
+                Console.ResetColor();
+        }
+
         /// <summary> 写日志方法 </summary>
         /// <param name="level"></param>
         /// <param name="message"></param>
         /// <param name="exception"></param>
         protected override void WriteInternal(LogLevel level, object message, Exception exception)
         {
-            lock (LockObj)
+            Task.Run(() =>
             {
                 if (message != null)
                 {
-                    if (_logColors.ContainsKey(level))
-                        Console.ForegroundColor = _logColors[level];
                     if (message.GetType().IsSimpleType())
                     {
-
-                        Console.WriteLine($"{Clock.Now:yyyy-MM-dd HH:mm:ss}({LoggerName})[{level}]\t{message}");
+                        Write($"{Clock.Now:yyyy-MM-dd HH:mm:ss}({LoggerName})[{level}]\t{message}", level);
                     }
                     else
                     {
-                        Console.WriteLine($"{Clock.Now:yyyy-MM-dd HH:mm:ss}({LoggerName})[{level}]");
-                        Console.WriteLine(JsonHelper.ToJson(message, NamingType.CamelCase, true));
+                        Write($"{Clock.Now:yyyy-MM-dd HH:mm:ss}({LoggerName})[{level}]", level);
+                        Write(JsonHelper.ToJson(message, NamingType.CamelCase, true), level);
                     }
                 }
 
                 if (exception != null)
                 {
-                    Console.WriteLine(exception.Format());
+                    Write(exception.Format(), level);
                 }
-                Console.ResetColor();
-            }
+            });
         }
 
         public override bool IsTraceEnabled => true;

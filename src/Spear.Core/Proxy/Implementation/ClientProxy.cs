@@ -4,10 +4,10 @@ using Acb.Core.Extensions;
 using Acb.Core.Logging;
 using Polly;
 using Spear.Core.Message;
-using Spear.Core.Message.Implementation;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -22,8 +22,11 @@ namespace Spear.Core.Proxy
     {
         private readonly ILogger _logger;
 
-        private IMicroClientFactory _clientFactory;
+        private readonly IMicroClientFactory _clientFactory;
         private readonly IServiceFinder _serviceFinder;
+
+        private readonly ConcurrentDictionary<string, object>
+            _initializers = new ConcurrentDictionary<string, object>();
 
         /// <inheritdoc />
         /// <summary> 构造函数 </summary>
@@ -138,14 +141,11 @@ namespace Spear.Core.Proxy
             return result;
         }
 
-        public T Create<T>()
+        public T Create<T>(string name)
         {
-            return Create<T, ClientProxy>();
-        }
-
-        public void SetClient(IMicroClientFactory clientFactory)
-        {
-            _clientFactory = clientFactory;
+            var key = string.IsNullOrWhiteSpace(name) ? typeof(T).FullName : $"{typeof(T).FullName}_{name}";
+            var instance = _initializers.GetOrAdd(key ?? throw new InvalidOperationException(), k => Create<T, ClientProxy>());
+            return (T)instance;
         }
     }
 }

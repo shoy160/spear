@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Spear.DotNetty
 {
-    public abstract class DotNettyMicroSender
+    public abstract class DotNettyMessageSender
     {
         private readonly IMessageEncoder _messageEncoder;
 
-        protected DotNettyMicroSender(IMessageEncoder messageEncoder)
+        protected DotNettyMessageSender(IMessageEncoder messageEncoder)
         {
             _messageEncoder = messageEncoder;
         }
@@ -26,7 +26,7 @@ namespace Spear.DotNetty
     /// <summary>
     /// 基于DotNetty客户端的消息发送者。
     /// </summary>
-    public class DotNettyClientSender : DotNettyMicroSender, IMessageSender, IDisposable
+    public class DotNettyClientSender : DotNettyMessageSender, IMessageSender, IDisposable
     {
         private readonly IChannel _channel;
 
@@ -60,7 +60,7 @@ namespace Spear.DotNetty
     /// <summary>
     /// 基于DotNetty服务端的消息发送者。
     /// </summary>
-    public class DotNettyServerSender : DotNettyMicroSender, IMessageSender
+    public class DotNettyServerSender : DotNettyMessageSender, IMessageSender
     {
         private readonly IChannelHandlerContext _context;
 

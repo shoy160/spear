@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Spear.Core.Message;
 
-namespace Spear.Core.Micro
+namespace Spear.Core.Message
 {
     /// <summary>  消息发送者 </summary>
     public interface IMessageSender

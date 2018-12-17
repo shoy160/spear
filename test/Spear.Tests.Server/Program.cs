@@ -16,15 +16,17 @@ namespace Spear.Tests.Server
         {
             MapServiceCollection += services =>
             {
-                services.AddJsonCoder()
-                    .AddDotNetty()
-                    .AddConsul("http://192.168.0.252:8500")
-                    .AddServer();
+                services.AddMicroService(builder =>
+                {
+                    builder.AddJsonCoder()
+                        .AddDotNettyTcp()
+                        .AddConsul("http://192.168.0.252:8500");
+                });
             };
             var port = 5002;
             if (args.Length > 0)
                 port = args[0].CastTo(port);
-            UseServiceProvider += provider => provider.UseServer(address =>
+            UseServiceProvider += provider => provider.UseMicroService(address =>
             {
                 address.Host = "192.168.2.253";
                 address.Port = port;

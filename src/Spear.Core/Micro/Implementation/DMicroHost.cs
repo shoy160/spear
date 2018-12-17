@@ -1,10 +1,9 @@
-﻿using Spear.Core.Message.Implementation;
-using System.Net;
-using System.Threading.Tasks;
-using Acb.Core.Logging;
+﻿using Acb.Core.Logging;
 using Acb.Core.Serialize;
-using Spear.Core.Message;
+using Spear.Core.Message.Implementation;
 using Spear.Core.Micro.Services;
+using System.Threading.Tasks;
+using Spear.Core.Message;
 
 namespace Spear.Core.Micro.Implementation
 {
@@ -29,7 +28,7 @@ namespace Spear.Core.Micro.Implementation
         {
             Task.Run(async () => await Stop()).Wait();
         }
-        
+
         /// <summary> 启动微服务 </summary>
         /// <param name="serviceAddress">主机终结点。</param>
         /// <returns>一个任务。</returns>
@@ -44,7 +43,7 @@ namespace Spear.Core.Micro.Implementation
 
         private async Task MessageListenerReceived(IMessageSender sender, MicroMessage message)
         {
-            _logger.Info($"receive:{JsonHelper.ToJson(message)}");
+            _logger.Debug($"receive:{JsonHelper.ToJson(message)}");
             await _microExecutor.Execute(sender, message);
             //await MicroListener.OnReceived(sender, message);
         }

@@ -1,5 +1,6 @@
-﻿using Spear.Core.Message;
+﻿using Spear.Core.Message.Implementation;
 using System.Threading.Tasks;
+using Spear.Core.Message;
 
 namespace Spear.Core.Micro
 {
