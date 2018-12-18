@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Tests.Client", "test\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Tests.Contracts", "test\Spear.Tests.Contracts\Spear.Tests.Contracts.csproj", "{717E6011-70ED-4A2D-94FD-912CA46EF038}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Consul", "src\Spear.Consul\Spear.Consul.csproj", "{0734F726-EB5B-4529-A8E2-65BF2BF20A15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Consul", "src\Spear.Consul\Spear.Consul.csproj", "{0734F726-EB5B-4529-A8E2-65BF2BF20A15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.ProxyGenerator", "src\Spear.ProxyGenerator\Spear.ProxyGenerator.csproj", "{92C998CB-BC49-4A3E-A663-0841B8E340CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{0734F726-EB5B-4529-A8E2-65BF2BF20A15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0734F726-EB5B-4529-A8E2-65BF2BF20A15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0734F726-EB5B-4529-A8E2-65BF2BF20A15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92C998CB-BC49-4A3E-A663-0841B8E340CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92C998CB-BC49-4A3E-A663-0841B8E340CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92C998CB-BC49-4A3E-A663-0841B8E340CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92C998CB-BC49-4A3E-A663-0841B8E340CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

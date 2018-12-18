@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.ML" Version="0.8.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +15,18 @@
     <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
     <ProjectReference Include="..\..\src\Spear.DotNetty\Spear.DotNetty.csproj" />
     <ProjectReference Include="..\Spear.Tests.Contracts\Spear.Tests.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ML\data\iris-data.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ML\data\taxi-fare-test.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ML\data\taxi-fare-train.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
