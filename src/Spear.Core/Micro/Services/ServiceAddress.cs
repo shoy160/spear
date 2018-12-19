@@ -4,10 +4,17 @@ using System.Net;
 
 namespace Spear.Core.Micro.Services
 {
+    public enum ServiceProtocol
+    {
+        Tcp,
+        Http,
+        Ws
+    }
+
     public class ServiceAddress
     {
         public IPAddress Ip { get; set; }
-        public string Protocol { get; set; } = "tcp";
+        public ServiceProtocol Protocol { get; set; } = ServiceProtocol.Tcp;
         public string Host { get; set; }
         public int Port { get; set; }
 
@@ -26,7 +33,7 @@ namespace Spear.Core.Micro.Services
 
         public string Address()
         {
-            return $"{Protocol}://{Host}";
+            return $"{Protocol.ToString().ToLower()}://{Host}";
         }
 
         public override string ToString()

@@ -30,7 +30,7 @@ namespace Spear.Tests.Server
                 port = args[0].CastTo(port);
             UseServiceProvider += provider => provider.UseMicroService(address =>
             {
-                address.Protocol = "http";
+                //address.Protocol = "http";
                 address.Host = "192.168.2.253";
                 address.Port = port;
             });

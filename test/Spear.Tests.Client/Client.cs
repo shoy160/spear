@@ -61,7 +61,7 @@ namespace Spear.Tests.Client
                     {
                         if (isNotice)
                         {
-                            service.Notice(message).Wait();
+                            service.Notice(message).GetAwaiter().GetResult();
                         }
                         else
                         {

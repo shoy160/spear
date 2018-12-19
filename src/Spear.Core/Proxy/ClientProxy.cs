@@ -99,6 +99,8 @@ namespace Spear.Core.Proxy
         /// <returns></returns>
         private async Task<ResultMessage> InvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
         {
+            var protocol = serviceAddress.Protocol;
+            //:todo 不能的协议处理
             var client = _clientFactory.CreateClient(serviceAddress);
             var result = await client.Send(message);
             return result;
