@@ -5,11 +5,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Proxy\Implementation\**" />
+    <EmbeddedResource Remove="Proxy\Implementation\**" />
+    <None Remove="Proxy\Implementation\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Proxy\IClientProxy.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Acb.Core" Version="1.5.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Polly" Version="6.1.2" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spear.ProxyGenerator\Spear.ProxyGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

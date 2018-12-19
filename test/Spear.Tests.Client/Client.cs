@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Logging;
-using Spear.Core.Proxy;
-using Spear.DotNetty;
+using Spear.Protocol.Tcp;
+using Spear.ProxyGenerator;
 using Spear.Tests.Client.Services;
 using Spear.Tests.Client.Services.Impl;
 using Spear.Tests.Contracts;
@@ -28,13 +28,12 @@ namespace Spear.Tests.Client
                 .AddMicroClient(opt =>
                 {
                     opt.AddJsonCoder()
-                        .AddDotNettyClient()
+                        .AddTcpProtocol()
                         .AddConsul("http://192.168.0.252:8500");
                 });
             services.AddSingleton<IService, ServieA>();
             services.AddSingleton<IService, ServieB>();
             var provider = services.BuildServiceProvider();
-            provider.UseMicroClient();
             logger.Info("请输入消息");
             while (true)
             {
@@ -55,10 +54,10 @@ namespace Spear.Tests.Client
                 message = msgArgs[0];
                 Task.Run(() =>
                 {
-                    var proxy = provider.GetService<IClientProxy>();
+                    var proxy = provider.GetService<IProxyFactory>();
                     var service = proxy.Create<ITestContract>();
 
-                    var result = CodeTimer.Time("dotnetty test", repeat, () =>
+                    var result = CodeTimer.Time("micro test", repeat, () =>
                     {
                         if (isNotice)
                         {
@@ -67,6 +66,7 @@ namespace Spear.Tests.Client
                         else
                         {
                             var msg = service.Get(message).Result;
+                            logger.Debug(msg);
                         }
                     }, thread);
                     logger.Info(result.ToString());

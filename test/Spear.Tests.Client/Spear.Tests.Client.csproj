@@ -13,7 +13,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Spear.Consul\Spear.Consul.csproj" />
     <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
-    <ProjectReference Include="..\..\src\Spear.DotNetty\Spear.DotNetty.csproj" />
+    <ProjectReference Include="..\..\src\Spear.Protocol.Http\Spear.Protocol.Http.csproj" />
+    <ProjectReference Include="..\..\src\Spear.Protocol.Tcp\Spear.Protocol.Tcp.csproj" />
+    <ProjectReference Include="..\..\src\Spear.ProxyGenerator\Spear.ProxyGenerator.csproj" />
     <ProjectReference Include="..\Spear.Tests.Contracts\Spear.Tests.Contracts.csproj" />
   </ItemGroup>
 

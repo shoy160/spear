@@ -1,12 +1,12 @@
 ﻿using Acb.Core.Logging;
 using DotNetty.Transport.Channels;
-using Spear.Core.Message;
+using Spear.Core.Message.Implementation;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Spear.Core.Message.Implementation;
+using Spear.Core.Message;
 
-namespace Spear.DotNetty.Adapter
+namespace Spear.Protocol.Tcp.Adapter
 {
     /// <summary> 服务端处理器 </summary>
     internal class ServerHandler : ChannelHandlerAdapter

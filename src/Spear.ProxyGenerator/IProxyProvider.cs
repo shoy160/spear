@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Spear.ProxyGenerator
@@ -7,11 +8,25 @@ namespace Spear.ProxyGenerator
     public interface IProxyProvider
     {
         /// <summary> 执行代理 </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <param name="method"></param>
         /// <param name="parameters"></param>
-        /// <param name="routePath"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<T> Invoke<T>(IDictionary<string, object> parameters, string routePath, object key = null);
+        object Invoke(MethodInfo method, IDictionary<string, object> parameters, object key = null);
+
+        /// <summary> 执行代理 </summary>
+        /// <param name="method"></param>
+        /// <param name="parameters"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        Task InvokeAsync(MethodInfo method, IDictionary<string, object> parameters, object key = null);
+
+        /// <summary> 执行代理 </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="method"></param>
+        /// <param name="parameters"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        Task<T> InvokeAsync<T>(MethodInfo method, IDictionary<string, object> parameters, object key = null);
     }
 }

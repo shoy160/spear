@@ -9,13 +9,14 @@ using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
-using Spear.DotNetty.Adapter;
+using Spear.Core.Micro.Services;
+using Spear.Protocol.Tcp.Adapter;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Net;
+using Spear.Protocol.Tcp.Sender;
 
-namespace Spear.DotNetty
+namespace Spear.Protocol.Tcp
 {
     public class DotNettyClientFactory : IMicroClientFactory, IDisposable
     {
@@ -24,10 +25,10 @@ namespace Spear.DotNetty
         private readonly IMessageCoderFactory _coderFactory;
         private readonly IMicroExecutor _microExecutor;
 
-        private readonly ConcurrentDictionary<EndPoint, Lazy<IMicroClient>> _clients;
+        private readonly ConcurrentDictionary<ServiceAddress, Lazy<IMicroClient>> _clients;
 
-        private static readonly AttributeKey<EndPoint> OrigEndPointKey =
-            AttributeKey<EndPoint>.ValueOf(typeof(DotNettyClientFactory), nameof(EndPoint));
+        private static readonly AttributeKey<ServiceAddress> ServiceAddressKey =
+            AttributeKey<ServiceAddress>.ValueOf(typeof(DotNettyClientFactory), nameof(ServiceAddress));
 
         private static readonly AttributeKey<IMessageSender> SenderKey =
             AttributeKey<IMessageSender>.ValueOf(typeof(DotNettyClientFactory), nameof(IMessageSender));
@@ -40,7 +41,7 @@ namespace Spear.DotNetty
             _microExecutor = executor;
             _logger = LogManager.Logger<DotNettyClientFactory>();
             _bootstrap = GetBootstrap();
-            _clients = new ConcurrentDictionary<EndPoint, Lazy<IMicroClient>>();
+            _clients = new ConcurrentDictionary<ServiceAddress, Lazy<IMicroClient>>();
             _bootstrap.Handler(new ActionChannelInitializer<ISocketChannel>(c =>
             {
                 var pipeline = c.Pipeline;
@@ -76,23 +77,23 @@ namespace Spear.DotNetty
 
         /// <inheritdoc />
         /// <summary> 创建客户端 </summary>
-        /// <param name="endPoint">终结点。</param>
+        /// <param name="serviceAddress">终结点。</param>
         /// <returns>传输客户端实例。</returns>
-        public IMicroClient CreateClient(EndPoint endPoint)
+        public IMicroClient CreateClient(ServiceAddress serviceAddress)
         {
             //_logger.Debug($"准备为服务端地址：{endPoint}创建客户端。");
             try
             {
-                var lazyClient = _clients.GetOrAdd(endPoint, k => new Lazy<IMicroClient>(() =>
+                var lazyClient = _clients.GetOrAdd(serviceAddress, k => new Lazy<IMicroClient>(() =>
                     {
-                        _logger.Debug($"创建客户端：{endPoint}创建客户端。");
+                        _logger.Debug($"创建客户端：{serviceAddress}创建客户端。");
                         var bootstrap = _bootstrap;
-                        var channel = bootstrap.ConnectAsync(k).Result;
+                        var channel = bootstrap.ConnectAsync(k.ToEndPoint()).Result;
                         var listener = new MessageListener();
                         var sender = new DotNettyClientSender(_coderFactory.GetEncoder(), channel);
                         channel.GetAttribute(ListenerKey).Set(listener);
                         channel.GetAttribute(SenderKey).Set(sender);
-                        channel.GetAttribute(OrigEndPointKey).Set(k);
+                        channel.GetAttribute(ServiceAddressKey).Set(k);
                         return new MicroClient(sender, listener, _microExecutor);
                     }
                 ));
@@ -101,7 +102,7 @@ namespace Spear.DotNetty
             catch (Exception ex)
             {
                 _logger.Error("创建客户端失败", ex);
-                _clients.TryRemove(endPoint, out _);
+                _clients.TryRemove(serviceAddress, out _);
                 throw;
             }
         }
@@ -127,7 +128,7 @@ namespace Spear.DotNetty
 
             public override void ChannelInactive(IChannelHandlerContext context)
             {
-                var k = context.Channel.GetAttribute(OrigEndPointKey).Get();
+                var k = context.Channel.GetAttribute(ServiceAddressKey).Get();
                 _factory._logger.Debug($"删除客户端：{k}");
                 _factory._clients.TryRemove(k, out _);
             }

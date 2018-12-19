@@ -8,4 +8,8 @@
     <PackageReference Include="Acb.Core" Version="1.5.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
+  </ItemGroup>
+
 </Project>

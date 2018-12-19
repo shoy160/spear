@@ -1,7 +1,6 @@
 ﻿using Acb.Core.Exceptions;
 using Acb.Core.Logging;
 using Spear.Core.Message;
-using Spear.Core.Message.Implementation;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;

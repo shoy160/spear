@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Acb.Core.Dependency;
 using Acb.Core.Extensions;
 using Acb.Core.Logging;
+using Acb.Core.Serialize;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 
@@ -26,6 +27,7 @@ namespace Spear.Core.Micro.Implementation
         {
             try
             {
+                _logger.Debug(JsonHelper.ToJson(invokeMessage));
                 var service = _entryFactory.Find(invokeMessage.ServiceId);
                 var args = new List<object>();
                 var parameters = invokeMessage.Parameters ?? new Dictionary<string, object>();

@@ -53,17 +53,11 @@ namespace Spear.Core.Micro.Implementation
             var type = method.DeclaringType;
             if (type == null)
                 throw new ArgumentNullException(nameof(method.DeclaringType), "方法的定义类型不能为空。");
-
-            var id = $"{type.FullName}.{method.Name}";
-            var parameters = method.GetParameters();
-            if (parameters.Any())
-            {
-                id += "_" + string.Join("_", parameters.Select(i => i.Name));
-            }
+            var id = method.ServiceKey();
             _logger.Debug($"为方法：{method}生成服务Id：{id}。");
             return id;
         }
-        
+
         public IEnumerable<Assembly> GetServices()
         {
             var list = new List<Assembly>();

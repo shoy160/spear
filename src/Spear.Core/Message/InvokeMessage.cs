@@ -7,6 +7,7 @@ namespace Spear.Core.Message
     {
         /// <summary> 服务Id </summary>
         public string ServiceId { get; set; }
+
         /// <summary> 是否是通知 </summary>
         public bool IsNotice { get; set; }
 

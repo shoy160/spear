@@ -1,11 +1,10 @@
 ﻿using Acb.Core.Helper;
 using System;
 
-namespace Spear.Core.Message.Implementation
+namespace Spear.Core.Message
 {
-    public class MicroMessage : IMicroMessage
+    public class MicroMessage
     {
-        /// <inheritdoc />
         /// <summary> 消息ID </summary>
         public string Id { get; set; }
 

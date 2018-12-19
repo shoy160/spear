@@ -28,11 +28,14 @@ namespace Spear.Core.Micro.Implementation
         /// <summary> 启动微服务 </summary>
         /// <param name="serviceAddress">主机终结点。</param>
         /// <returns>一个任务。</returns>
-        public override async Task Start(ServiceAddress serviceAddress)
+        public override Task Start(ServiceAddress serviceAddress)
         {
             try
             {
-                await MicroListener.Start(serviceAddress);
+                Task.Factory.StartNew(async () =>
+                {
+                    await MicroListener.Start(serviceAddress);
+                });
                 _logger.Info("Micro Host Started");
             }
             catch (Exception ex)
@@ -41,7 +44,7 @@ namespace Spear.Core.Micro.Implementation
             }
 
             var assemblies = _entryFactory.GetServices();
-            await _serviceRegister.Regist(assemblies, serviceAddress);
+            return _serviceRegister.Regist(assemblies, serviceAddress);
         }
 
         public override async Task Stop()

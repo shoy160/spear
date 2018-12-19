@@ -5,7 +5,7 @@ namespace Spear.Core.Message.Implementation
 {
     public class JsonMessageDecoder : IMessageDecoder
     {
-        public IMicroMessage Decode(byte[] data)
+        public MicroMessage Decode(byte[] data)
         {
             var content = Encoding.UTF8.GetString(data);
             var message = JsonConvert.DeserializeObject<MicroMessage>(content);

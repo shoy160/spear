@@ -6,14 +6,33 @@ using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Core.Proxy;
+using Spear.ProxyGenerator;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Spear.Core
 {
     public static class ServiceCollectionExtensions
     {
+        public static string ServiceKey(this MethodInfo method)
+        {
+            var key = string.Empty;
+            var attr = method.DeclaringType?.GetCustomAttribute<ServiceRouteAttribute>();
+            if (attr != null)
+                key = attr.Route;
+            attr = method.GetCustomAttribute<ServiceRouteAttribute>();
+            if (attr != null && !string.IsNullOrWhiteSpace(attr.Route))
+                return (attr.Route.StartsWith("/") ? attr.Route.TrimStart('/') : $"{key}/{attr.Route}").ToLower();
+            if (!string.IsNullOrWhiteSpace(key))
+            {
+                return $"{key}/{method.Name}".ToLower();
+            }
+
+            return $"{method.DeclaringType?.Name}/{method.Name}".ToLower();
+        }
+
         public static object GetService(this IServiceProvider provider, Type type, string name)
         {
             var services = provider.GetServices(type);
@@ -45,6 +64,18 @@ namespace Spear.Core
             return builder;
         }
 
+        /// <summary> 添加微服务客户端 </summary>
+        /// <param name="services"></param>
+        /// <param name="builderAction"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddMicroClient(this IServiceCollection services, Action<IMicroBuilder> builderAction)
+        {
+            var builder = new MicroBuilder(services);
+            builderAction.Invoke(builder);
+            services.AddProxy<ClientProxy>();
+            return services;
+        }
+
         /// <summary> 添加微服务 </summary>
         /// <param name="services"></param>
         /// <param name="builderAction"></param>
@@ -59,20 +90,8 @@ namespace Spear.Core
             return services;
         }
 
-        /// <summary> 添加微服务客户端 </summary>
-        /// <param name="services"></param>
-        /// <param name="builderAction"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddMicroClient(this IServiceCollection services, Action<IMicroBuilder> builderAction)
-        {
-            var builder = new MicroBuilder(services);
-            builderAction.Invoke(builder);
-            services.AddSingleton<IClientProxy, ClientProxy>();
-            return services;
-        }
 
-
-        /// <summary> 使用微服务 </summary>
+        /// <summary> 开启微服务 </summary>
         /// <param name="provider"></param>
         /// <param name="host"></param>
         /// <param name="port"></param>
@@ -86,7 +105,7 @@ namespace Spear.Core
             });
         }
 
-        /// <summary> 使用微服务 </summary>
+        /// <summary> 开启微服务 </summary>
         /// <param name="provider"></param>
         /// <param name="addressAction"></param>
         /// <returns></returns>
@@ -96,12 +115,6 @@ namespace Spear.Core
             addressAction?.Invoke(address);
             var host = provider.GetService<IMicroHost>();
             Task.Factory.StartNew(async () => await host.Start(address));
-            return provider;
-        }
-
-        public static IServiceProvider UseMicroClient(this ServiceProvider provider)
-        {
-            ClientContext.Provider = provider;
             return provider;
         }
     }

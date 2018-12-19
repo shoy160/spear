@@ -16,32 +16,36 @@ namespace Spear.ProxyGenerator.Impl
             _serviceKey = serviceKey;
         }
 
+        private static IDictionary<string, object> GetParameters(MethodBase method, IReadOnlyList<object> args)
+        {
+            var dict = new Dictionary<string, object>();
+            var parameters = method.GetParameters();
+            if (!parameters.Any())
+                return dict;
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                dict.Add(parameters[i].Name, args[i]);
+            }
+
+            return dict;
+        }
+
         public object Invoke(MethodInfo method, object[] args)
         {
-            return InvokeAsyncT<object>(method, args);
+            var parameters = GetParameters(method, args);
+            return _proxyProvider.Invoke(method, parameters, _serviceKey);
         }
 
         public Task InvokeAsync(MethodInfo method, object[] args)
         {
-            return InvokeAsyncT<object>(method, args);
+            var parameters = GetParameters(method, args);
+            return _proxyProvider.InvokeAsync(method, parameters, _serviceKey);
         }
 
         public Task<T> InvokeAsyncT<T>(MethodInfo method, object[] args)
         {
-            var methodType = method.DeclaringType;
-            var serviceId = $"{methodType?.FullName}.{method.Name}";
-            var dict = new Dictionary<string, object>();
-            var parameters = method.GetParameters();
-            if (parameters.Any())
-            {
-                for (var i = 0; i < parameters.Length; i++)
-                {
-                    dict.Add(parameters[i].Name, args[i]);
-                }
-                serviceId += "_" + string.Join("_", parameters.Select(i => i.Name));
-            }
-
-            return _proxyProvider.Invoke<T>(dict, serviceId, _serviceKey);
+            var parameters = GetParameters(method, args);
+            return _proxyProvider.InvokeAsync<T>(method, parameters, _serviceKey);
         }
     }
 }

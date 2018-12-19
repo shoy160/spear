@@ -6,11 +6,11 @@ using Polly;
 using Spear.Core.Message;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
+using Spear.ProxyGenerator;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -18,32 +18,29 @@ using System.Threading.Tasks;
 namespace Spear.Core.Proxy
 {
     /// <summary> 代理调用 </summary>
-    public class ClientProxy : ProxyAsync, IClientProxy
+    public class ClientProxy : IProxyProvider
     {
         private readonly ILogger _logger;
 
         private readonly IMicroClientFactory _clientFactory;
         private readonly IServiceFinder _serviceFinder;
 
-        private readonly ConcurrentDictionary<string, object>
-            _initializers = new ConcurrentDictionary<string, object>();
-
         /// <inheritdoc />
         /// <summary> 构造函数 </summary>
-        public ClientProxy()
+        public ClientProxy(IMicroClientFactory clientFactory, IServiceFinder finder)
         {
             _logger = LogManager.Logger<ClientProxy>();
-            _clientFactory = ClientContext.Resolve<IMicroClientFactory>();
-            _serviceFinder = ClientContext.Resolve<IServiceFinder>();
+            _clientFactory = clientFactory;
+            _serviceFinder = finder;
         }
 
-        private async Task<ResultMessage> BaseInvoke(MethodInfo targetMethod, object[] args)
+        private async Task<ResultMessage> BaseInvoke(MethodInfo targetMethod, IDictionary<string, object> args)
         {
             var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>()).ToList();
             var invokeMessage = Create(targetMethod, args);
             ServiceAddress service = null;
             var builder = Policy
-                .Handle<Exception>(ex => ex.GetBaseException() is SocketException) //服务器异常
+                .Handle<Exception>(ex => ex.GetBaseException() is SocketException || ex.GetBaseException() is HttpRequestException) //服务器异常
                 .OrResult<ResultMessage>(r => r.Code != 200); //服务未找到
             //熔断,3次异常,熔断5分钟
             var breaker = builder.CircuitBreakerAsync(3, TimeSpan.FromMinutes(5));
@@ -67,32 +64,11 @@ namespace Spear.Core.Proxy
 
                 service = services.RandomSort().First();
 
-                return await InvokeAsync(service.ToEndPoint(), invokeMessage);
+                return await InvokeAsync(service, invokeMessage);
             });
         }
 
-        /// <summary> 接口调用 </summary>
-        /// <param name="method"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public override object Invoke(MethodInfo method, object[] args)
-        {
-            var result = BaseInvoke(method, args);
-            return result.Result.Data;
-        }
-
-        public override Task InvokeAsync(MethodInfo method, object[] args)
-        {
-            return BaseInvoke(method, args);
-        }
-
-        public override async Task<T> InvokeAsyncT<T>(MethodInfo method, object[] args)
-        {
-            var result = await BaseInvoke(method, args);
-            return (T)result.Data;
-        }
-
-        private static InvokeMessage Create(MethodInfo targetMethod, object[] args)
+        private static InvokeMessage Create(MethodInfo targetMethod, IDictionary<string, object> args)
         {
             var remoteIp = AcbHttpContext.RemoteIpAddress;
             var headers = new Dictionary<string, string>
@@ -104,24 +80,11 @@ namespace Spear.Core.Proxy
                 },
                 {"referer", AcbHttpContext.RawUrl}
             };
-            var methodType = targetMethod.DeclaringType;
-            var serviceId = $"{methodType?.FullName}.{targetMethod.Name}";
-            var dict = new Dictionary<string, object>();
-            var parameters = targetMethod.GetParameters();
-            if (parameters.Any())
-            {
-                for (var i = 0; i < parameters.Length; i++)
-                {
-                    dict.Add(parameters[i].Name, args[i]);
-                }
-
-                serviceId += "_" + string.Join("_", parameters.Select(i => i.Name));
-            }
-
+            var serviceId = targetMethod.ServiceKey();
             var invokeMessage = new InvokeMessage
             {
                 ServiceId = serviceId,
-                Parameters = dict,
+                Parameters = args,
                 Headers = headers
             };
             var type = targetMethod.ReturnType;
@@ -131,21 +94,37 @@ namespace Spear.Core.Proxy
         }
 
         /// <summary> 执行请求 </summary>
-        /// <param name="endPoint"></param>
+        /// <param name="serviceAddress"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        private async Task<ResultMessage> InvokeAsync(EndPoint endPoint, InvokeMessage message)
+        private async Task<ResultMessage> InvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
         {
-            var client = _clientFactory.CreateClient(endPoint);
+            var client = _clientFactory.CreateClient(serviceAddress);
             var result = await client.Send(message);
             return result;
         }
 
-        public T Create<T>(string name)
+        public async Task<T> Invoke<T>(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
-            var key = string.IsNullOrWhiteSpace(name) ? typeof(T).FullName : $"{typeof(T).FullName}_{name}";
-            var instance = _initializers.GetOrAdd(key ?? throw new InvalidOperationException(), k => Create<T, ClientProxy>());
-            return (T)instance;
+            var result = await BaseInvoke(method, parameters);
+            return (T)result.Data;
+        }
+
+        public object Invoke(MethodInfo method, IDictionary<string, object> parameters, object key = null)
+        {
+            var result = BaseInvoke(method, parameters).GetAwaiter().GetResult();
+            return result.Data;
+        }
+
+        public Task InvokeAsync(MethodInfo method, IDictionary<string, object> parameters, object key = null)
+        {
+            return BaseInvoke(method, parameters);
+        }
+
+        public async Task<T> InvokeAsync<T>(MethodInfo method, IDictionary<string, object> parameters, object key = null)
+        {
+            var result = await BaseInvoke(method, parameters);
+            return (T)result.Data;
         }
     }
 }

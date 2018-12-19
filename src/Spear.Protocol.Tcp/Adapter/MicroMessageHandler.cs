@@ -3,7 +3,7 @@ using DotNetty.Common.Utilities;
 using DotNetty.Transport.Channels;
 using Spear.Core.Message;
 
-namespace Spear.DotNetty.Adapter
+namespace Spear.Protocol.Tcp.Adapter
 {
     public class MicroMessageHandler : ChannelHandlerAdapter
     {

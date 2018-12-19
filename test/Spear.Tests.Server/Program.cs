@@ -4,9 +4,10 @@ using Acb.Framework;
 using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Micro;
-using Spear.DotNetty;
+using Spear.Protocol.Http;
 using System;
 using System.Threading.Tasks;
+using Spear.Protocol.Tcp;
 
 namespace Spear.Tests.Server
 {
@@ -18,8 +19,9 @@ namespace Spear.Tests.Server
             {
                 services.AddMicroService(builder =>
                 {
-                    builder.AddJsonCoder()
-                        .AddDotNettyTcp()
+                    builder
+                        .AddJsonCoder()
+                        .AddTcpProtocol()
                         .AddConsul("http://192.168.0.252:8500");
                 });
             };
@@ -28,6 +30,7 @@ namespace Spear.Tests.Server
                 port = args[0].CastTo(port);
             UseServiceProvider += provider => provider.UseMicroService(address =>
             {
+                address.Protocol = "http";
                 address.Host = "192.168.2.253";
                 address.Port = port;
             });

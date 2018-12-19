@@ -6,11 +6,12 @@ namespace Spear.ProxyGenerator
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddProxy(this IServiceCollection services)
+        public static IServiceCollection AddProxy<T>(this IServiceCollection services)
+        where T : class, IProxyProvider
         {
             services.AddSingleton<AsyncProxyGenerator>();
             services.AddSingleton<IResolver, ProxyResolver>();
-            services.AddSingleton<IProxyProvider, ProxyProvider>();
+            services.AddSingleton<IProxyProvider, T>();
             services.AddSingleton<IProxyFactory, ProxyFactory>();
             return services;
         }

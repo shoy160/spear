@@ -1,4 +1,6 @@
-﻿namespace Spear.Core.Message
+﻿using Spear.Core.Message.Implementation;
+
+namespace Spear.Core.Message
 {
     /// <summary> 消息编码器 </summary>
     public interface IMessageEncoder
@@ -6,7 +8,7 @@
         /// <summary> 消息编码 </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        byte[] Encode(IMicroMessage message);
+        byte[] Encode(MicroMessage message);
     }
 
     /// <summary> 消息解码器 </summary>
@@ -15,7 +17,7 @@
         /// <summary> 消息解码 </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        IMicroMessage Decode(byte[] data);
+        MicroMessage Decode(byte[] data);
     }
 
     public interface IMessageCoderFactory

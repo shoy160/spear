@@ -24,13 +24,22 @@ namespace Spear.ProxyGenerator.Proxy
             _proxyAssembly = new ProxyAssembly();
         }
 
-
-        public object CreateProxy(Type interfaceType, ProxyExecutor executor)
+        /// <summary> 创建代理 </summary>
+        /// <param name="interfaceType"></param>
+        /// <param name="baseType"></param>
+        /// <param name="proxyProvider"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public object CreateProxy(Type interfaceType, Type baseType, IProxyProvider proxyProvider, object key = null)
         {
-            var proxiedType = GetProxyType(executor.GetType(), interfaceType);
-            return Activator.CreateInstance(proxiedType, new ProxyHandler(this));
+            var proxiedType = GetProxyType(baseType, interfaceType);
+            return Activator.CreateInstance(proxiedType, proxyProvider, key, new ProxyHandler(this));
         }
 
+        /// <summary> 获取代理类型/// </summary>
+        /// <param name="baseType"></param>
+        /// <param name="interfaceType"></param>
+        /// <returns></returns>
         private Type GetProxyType(Type baseType, Type interfaceType)
         {
             lock (_proxyTypeCaches)
@@ -51,55 +60,43 @@ namespace Spear.ProxyGenerator.Proxy
             }
         }
 
-        // Unconditionally generates a new proxy type derived from 'baseType' and implements 'interfaceType'
+        /// <summary> 生成代理类型 </summary>
+        /// <param name="baseType"></param>
+        /// <param name="interfaceType"></param>
+        /// <returns></returns>
         private Type GenerateProxyType(Type baseType, Type interfaceType)
         {
-            // Parameter validation is deferred until the point we need to create the proxy.
-            // This prevents unnecessary overhead revalidating cached proxy types.
             var baseTypeInfo = baseType.GetTypeInfo();
-
-            // The interface type must be an interface, not a class
             if (!interfaceType.GetTypeInfo().IsInterface)
             {
-                // "T" is the generic parameter seen via the public contract
-                throw new ArgumentException($"InterfaceType_Must_Be_Interface, {interfaceType.FullName}", "T");
+                throw new ArgumentException($"InterfaceType_Must_Be_Interface, {interfaceType.FullName}", nameof(interfaceType));
             }
 
-            // The base type cannot be sealed because the proxy needs to subclass it.
             if (baseTypeInfo.IsSealed)
             {
-                // "TProxy" is the generic parameter seen via the public contract
-                throw new ArgumentException($"BaseType_Cannot_Be_Sealed, {baseTypeInfo.FullName}", "TProxy");
+                throw new ArgumentException($"BaseType_Cannot_Be_Sealed, {baseTypeInfo.FullName}", nameof(baseType));
             }
 
-            // The base type cannot be abstract
             if (baseTypeInfo.IsAbstract)
             {
-                throw new ArgumentException($"BaseType_Cannot_Be_Abstract {baseType.FullName}", "TProxy");
+                throw new ArgumentException($"BaseType_Cannot_Be_Abstract {baseType.FullName}", nameof(baseType));
             }
 
-            // The base type must have a public default ctor
-            //if (!baseTypeInfo.DeclaredConstructors.Any(c => c.IsPublic && c.GetParameters().Length == 0))
-            //{
-            //    throw new ArgumentException($"BaseType_Must_Have_Default_Ctor {baseType.FullName}", "TProxy");
-            //}
+            var pb = _proxyAssembly.CreateProxy("SpearProxy", baseType);
 
-            // Create a type that derives from 'baseType' provided by caller
-            ProxyBuilder pb = _proxyAssembly.CreateProxy("generatedProxy", baseType);
-
-            foreach (Type t in interfaceType.GetTypeInfo().ImplementedInterfaces)
+            foreach (var t in interfaceType.GetTypeInfo().ImplementedInterfaces)
                 pb.AddInterfaceImpl(t);
 
             pb.AddInterfaceImpl(interfaceType);
 
-            Type generatedProxyType = pb.CreateType();
+            var generatedProxyType = pb.CreateType();
             return generatedProxyType;
         }
 
         private ProxyMethodResolverContext Resolve(object[] args)
         {
-            PackedArgs packed = new PackedArgs(args);
-            MethodBase method = _proxyAssembly.ResolveMethodToken(packed.DeclaringType, packed.MethodToken);
+            var packed = new PackedArgs(args);
+            var method = _proxyAssembly.ResolveMethodToken(packed.DeclaringType, packed.MethodToken);
             if (method.IsGenericMethodDefinition)
                 method = ((MethodInfo)method).MakeGenericMethod(packed.GenericTypes);
 
@@ -148,8 +145,7 @@ namespace Spear.ProxyGenerator.Proxy
         {
             var context = Resolve(args);
 
-            // Call (protected Task<T> method) NetCoreStackDispatchProxy.InvokeAsync<T>()
-            T returnValue = default(T);
+            var returnValue = default(T);
             try
             {
                 Debug.Assert(_dispatchProxyInvokeAsyncTMethod != null);

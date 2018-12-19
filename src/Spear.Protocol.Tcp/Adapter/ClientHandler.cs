@@ -4,7 +4,7 @@ using Spear.Core.Message;
 using System;
 using Spear.Core.Message.Implementation;
 
-namespace Spear.DotNetty.Adapter
+namespace Spear.Protocol.Tcp.Adapter
 {
     /// <summary> 客户端处理器 </summary>
     public class ClientHandler : ChannelHandlerAdapter

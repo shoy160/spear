@@ -45,10 +45,11 @@ namespace Spear.ProxyGenerator.Proxy
                 return _ignoresAccessChecksToAttributeConstructor;
             }
         }
+
         public ProxyBuilder CreateProxy(string name, Type proxyBaseType)
         {
-            int nextId = Interlocked.Increment(ref _typeId);
-            TypeBuilder tb = _mb.DefineType(name + "_" + nextId, TypeAttributes.Public, proxyBaseType);
+            var nextId = Interlocked.Increment(ref _typeId);
+            var tb = _mb.DefineType(name + "_" + nextId, TypeAttributes.Public, proxyBaseType);
             return new ProxyBuilder(this, tb, proxyBaseType);
         }
 

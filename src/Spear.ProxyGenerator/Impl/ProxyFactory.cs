@@ -20,8 +20,7 @@ namespace Spear.ProxyGenerator.Impl
         {
             var instance = _resolver.Resolve(type, key);
             if (instance != null) return instance;
-            var executor = new ProxyExecutor(_proxyProvider, key);
-            instance = _proxyGenerator.CreateProxy(type, executor);
+            instance = _proxyGenerator.CreateProxy(type, typeof(ProxyExecutor), _proxyProvider, key);
             _resolver.Register(type, instance, key);
             return instance;
         }

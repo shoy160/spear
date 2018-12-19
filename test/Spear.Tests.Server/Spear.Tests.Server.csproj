@@ -13,13 +13,14 @@
 
   <ItemGroup>
     <PackageReference Include="Acb.Framework" Version="1.5.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Spear.Consul\Spear.Consul.csproj" />
     <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
-    <ProjectReference Include="..\..\src\Spear.DotNetty\Spear.DotNetty.csproj" />
+    <ProjectReference Include="..\..\src\Spear.Protocol.Http\Spear.Protocol.Http.csproj" />
+    <ProjectReference Include="..\..\src\Spear.Protocol.Tcp\Spear.Protocol.Tcp.csproj" />
     <ProjectReference Include="..\Spear.Tests.Contracts\Spear.Tests.Contracts.csproj" />
   </ItemGroup>
 

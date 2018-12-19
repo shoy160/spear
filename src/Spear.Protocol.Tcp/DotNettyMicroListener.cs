@@ -7,11 +7,12 @@ using DotNetty.Transport.Channels.Sockets;
 using Spear.Core.Message;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
-using Spear.DotNetty.Adapter;
+using Spear.Protocol.Tcp.Adapter;
+using Spear.Protocol.Tcp.Sender;
 using System;
 using System.Threading.Tasks;
 
-namespace Spear.DotNetty
+namespace Spear.Protocol.Tcp
 {
     public class DotNettyMicroListener : MicroListener, IDisposable
     {

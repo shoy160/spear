@@ -45,7 +45,6 @@ namespace Spear.Core.Micro.Implementation
         {
             _logger.Debug($"receive:{JsonHelper.ToJson(message)}");
             await _microExecutor.Execute(sender, message);
-            //await MicroListener.OnReceived(sender, message);
         }
     }
 }

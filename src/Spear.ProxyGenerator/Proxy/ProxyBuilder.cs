@@ -30,7 +30,9 @@ namespace Spear.ProxyGenerator.Proxy
 
             _fields = new List<FieldBuilder>
             {
-                tb.DefineField("_handler", typeof(ProxyHandler), FieldAttributes.Private)
+                //tb.DefineField("_provider", typeof(IProxyProvider), FieldAttributes.Private),
+                //tb.DefineField("_key", typeof(object), FieldAttributes.Private),
+                tb.DefineField("_handler", typeof(ProxyHandler), FieldAttributes.Private),
             };
         }
 
@@ -48,31 +50,30 @@ namespace Spear.ProxyGenerator.Proxy
 
         private void Complete()
         {
-            var args = new Type[_fields.Count];
-            for (var i = 0; i < args.Length; i++)
+            var args = new[]
             {
-                args[i] = _fields[i].FieldType;
-            }
+                typeof(IProxyProvider),
+                typeof(object),
+                typeof(ProxyHandler)
+            };
 
             var cb = _tb.DefineConstructor(MethodAttributes.Public, CallingConventions.HasThis, args);
             var il = cb.GetILGenerator();
 
             // chained ctor call
             var baseCtor = _proxyBaseType.GetTypeInfo().DeclaredConstructors
-                .SingleOrDefault(c => c.IsPublic && c.GetParameters().Length == 0);
+                .SingleOrDefault(c => c.IsPublic && c.GetParameters().Length == 2);
             Debug.Assert(baseCtor != null);
 
             il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Ldarg_2);
             il.Emit(OpCodes.Call, baseCtor);
 
             // store all the fields
-            for (var i = 0; i < args.Length; i++)
-            {
-                il.Emit(OpCodes.Ldarg_0);
-                il.Emit(OpCodes.Ldarg, i + 1);
-                il.Emit(OpCodes.Stfld, _fields[i]);
-            }
-
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldarg, 3);
+            il.Emit(OpCodes.Stfld, _fields[0]);
             il.Emit(OpCodes.Ret);
         }
 

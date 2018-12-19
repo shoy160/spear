@@ -1,8 +1,6 @@
-﻿using Spear.Core.Message.Implementation;
-using System.Threading.Tasks;
-using Spear.Core.Message;
+﻿using System.Threading.Tasks;
 
-namespace Spear.Core.Micro.Implementation
+namespace Spear.Core.Message.Implementation
 {
     /// <summary> 消息监听者 </summary>
     public class MessageListener : IMessageListener

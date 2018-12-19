@@ -1,6 +1,4 @@
-﻿using Spear.Core.Message.Implementation;
-
-namespace Spear.Core.Message
+﻿namespace Spear.Core.Message
 {
     public static class ContentTypes
     {
