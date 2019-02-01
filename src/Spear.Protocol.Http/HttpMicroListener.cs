@@ -1,19 +1,17 @@
-﻿using Acb.Core;
-using Acb.Core.Domain;
-using Acb.Core.Exceptions;
-using Acb.Core.Helper;
-using Acb.Core.Logging;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Spear.Core;
 using Spear.Core.Message;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Protocol.Http.Filters;
 using Spear.Protocol.Http.Sender;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -30,7 +28,7 @@ namespace Spear.Protocol.Http
             _coderFactory = coderFactory;
         }
 
-        public override Task Start(ServiceAddress serviceAddress)
+        public override async Task Start(ServiceAddress serviceAddress)
         {
             var endpoint = serviceAddress.ToEndPoint() as IPEndPoint;
             _host = new WebHostBuilder()
@@ -43,7 +41,7 @@ namespace Spear.Protocol.Http
                 .ConfigureServices(ConfigureServices)
                 .Configure(AppResolve)
                 .Build();
-            return _host.RunAsync();
+            await _host.RunAsync();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -72,19 +70,20 @@ namespace Spear.Protocol.Http
                     catch (Exception ex)
                     {
                         var result = new ResultMessage();
-                        if (ex is BusiException busi)
+                        if (ex is SpearException busi)
                         {
                             result.Code = busi.Code;
                             result.Message = busi.Message;
                         }
                         else
                         {
-                            LogManager.Logger<HttpMicroListener>().Error(ex.Message, ex);
+                            var logger = app.ApplicationServices.GetService<ILogger<HttpMicroListener>>();
+                            logger.LogError(ex, ex.Message);
                             result.Code = (int)HttpStatusCode.InternalServerError;
-                            result.Message = Consts.Mode == ProductMode.Dev ? ex.Message : "微服务调用异常";
+                            result.Message = ex.Message;
                         }
 
-                        await sender.Send(MicroMessage.CreateResultMessage(IdentityHelper.Guid32, result));
+                        await sender.Send(MicroMessage.CreateResultMessage(Guid.NewGuid().ToString("N"), result));
                     }
                 });
             });
@@ -103,6 +102,7 @@ namespace Spear.Protocol.Http
             }
             var message = _coderFactory.GetDecoder().Decode(buffers);
             var invoke = message.GetContent<InvokeMessage>();
+            invoke.Headers = invoke.Headers ?? new Dictionary<string, string>();
             foreach (var header in request.Headers)
             {
                 invoke.Headers[header.Key] = header.Value;
@@ -112,12 +112,12 @@ namespace Spear.Protocol.Http
 
         public override Task Stop()
         {
-            return _host.StopAsync();
+            return _host?.StopAsync();
         }
 
         public void Dispose()
         {
-            _host.Dispose();
+            _host?.Dispose();
         }
     }
 }

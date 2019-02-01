@@ -1,10 +1,9 @@
-﻿using Acb.Core.Logging;
-using DotNetty.Transport.Channels;
-using Spear.Core.Message.Implementation;
+﻿using DotNetty.Transport.Channels;
+using Microsoft.Extensions.Logging;
+using Spear.Core.Message;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Spear.Core.Message;
 
 namespace Spear.Protocol.Tcp.Adapter
 {
@@ -14,37 +13,37 @@ namespace Spear.Protocol.Tcp.Adapter
         private readonly ILogger _logger;
         private readonly Action<IChannelHandlerContext, MicroMessage> _readAction;
 
-        public ServerHandler(Action<IChannelHandlerContext, MicroMessage> readAction)
+        public ServerHandler(ILogger logger, Action<IChannelHandlerContext, MicroMessage> readAction)
         {
             _readAction = readAction;
-            _logger = LogManager.Logger<ServerHandler>();
+            _logger = logger;
         }
 
         public override Task ConnectAsync(IChannelHandlerContext context, EndPoint remoteAddress, EndPoint localAddress)
         {
-            _logger.Debug($"ConnectAsync,client:{remoteAddress},server:{localAddress}");
+            _logger.LogDebug($"ConnectAsync,client:{remoteAddress},server:{localAddress}");
             return Task.CompletedTask;
         }
 
         public override Task DisconnectAsync(IChannelHandlerContext context)
         {
-            _logger.Debug("DisconnectAsync");
+            _logger.LogDebug("DisconnectAsync");
             return Task.CompletedTask;
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            _logger.Debug($"ChannelActive:{context.Channel.RemoteAddress}");
+            _logger.LogDebug($"ChannelActive:{context.Channel.RemoteAddress}");
         }
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            _logger.Debug($"ChannelInactive:{context.Channel.RemoteAddress}");
+            _logger.LogDebug($"ChannelInactive:{context.Channel.RemoteAddress}");
         }
 
         public override void ChannelRegistered(IChannelHandlerContext context)
         {
-            _logger.Debug($"ChannelRegistered:{context.Channel.RemoteAddress}");
+            _logger.LogDebug($"ChannelRegistered:{context.Channel.RemoteAddress}");
         }
 
         public override void ChannelRead(IChannelHandlerContext context, object message)
@@ -64,7 +63,7 @@ namespace Spear.Protocol.Tcp.Adapter
         {
             //客户端主动断开需要应答，否则socket变成CLOSE_WAIT状态导致socket资源耗尽
             context.CloseAsync();
-            _logger.Error($"与服务器：{context.Channel.RemoteAddress}通信时发送了错误。", exception);
+            _logger.LogError(exception, $"与服务器：{context.Channel.RemoteAddress}通信时发送了错误。");
         }
 
 

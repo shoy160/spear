@@ -113,12 +113,16 @@ namespace Spear.ProxyGenerator.Proxy
             {
                 Debug.Assert(_dispatchProxyInvokeMethod != null);
                 returnValue = _dispatchProxyInvokeMethod.Invoke(context.Packed.DispatchProxy,
-                                                                       new object[] { context.Method, context.Packed.Args });
+                    new object[] {context.Method, context.Packed.Args});
                 context.Packed.ReturnValue = returnValue;
             }
             catch (TargetInvocationException tie)
             {
                 ExceptionDispatchInfo.Capture(tie.InnerException).Throw();
+            }
+            catch (Exception ex)
+            {
+                
             }
 
             return returnValue;
@@ -138,6 +142,10 @@ namespace Spear.ProxyGenerator.Proxy
             catch (TargetInvocationException tie)
             {
                 ExceptionDispatchInfo.Capture(tie.InnerException).Throw();
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 

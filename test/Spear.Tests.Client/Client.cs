@@ -1,11 +1,10 @@
 ﻿using Acb.Core.Extensions;
-using Acb.Core.Logging;
 using Acb.Core.Tests;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Spear.Consul;
 using Spear.Core;
-using Spear.Core.Logging;
-using Spear.Protocol.Tcp;
+using Spear.Protocol.Http;
 using Spear.ProxyGenerator;
 using Spear.Tests.Client.Services;
 using Spear.Tests.Client.Services.Impl;
@@ -19,30 +18,29 @@ namespace Spear.Tests.Client
     {
         public static void Start(params string[] args)
         {
-            LogManager.ClearAdapter();
-            LogManager.LogLevel(LogLevel.Info);
-            LogManager.AddAdapter(new ConsoleAdapter());
-
-            var logger = LogManager.Logger<Program>();
             var services = new ServiceCollection()
                 .AddMicroClient(opt =>
                 {
                     opt.AddJsonCoder()
-                        .AddTcpProtocol()
+                        .AddHttpProtocol()
+                        //.AddTcpProtocol()
                         .AddConsul("http://192.168.0.252:8500");
                 });
+            services.AddLogging(builder =>
+            {
+                builder.AddConsole();
+            });
             services.AddSingleton<IService, ServieA>();
             services.AddSingleton<IService, ServieB>();
             var provider = services.BuildServiceProvider();
-            logger.Info("请输入消息");
+            var logger = provider.GetService<ILogger<Client>>();
+            logger.LogInformation("请输入消息");
             while (true)
             {
                 var message = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(message))
                     continue;
-                var t = provider.GetService<IService>("serviceA");
-                Console.WriteLine(t.Name(message));
-                var msgArgs = message.Split(',');
+                var msgArgs = message.Split(new[] { ",", ";", " " }, StringSplitOptions.RemoveEmptyEntries);
                 int repeat = 1, thread = 1;
                 var isNotice = true;
                 if (msgArgs.Length > 1)
@@ -52,24 +50,38 @@ namespace Spear.Tests.Client
                 if (msgArgs.Length > 3)
                     isNotice = msgArgs[3].CastTo(true);
                 message = msgArgs[0];
-                Task.Run(() =>
+                //var watch = Stopwatch.StartNew();
+                //var proxy = provider.GetService<IProxyFactory>();
+                //var service = proxy.Create<ITestContract>();
+                //if (isNotice)
+                //{
+                //    service.Notice(message).GetAwaiter().GetResult();
+                //}
+                //else
+                //{
+                //    var msg = service.Get(message).Result;
+                //    logger.Debug(msg);
+                //}
+                //watch.Stop();
+                //logger.Info(watch.ElapsedMilliseconds);
+                Task.Run(async () =>
                 {
                     var proxy = provider.GetService<IProxyFactory>();
                     var service = proxy.Create<ITestContract>();
 
-                    var result = CodeTimer.Time("micro test", repeat, () =>
-                    {
-                        if (isNotice)
-                        {
-                            service.Notice(message).GetAwaiter().GetResult();
-                        }
-                        else
-                        {
-                            var msg = service.Get(message).Result;
-                            logger.Debug(msg);
-                        }
-                    }, thread);
-                    logger.Info(result.ToString());
+                    var result = await CodeTimer.Time("micro test", repeat, async () =>
+                     {
+                         if (isNotice)
+                         {
+                             await service.Notice(message);
+                         }
+                         else
+                         {
+                             var msg = await service.Get(message);
+                             logger.LogInformation(msg);
+                         }
+                     }, thread);
+                    logger.LogInformation(result.ToString());
                 });
             }
         }

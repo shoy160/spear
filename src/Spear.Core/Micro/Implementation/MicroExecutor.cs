@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Spear.Core.Message;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Acb.Core.Dependency;
-using Acb.Core.Extensions;
-using Acb.Core.Logging;
-using Acb.Core.Serialize;
-using Spear.Core.Message;
-using Spear.Core.Message.Implementation;
 
 namespace Spear.Core.Micro.Implementation
 {
@@ -15,19 +12,21 @@ namespace Spear.Core.Micro.Implementation
     /// <summary> 默认服务执行者 </summary>
     public class MicroExecutor : IMicroExecutor
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<MicroExecutor> _logger;
         private readonly IMicroEntryFactory _entryFactory;
-        public MicroExecutor(IMicroEntryFactory entryFactory)
+        private readonly IServiceProvider _provider;
+        public MicroExecutor(ILogger<MicroExecutor> logger, IServiceProvider provider, IMicroEntryFactory entryFactory)
         {
             _entryFactory = entryFactory;
-            _logger = LogManager.Logger<MicroExecutor>();
+            _logger = logger;
+            _provider = provider;
         }
 
         private async Task LocalExecute(InvokeMessage invokeMessage, ResultMessage result)
         {
             try
             {
-                _logger.Debug(JsonHelper.ToJson(invokeMessage));
+                _logger.LogDebug(JsonConvert.SerializeObject(invokeMessage));
                 var service = _entryFactory.Find(invokeMessage.ServiceId);
                 var args = new List<object>();
                 var parameters = invokeMessage.Parameters ?? new Dictionary<string, object>();
@@ -36,7 +35,8 @@ namespace Spear.Core.Micro.Implementation
                     if (parameters.ContainsKey(parameter.Name))
                     {
                         var parameterType = parameter.ParameterType;
-                        args.Add(parameters[parameter.Name].CastTo(parameterType));
+                        var arg = parameters[parameter.Name].CastTo(parameterType);
+                        args.Add(arg);
                     }
                     else
                     {
@@ -44,7 +44,7 @@ namespace Spear.Core.Micro.Implementation
                     }
                 }
 
-                var instance = CurrentIocManager.Resolve(service.DeclaringType);
+                var instance = _provider.GetService(service.DeclaringType);
                 var data = service.Invoke(instance, args.ToArray());
                 if (!(data is Task task))
                 {
@@ -64,7 +64,7 @@ namespace Spear.Core.Micro.Implementation
             }
             catch (Exception ex)
             {
-                _logger.Error("执行本地逻辑时候发生了错误。", ex);
+                _logger.LogError(ex, "执行本地逻辑时候发生了错误。");
                 result.Message = ex.Message;
                 result.Code = 500;
             }
@@ -78,7 +78,7 @@ namespace Spear.Core.Micro.Implementation
             }
             catch (Exception ex)
             {
-                _logger.Error("发送响应消息异常", ex);
+                _logger.LogError(ex, "发送响应消息异常");
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using Acb.Core.Exceptions;
-using Acb.Core.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Spear.Core.Message;
 using System;
 using System.Collections.Concurrent;
@@ -17,12 +16,12 @@ namespace Spear.Core.Micro.Implementation
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>> _resultDictionary;
 
-        public MicroClient(IMessageSender sender, IMessageListener listener, IMicroExecutor executor)
+        public MicroClient(ILogger logger, IMessageSender sender, IMessageListener listener, IMicroExecutor executor)
         {
             _sender = sender;
             _listener = listener;
             _executor = executor;
-            _logger = LogManager.Logger<MicroClient>();
+            _logger = logger;
             _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>>();
             listener.Received += ListenerOnReceived;
         }
@@ -37,7 +36,7 @@ namespace Spear.Core.Micro.Implementation
                 var content = message.GetContent<ResultMessage>();
                 if (content.Code != 200)
                 {
-                    task.TrySetException(new BusiException(content.Message, content.Code));
+                    task.TrySetException(new SpearException(content.Message, content.Code));
                 }
                 else
                 {
@@ -50,7 +49,7 @@ namespace Spear.Core.Micro.Implementation
 
         private async Task<T> RegistCallbackAsync<T>(string messageId)
         {
-            _logger.Debug($"准备获取Id为：{messageId}的响应内容。");
+            _logger.LogDebug($"准备获取Id为：{messageId}的响应内容。");
             var task = new TaskCompletionSource<MicroMessage>();
             _resultDictionary.TryAdd(messageId, task);
             try
@@ -69,7 +68,7 @@ namespace Spear.Core.Micro.Implementation
         {
             try
             {
-                _logger.Debug("准备发送消息");
+                _logger.LogDebug("准备发送消息");
                 var microMessage = new MicroMessage(message);
                 var callback = RegistCallbackAsync<T>(microMessage.Id);
                 try
@@ -79,16 +78,16 @@ namespace Spear.Core.Micro.Implementation
                 }
                 catch (Exception exception)
                 {
-                    _logger.Error("与服务端通讯时发生了异常", exception);
-                    throw new BusiException("与服务端通讯时发生了异常");
+                    _logger.LogError(exception, "与服务端通讯时发生了异常");
+                    throw new SpearException("与服务端通讯时发生了异常");
                 }
-                _logger.Debug("消息发送成功");
+                _logger.LogDebug("消息发送成功");
                 return await callback;
             }
             catch (Exception ex)
             {
-                _logger.Error("消息发送失败。", ex);
-                throw new BusiException("消息发送失败");
+                _logger.LogError(ex, "消息发送失败。");
+                throw new SpearException("消息发送失败");
             }
         }
 

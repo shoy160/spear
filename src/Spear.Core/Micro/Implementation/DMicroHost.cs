@@ -1,23 +1,22 @@
-﻿using Acb.Core.Logging;
-using Acb.Core.Serialize;
-using Spear.Core.Message.Implementation;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Spear.Core.Message;
 using Spear.Core.Micro.Services;
 using System.Threading.Tasks;
-using Spear.Core.Message;
 
 namespace Spear.Core.Micro.Implementation
 {
     public abstract class DMicroHost : IMicroHost
     {
         private readonly IMicroExecutor _microExecutor;
-        private readonly ILogger _logger;
+        private readonly ILogger<DMicroHost> _logger;
 
         /// <summary> 消息监听者。 </summary>
         protected IMicroListener MicroListener { get; set; }
 
-        protected DMicroHost(IMicroExecutor microExecutor, IMicroListener microListener)
+        protected DMicroHost(ILogger<DMicroHost> logger, IMicroExecutor microExecutor, IMicroListener microListener)
         {
-            _logger = LogManager.Logger<DMicroHost>();
+            _logger = logger;
             _microExecutor = microExecutor;
             MicroListener = microListener;
             MicroListener.Received += MessageListenerReceived;
@@ -43,7 +42,7 @@ namespace Spear.Core.Micro.Implementation
 
         private async Task MessageListenerReceived(IMessageSender sender, MicroMessage message)
         {
-            _logger.Debug($"receive:{JsonHelper.ToJson(message)}");
+            _logger.LogDebug($"receive:{JsonConvert.SerializeObject(message)}");
             await _microExecutor.Execute(sender, message);
         }
     }

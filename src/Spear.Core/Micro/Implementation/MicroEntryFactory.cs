@@ -1,7 +1,5 @@
-﻿using Acb.Core;
-using Acb.Core.Dependency;
-using Acb.Core.Logging;
-using Acb.Core.Reflection;
+﻿using Microsoft.Extensions.Logging;
+using Spear.Core.Reflection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -14,29 +12,31 @@ namespace Spear.Core.Micro.Implementation
     /// </summary>
     public class MicroEntryFactory : IMicroEntryFactory
     {
-        private readonly ILogger _logger;
-        private readonly ITypeFinder _typeFinder;
+        private readonly ILogger<MicroEntryFactory> _logger;
         private readonly ConcurrentDictionary<string, MethodInfo> _methods;
+        private readonly ITypeFinder _typeFinder;
 
-        public MicroEntryFactory()
+        public MicroEntryFactory(ILogger<MicroEntryFactory> logger, ITypeFinder typeFinder)
         {
-            _logger = LogManager.Logger<MicroEntryFactory>();
             _methods = new ConcurrentDictionary<string, MethodInfo>();
-            _typeFinder = CurrentIocManager.Resolve<ITypeFinder>();
+            _logger = logger;
+            _typeFinder = typeFinder;
             InitServices();
+        }
+
+        private bool HasImpl(Type interfaceType)
+        {
+            return _typeFinder.Find(t => interfaceType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract).Any();
         }
 
         /// <summary> 初始化服务 </summary>
         private void InitServices()
         {
-            if (_typeFinder == null) return;
             var services = _typeFinder
-                .Find(t => typeof(IMicroService).IsAssignableFrom(t) && t.IsInterface && t != typeof(IMicroService))
+                .Find(t => typeof(ISpearService).IsAssignableFrom(t) && t.IsInterface && t != typeof(ISpearService))
                 .ToList();
             foreach (var service in services)
             {
-                if (!CurrentIocManager.IsRegisted(service))
-                    continue;
                 var methods = service.GetMethods(BindingFlags.Public | BindingFlags.Instance);
                 foreach (var method in methods)
                 {
@@ -52,9 +52,13 @@ namespace Spear.Core.Micro.Implementation
                 throw new ArgumentNullException(nameof(method));
             var type = method.DeclaringType;
             if (type == null)
+            {
+                _logger.LogWarning("方法的定义类型不能为空。");
                 throw new ArgumentNullException(nameof(method.DeclaringType), "方法的定义类型不能为空。");
+            }
+
             var id = method.ServiceKey();
-            _logger.Debug($"为方法：{method}生成服务Id：{id}。");
+            _logger.LogDebug($"为方法：{method}生成服务Id：{id}。");
             return id;
         }
 

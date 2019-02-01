@@ -1,27 +1,27 @@
-﻿using Acb.Core.Logging;
-using DotNetty.Buffers;
+﻿using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Common.Utilities;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Microsoft.Extensions.Logging;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Protocol.Tcp.Adapter;
+using Spear.Protocol.Tcp.Sender;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using Spear.Protocol.Tcp.Sender;
 
 namespace Spear.Protocol.Tcp
 {
     public class DotNettyClientFactory : IMicroClientFactory, IDisposable
     {
         private readonly Bootstrap _bootstrap;
-        private readonly ILogger _logger;
+        private readonly ILogger<DotNettyClientFactory> _logger;
         private readonly IMessageCoderFactory _coderFactory;
         private readonly IMicroExecutor _microExecutor;
 
@@ -35,11 +35,11 @@ namespace Spear.Protocol.Tcp
         private static readonly AttributeKey<IMessageListener> ListenerKey =
             AttributeKey<IMessageListener>.ValueOf(typeof(DotNettyClientFactory), nameof(IMessageListener));
 
-        public DotNettyClientFactory(IMessageCoderFactory coderFactory, IMicroExecutor executor = null)
+        public DotNettyClientFactory(ILogger<DotNettyClientFactory> logger, IMessageCoderFactory coderFactory, IMicroExecutor executor = null)
         {
             _coderFactory = coderFactory;
             _microExecutor = executor;
-            _logger = LogManager.Logger<DotNettyClientFactory>();
+            _logger = logger;
             _bootstrap = GetBootstrap();
             _clients = new ConcurrentDictionary<ServiceAddress, Lazy<IMicroClient>>();
             _bootstrap.Handler(new ActionChannelInitializer<ISocketChannel>(c =>
@@ -86,22 +86,22 @@ namespace Spear.Protocol.Tcp
             {
                 var lazyClient = _clients.GetOrAdd(serviceAddress, k => new Lazy<IMicroClient>(() =>
                     {
-                        _logger.Debug($"创建客户端：{serviceAddress}创建客户端。");
+                        _logger.LogDebug($"创建客户端：{serviceAddress}创建客户端。");
                         var bootstrap = _bootstrap;
-                        var channel = bootstrap.ConnectAsync(k.ToEndPoint()).Result;
+                        var channel = bootstrap.ConnectAsync(k.ToEndPoint(false)).Result;
                         var listener = new MessageListener();
                         var sender = new DotNettyClientSender(_coderFactory.GetEncoder(), channel);
                         channel.GetAttribute(ListenerKey).Set(listener);
                         channel.GetAttribute(SenderKey).Set(sender);
                         channel.GetAttribute(ServiceAddressKey).Set(k);
-                        return new MicroClient(sender, listener, _microExecutor);
+                        return new MicroClient(_logger, sender, listener, _microExecutor);
                     }
                 ));
                 return lazyClient.Value;
             }
             catch (Exception ex)
             {
-                _logger.Error("创建客户端失败", ex);
+                _logger.LogError(ex, "创建客户端失败");
                 _clients.TryRemove(serviceAddress, out _);
                 throw;
             }
@@ -129,7 +129,7 @@ namespace Spear.Protocol.Tcp
             public override void ChannelInactive(IChannelHandlerContext context)
             {
                 var k = context.Channel.GetAttribute(ServiceAddressKey).Get();
-                _factory._logger.Debug($"删除客户端：{k}");
+                _factory._logger.LogDebug($"删除客户端：{k}");
                 _factory._clients.TryRemove(k, out _);
             }
 

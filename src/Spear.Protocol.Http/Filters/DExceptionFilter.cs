@@ -1,7 +1,7 @@
-﻿using Acb.Core.Exceptions;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Net;
+using Spear.Core;
+using Spear.Core.Message;
 
 namespace Spear.Protocol.Http.Filters
 {
@@ -14,15 +14,21 @@ namespace Spear.Protocol.Http.Filters
         /// <param name="context"></param>
         public void OnException(ExceptionContext context)
         {
-            var json = ExceptionHandler.Handler(context.Exception);
-            if (json == null)
-                return;
-            const int code = (int)HttpStatusCode.InternalServerError;
-            context.Result = new JsonResult(json)
+            var ex = context.Exception;
+            ResultMessage result;
+            if (ex is SpearException busi)
             {
-                StatusCode = code
+                result = new ResultMessage(busi.Message, busi.Code);
+            }
+            else
+            {
+                result = new ResultMessage(ex.Message);
+            }
+            context.Result = new JsonResult(result)
+            {
+                StatusCode = result.Code
             };
-            context.HttpContext.Response.StatusCode = code;
+            context.HttpContext.Response.StatusCode = result.Code;
             context.ExceptionHandled = true;
         }
     }

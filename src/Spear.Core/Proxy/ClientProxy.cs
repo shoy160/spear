@@ -1,7 +1,4 @@
-﻿using Acb.Core;
-using Acb.Core.Exceptions;
-using Acb.Core.Extensions;
-using Acb.Core.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Polly;
 using Spear.Core.Message;
 using Spear.Core.Micro;
@@ -20,23 +17,27 @@ namespace Spear.Core.Proxy
     /// <summary> 代理调用 </summary>
     public class ClientProxy : IProxyProvider
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<ClientProxy> _logger;
 
         private readonly IMicroClientFactory _clientFactory;
         private readonly IServiceFinder _serviceFinder;
 
         /// <inheritdoc />
         /// <summary> 构造函数 </summary>
-        public ClientProxy(IMicroClientFactory clientFactory, IServiceFinder finder)
+        public ClientProxy(ILogger<ClientProxy> logger, IMicroClientFactory clientFactory, IServiceFinder finder)
         {
-            _logger = LogManager.Logger<ClientProxy>();
+            _logger = logger;
             _clientFactory = clientFactory;
             _serviceFinder = finder;
         }
 
-        private async Task<ResultMessage> BaseInvoke(MethodInfo targetMethod, IDictionary<string, object> args)
+        private async Task<ResultMessage> InternalInvoke(MethodInfo targetMethod, IDictionary<string, object> args)
         {
             var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>()).ToList();
+            if (!services.Any())
+            {
+                throw new SpearException("没有可用的服务");
+            }
             var invokeMessage = Create(targetMethod, args);
             ServiceAddress service = null;
             var builder = Policy
@@ -47,7 +48,7 @@ namespace Spear.Core.Proxy
             //重试3次
             var retry = builder.RetryAsync(3, (result, count) =>
             {
-                _logger.Warn(result.Exception != null
+                _logger.LogWarning(result.Exception != null
                     ? $"{service}{targetMethod.Name}:retry,{count},{result.Exception.Format()}"
                     : $"{service}{targetMethod.Name}:retry,{count},{result.Result.Code}");
                 services.Remove(service);
@@ -59,33 +60,33 @@ namespace Spear.Core.Proxy
             {
                 if (!services.Any())
                 {
-                    throw ErrorCodes.NoService.CodeException();
+                    throw new SpearException("没有可用的服务");
                 }
 
                 service = services.RandomSort().First();
 
-                return await InvokeAsync(service, invokeMessage);
+                return await ClientInvokeAsync(service, invokeMessage);
             });
         }
 
         private static InvokeMessage Create(MethodInfo targetMethod, IDictionary<string, object> args)
         {
-            var remoteIp = AcbHttpContext.RemoteIpAddress;
-            var headers = new Dictionary<string, string>
-            {
-                {"X-Forwarded-For", remoteIp},
-                {"X-Real-IP", remoteIp},
-                {
-                    "User-Agent", AcbHttpContext.Current == null ? "micro_service_client" : AcbHttpContext.UserAgent
-                },
-                {"referer", AcbHttpContext.RawUrl}
-            };
+            //var remoteIp = AcbHttpContext.RemoteIpAddress;
+            //var headers = new Dictionary<string, string>
+            //{
+            //    {"X-Forwarded-For", remoteIp},
+            //    {"X-Real-IP", remoteIp},
+            //    {
+            //        "User-Agent", AcbHttpContext.Current == null ? "micro_service_client" : AcbHttpContext.UserAgent
+            //    },
+            //    {"referer", AcbHttpContext.RawUrl}
+            //};
             var serviceId = targetMethod.ServiceKey();
             var invokeMessage = new InvokeMessage
             {
                 ServiceId = serviceId,
                 Parameters = args,
-                Headers = headers
+                Headers = new Dictionary<string, string>()
             };
             var type = targetMethod.ReturnType;
             if (type == typeof(void) || type == typeof(Task))
@@ -97,35 +98,29 @@ namespace Spear.Core.Proxy
         /// <param name="serviceAddress"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        private async Task<ResultMessage> InvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
+        private async Task<ResultMessage> ClientInvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
         {
-            var protocol = serviceAddress.Protocol;
-            //:todo 不能的协议处理
+            //var protocol = serviceAddress.Protocol;
+            //:todo 不同的协议处理
             var client = _clientFactory.CreateClient(serviceAddress);
             var result = await client.Send(message);
             return result;
         }
 
-        public async Task<T> Invoke<T>(MethodInfo method, IDictionary<string, object> parameters, object key = null)
-        {
-            var result = await BaseInvoke(method, parameters);
-            return (T)result.Data;
-        }
-
         public object Invoke(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
-            var result = BaseInvoke(method, parameters).GetAwaiter().GetResult();
+            var result = InternalInvoke(method, parameters).GetAwaiter().GetResult();
             return result.Data;
         }
 
         public Task InvokeAsync(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
-            return BaseInvoke(method, parameters);
+            return InternalInvoke(method, parameters);
         }
 
         public async Task<T> InvokeAsync<T>(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
-            var result = await BaseInvoke(method, parameters);
+            var result = await InternalInvoke(method, parameters);
             return (T)result.Data;
         }
     }

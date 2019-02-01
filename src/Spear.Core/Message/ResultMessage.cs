@@ -1,4 +1,6 @@
-﻿namespace Spear.Core.Message
+﻿using System.Net;
+
+namespace Spear.Core.Message
 {
     /// <summary> 调用结果消息 </summary>
     public class ResultMessage
@@ -17,7 +19,7 @@
             Data = data;
         }
 
-        public ResultMessage(string message, int code = 500)
+        public ResultMessage(string message, int code = (int)HttpStatusCode.InternalServerError)
         {
             Message = message;
             Code = code;

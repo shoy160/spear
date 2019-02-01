@@ -1,7 +1,6 @@
-﻿using Acb.Core;
-using Acb.Core.Extensions;
-using Acb.Core.Logging;
-using Consul;
+﻿using Consul;
+using Microsoft.Extensions.Logging;
+using Spear.Core;
 using Spear.Core.Micro.Services;
 using System;
 using System.Collections.Generic;
@@ -16,13 +15,13 @@ namespace Spear.Consul
         private readonly string _consulServer;
         private readonly string _consulToken;
         private readonly List<string> _services;
-        private readonly ILogger _logger;
+        private readonly ILogger<ConsulServiceRegister> _logger;
 
-        public ConsulServiceRegister(string server, string token)
+        public ConsulServiceRegister(ILogger<ConsulServiceRegister> logger, string server, string token)
         {
             _consulServer = server;
             _consulToken = token;
-            _logger = LogManager.Logger<ConsulServiceRegister>();
+            _logger = logger;
             _services = new List<string>();
         }
         private IConsulClient CreateClient()
@@ -46,7 +45,7 @@ namespace Spear.Consul
                     {
                         ID = $"{ass.GetName().Name}_{serverAddress}".Md5(),
                         Name = assName.Name,
-                        Tags = new[] { $"{Consts.Mode}" },
+                        Tags = new[] { $"{Constants.Mode}" },
                         EnableTagOverride = true,
                         Address = serverAddress.Address(),
                         Port = serverAddress.Port,
@@ -58,10 +57,10 @@ namespace Spear.Consul
                     _services.Add(service.ID);
                     var result = await client.Agent.ServiceRegister(service);
                     if (result.StatusCode != HttpStatusCode.OK)
-                        _logger.Warn(
+                        _logger.LogWarning(
                             $"服务注册失败 [{assName.Name},{serverAddress}]:{result.StatusCode},{result.RequestTime}");
                     else
-                        _logger.Info($"服务注册成功 [{assName.Name},{serverAddress}]");
+                        _logger.LogInformation($"服务注册成功 [{assName.Name},{serverAddress}]");
                 }
             }
         }
@@ -73,7 +72,7 @@ namespace Spear.Consul
                 foreach (var service in _services)
                 {
                     await client.Agent.ServiceDeregister(service);
-                    _logger.Info($"注销服务 [{service}]");
+                    _logger.LogInformation($"注销服务 [{service}]");
                 }
             }
         }

@@ -1,8 +1,8 @@
-﻿using Acb.Core.Logging;
-using DotNetty.Transport.Channels;
+﻿using DotNetty.Transport.Channels;
 using Spear.Core.Message;
 using System;
-using Spear.Core.Message.Implementation;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Spear.Protocol.Tcp.Adapter
 {
@@ -13,11 +13,11 @@ namespace Spear.Protocol.Tcp.Adapter
         private readonly Action<IChannelHandlerContext, MicroMessage> _readAction;
         private readonly ILogger _logger;
 
-        public ClientHandler(Action<IChannel> removeAction, Action<IChannelHandlerContext, MicroMessage> readAction)
+        public ClientHandler(ILogger logger, Action<IChannel> removeAction, Action<IChannelHandlerContext, MicroMessage> readAction)
         {
             _removeAction = removeAction;
             _readAction = readAction;
-            _logger = LogManager.Logger<ClientHandler>();
+            _logger = logger;
         }
         public override void ChannelInactive(IChannelHandlerContext context)
         {
@@ -26,7 +26,7 @@ namespace Spear.Protocol.Tcp.Adapter
 
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
-            _logger.Debug(message);
+            _logger.LogDebug(JsonConvert.SerializeObject(message));
             if (!(message is MicroMessage msg))
                 return;
             _readAction?.Invoke(context, msg);
@@ -34,7 +34,7 @@ namespace Spear.Protocol.Tcp.Adapter
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
-            _logger.Error($"与服务器：{context.Channel.RemoteAddress}通信时发送了错误。", exception);
+            _logger.LogError(exception, $"与服务器：{context.Channel.RemoteAddress}通信时发送了错误。");
         }
     }
 }

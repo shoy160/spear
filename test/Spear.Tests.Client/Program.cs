@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Spear.ProxyGenerator;
-using Spear.Tests.Contracts;
-using System;
-
-namespace Spear.Tests.Client
+﻿namespace Spear.Tests.Client
 {
     internal class Program
     {

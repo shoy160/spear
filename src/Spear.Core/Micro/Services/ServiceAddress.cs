@@ -1,5 +1,4 @@
-﻿using Acb.Core.Helper;
-using Acb.Core.Serialize;
+﻿using Newtonsoft.Json;
 using System.Net;
 
 namespace Spear.Core.Micro.Services
@@ -14,9 +13,11 @@ namespace Spear.Core.Micro.Services
     public class ServiceAddress
     {
         public IPAddress Ip { get; set; }
-        public ServiceProtocol Protocol { get; set; } = ServiceProtocol.Tcp;
+        public ServiceProtocol Protocol { get; } = Constants.Protocol;
         public string Host { get; set; }
         public int Port { get; set; }
+        /// <summary> 对外注册的服务地址(ip或DNS) </summary>
+        public string Service { get; set; }
 
         public ServiceAddress() { }
 
@@ -28,7 +29,7 @@ namespace Spear.Core.Micro.Services
 
         public string ToJson()
         {
-            return JsonHelper.ToJson(this);
+            return JsonConvert.SerializeObject(this);
         }
 
         public string Address()
@@ -43,11 +44,17 @@ namespace Spear.Core.Micro.Services
             return $"{Address()}:{Port}";
         }
 
-        public EndPoint ToEndPoint()
+        public EndPoint ToEndPoint(bool isHost = true)
         {
-            if (RegexHelper.IsIp(Host))
-                return new IPEndPoint(IPAddress.Parse(Host), Port);
-            return new DnsEndPoint(Host, Port);
+            var service = isHost ? Host : Service;
+            if (string.IsNullOrWhiteSpace(service) || service == "localhost")
+            {
+                return new IPEndPoint(IPAddress.Loopback, Port);
+            }
+
+            if (service.IsIp())
+                return new IPEndPoint(IPAddress.Parse(service), Port);
+            return new DnsEndPoint(service, Port);
         }
     }
 }

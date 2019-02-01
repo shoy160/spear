@@ -1,6 +1,7 @@
 ﻿using Spear.Tests.Contracts;
 using System;
 using System.Threading.Tasks;
+using Acb.Core.Timing;
 
 namespace Spear.Tests.Server.Services
 {
@@ -8,7 +9,7 @@ namespace Spear.Tests.Server.Services
     {
         public async Task Notice(string name)
         {
-            Console.WriteLine($"get name:{name}");
+            Console.WriteLine($"{Clock.Now:u} -> get name:{name}");
             await Task.CompletedTask;
         }
 

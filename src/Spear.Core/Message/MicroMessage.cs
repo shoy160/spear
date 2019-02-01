@@ -1,5 +1,4 @@
-﻿using Acb.Core.Helper;
-using System;
+﻿using System;
 
 namespace Spear.Core.Message
 {
@@ -20,7 +19,7 @@ namespace Spear.Core.Message
 
         public MicroMessage(object content, string contentType = null)
         {
-            Id = IdentityHelper.Guid32;
+            Id = Guid.NewGuid().ToString("N");
             Content = content ?? throw new ArgumentNullException(nameof(content));
             contentType = string.IsNullOrWhiteSpace(contentType) ? content.GetType().FullName : contentType;
             ContentType = contentType;
