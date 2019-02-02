@@ -5,16 +5,29 @@ using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Core.Proxy;
+using Spear.Core.Reflection;
 using Spear.ProxyGenerator;
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Spear.Core.Reflection;
 
 namespace Spear.Core
 {
     public static class ServiceCollectionExtensions
     {
+        public static T GetService<T>(this IServiceProvider provider, ServiceProtocol protocol)
+        {
+            var list = provider.GetServices<T>();
+            return list.First(t => t.GetType().GetCustomAttribute<ProtocolAttribute>()?.Protocol == protocol);
+        }
+
+        public static object GetService(this IServiceProvider provider, Type type, ServiceProtocol protocol)
+        {
+            var list = provider.GetServices(type);
+            return list.First(t => t.GetType().GetCustomAttribute<ProtocolAttribute>()?.Protocol == protocol);
+        }
+
         public static string ServiceKey(this MethodInfo method)
         {
             var key = string.Empty;
@@ -36,9 +49,9 @@ namespace Spear.Core
         /// <typeparam name="T">编解码器工厂实现类型。</typeparam>
         /// <param name="builder">服务构建者。</param>
         /// <returns>服务构建者。</returns>
-        public static IMicroBuilder AddCoder<T>(this IMicroBuilder builder) where T : class, IMessageCoderFactory
+        public static IMicroBuilder AddCoder<T>(this IMicroBuilder builder) where T : class, IMessageCodecFactory
         {
-            builder.AddSingleton<IMessageCoderFactory, T>();
+            builder.AddSingleton<IMessageCodecFactory, T>();
             return builder;
         }
 
@@ -47,7 +60,7 @@ namespace Spear.Core
         /// <returns>服务构建者。</returns>
         public static IMicroBuilder AddJsonCoder(this IMicroBuilder builder)
         {
-            builder.AddCoder<JsonMessageCoderFactory>();
+            builder.AddCoder<JsonMessageCodecFactory>();
             return builder;
         }
 
@@ -103,7 +116,6 @@ namespace Spear.Core
             addressAction?.Invoke(address);
             var host = provider.GetService<IMicroHost>();
             Task.Factory.StartNew(async () => await host.Start(address));
-            //host.Start(address).Wait();
         }
     }
 }

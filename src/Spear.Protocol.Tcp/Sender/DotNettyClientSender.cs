@@ -2,12 +2,15 @@
 using Spear.Core.Message;
 using System;
 using System.Threading.Tasks;
+using Spear.Core;
+using Spear.Core.Micro.Services;
 
 namespace Spear.Protocol.Tcp.Sender
 {
     /// <summary>
     /// 基于DotNetty客户端的消息发送者。
     /// </summary>
+    [Protocol(ServiceProtocol.Tcp)]
     public class DotNettyClientSender : DotNettyMessageSender, IMessageSender, IDisposable
     {
         private readonly IChannel _channel;

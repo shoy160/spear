@@ -18,14 +18,15 @@ using System.Threading.Tasks;
 
 namespace Spear.Protocol.Http
 {
+    [Protocol(ServiceProtocol.Http)]
     public class HttpMicroListener : MicroListener, IDisposable
     {
-        private readonly IMessageCoderFactory _coderFactory;
+        private readonly IMessageCodecFactory _codecFactory;
         private IWebHost _host;
 
-        public HttpMicroListener(IMessageCoderFactory coderFactory)
+        public HttpMicroListener(IMessageCodecFactory codecFactory)
         {
-            _coderFactory = coderFactory;
+            _codecFactory = codecFactory;
         }
 
         public override async Task Start(ServiceAddress serviceAddress)
@@ -62,7 +63,7 @@ namespace Spear.Protocol.Http
                 {
                     //route.Values.TryGetValue("contract", out var contract);
                     //route.Values.TryGetValue("method", out var method);
-                    var sender = new HttpServerMessageSender(_coderFactory.GetEncoder(), response);
+                    var sender = new HttpServerMessageSender(_codecFactory.GetEncoder(), response);
                     try
                     {
                         await OnReceived(sender, request);
@@ -100,7 +101,7 @@ namespace Spear.Protocol.Http
                 input.CopyTo(memstream);
                 buffers = memstream.ToArray();
             }
-            var message = _coderFactory.GetDecoder().Decode(buffers);
+            var message = _codecFactory.GetDecoder().Decode(buffers);
             var invoke = message.GetContent<InvokeMessage>();
             invoke.Headers = invoke.Headers ?? new Dictionary<string, string>();
             foreach (var header in request.Headers)

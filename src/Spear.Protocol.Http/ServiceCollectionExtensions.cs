@@ -18,7 +18,7 @@ namespace Spear.Protocol.Http
             builder.AddSingleton<IMicroClientFactory, HttpClientFactory>();
             builder.AddSingleton<IMicroListener>(provider =>
             {
-                var coderFactory = provider.GetService<IMessageCoderFactory>();
+                var coderFactory = provider.GetService<IMessageCodecFactory>();
                 return new HttpMicroListener(coderFactory);
             });
             return builder;

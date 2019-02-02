@@ -11,6 +11,7 @@ using Spear.Tests.Client.Services.Impl;
 using Spear.Tests.Contracts;
 using System;
 using System.Threading.Tasks;
+using Spear.Protocol.Tcp;
 
 namespace Spear.Tests.Client
 {
@@ -23,11 +24,12 @@ namespace Spear.Tests.Client
                 {
                     opt.AddJsonCoder()
                         .AddHttpProtocol()
-                        //.AddTcpProtocol()
+                        .AddTcpProtocol()
                         .AddConsul("http://192.168.0.252:8500");
                 });
             services.AddLogging(builder =>
             {
+                builder.SetMinimumLevel(LogLevel.Information);
                 builder.AddConsole();
             });
             services.AddSingleton<IService, ServieA>();

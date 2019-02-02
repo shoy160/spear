@@ -8,20 +8,22 @@ using Spear.Protocol.Http.Sender;
 using System;
 using System.Collections.Concurrent;
 using System.Net.Http;
+using Spear.Core;
 
 namespace Spear.Protocol.Http
 {
+    [Protocol(ServiceProtocol.Http)]
     public class HttpClientFactory : IMicroClientFactory
     {
         private readonly ILogger<HttpClientFactory> _logger;
-        private readonly IMessageCoderFactory _coderFactory;
+        private readonly IMessageCodecFactory _codecFactory;
         private readonly IMicroExecutor _microExecutor;
         private readonly IHttpClientFactory _clientFactory;
         private readonly ConcurrentDictionary<ServiceAddress, Lazy<IMicroClient>> _clients;
 
-        public HttpClientFactory(ILogger<HttpClientFactory> logger, IHttpClientFactory clientFactory, IMessageCoderFactory coderFactory, IMicroExecutor executor = null)
+        public HttpClientFactory(ILogger<HttpClientFactory> logger, IHttpClientFactory clientFactory, IMessageCodecFactory codecFactory, IMicroExecutor executor = null)
         {
-            _coderFactory = coderFactory;
+            _codecFactory = codecFactory;
             _microExecutor = executor;
             _logger = logger;
             _clientFactory = clientFactory;
@@ -34,7 +36,7 @@ namespace Spear.Protocol.Http
                 {
                     _logger.LogDebug($"创建客户端：{serviceAddress}创建客户端。");
                     var listener = new MessageListener();
-                    var sender = new HttpClientMessageSender(_clientFactory, _coderFactory.GetDecoder(), serviceAddress.ToString(),
+                    var sender = new HttpClientMessageSender(_logger, _clientFactory, _codecFactory, serviceAddress.ToString(),
                         listener);
                     return new MicroClient(_logger, sender, listener, _microExecutor);
                 }

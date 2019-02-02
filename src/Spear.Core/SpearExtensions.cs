@@ -15,6 +15,9 @@ namespace Spear.Core
         {
             return !string.IsNullOrWhiteSpace(str) && Regex.IsMatch(str, IpRegex);
         }
+
+        
+
         /// <summary> 随机排序 </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>

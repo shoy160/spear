@@ -14,12 +14,11 @@ namespace Spear.Protocol.Tcp
         /// <returns></returns>
         public static IMicroBuilder AddTcpProtocol(this IMicroBuilder builder)
         {
-            Constants.Protocol = ServiceProtocol.Http;
-
+            Constants.Protocol = ServiceProtocol.Tcp;
             builder.AddSingleton<IMicroClientFactory, DotNettyClientFactory>();
             builder.AddSingleton<IMicroListener>(provider =>
             {
-                var coderFactory = provider.GetService<IMessageCoderFactory>();
+                var coderFactory = provider.GetService<IMessageCodecFactory>();
                 var logger = provider.GetService<ILogger<DotNettyMicroListener>>();
                 return new DotNettyMicroListener(logger, coderFactory);
             });

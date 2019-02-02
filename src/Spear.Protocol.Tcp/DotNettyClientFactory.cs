@@ -15,14 +15,16 @@ using Spear.Protocol.Tcp.Sender;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using Spear.Core;
 
 namespace Spear.Protocol.Tcp
 {
+    [Protocol(ServiceProtocol.Tcp)]
     public class DotNettyClientFactory : IMicroClientFactory, IDisposable
     {
         private readonly Bootstrap _bootstrap;
         private readonly ILogger<DotNettyClientFactory> _logger;
-        private readonly IMessageCoderFactory _coderFactory;
+        private readonly IMessageCodecFactory _codecFactory;
         private readonly IMicroExecutor _microExecutor;
 
         private readonly ConcurrentDictionary<ServiceAddress, Lazy<IMicroClient>> _clients;
@@ -35,9 +37,9 @@ namespace Spear.Protocol.Tcp
         private static readonly AttributeKey<IMessageListener> ListenerKey =
             AttributeKey<IMessageListener>.ValueOf(typeof(DotNettyClientFactory), nameof(IMessageListener));
 
-        public DotNettyClientFactory(ILogger<DotNettyClientFactory> logger, IMessageCoderFactory coderFactory, IMicroExecutor executor = null)
+        public DotNettyClientFactory(ILogger<DotNettyClientFactory> logger, IMessageCodecFactory codecFactory, IMicroExecutor executor = null)
         {
-            _coderFactory = coderFactory;
+            _codecFactory = codecFactory;
             _microExecutor = executor;
             _logger = logger;
             _bootstrap = GetBootstrap();
@@ -47,7 +49,7 @@ namespace Spear.Protocol.Tcp
                 var pipeline = c.Pipeline;
                 pipeline.AddLast(new LengthFieldPrepender(4));
                 pipeline.AddLast(new LengthFieldBasedFrameDecoder(int.MaxValue, 0, 4, 0, 4));
-                pipeline.AddLast(new MicroMessageHandler(_coderFactory.GetDecoder()));
+                pipeline.AddLast(new MicroMessageHandler(_codecFactory.GetDecoder()));
                 pipeline.AddLast(new DefaultChannelHandler(this));
             }));
         }
@@ -90,7 +92,7 @@ namespace Spear.Protocol.Tcp
                         var bootstrap = _bootstrap;
                         var channel = bootstrap.ConnectAsync(k.ToEndPoint(false)).Result;
                         var listener = new MessageListener();
-                        var sender = new DotNettyClientSender(_coderFactory.GetEncoder(), channel);
+                        var sender = new DotNettyClientSender(_codecFactory.GetEncoder(), channel);
                         channel.GetAttribute(ListenerKey).Set(listener);
                         channel.GetAttribute(SenderKey).Set(sender);
                         channel.GetAttribute(ServiceAddressKey).Set(k);

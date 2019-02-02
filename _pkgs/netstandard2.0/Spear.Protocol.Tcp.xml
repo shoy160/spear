@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Protocol.Tcp</name>
+    </assembly>
+    <members>
+        <member name="T:Spear.Protocol.Tcp.Adapter.ClientHandler">
+            <summary> 客户端处理器 </summary>
+        </member>
+        <member name="T:Spear.Protocol.Tcp.Adapter.ServerHandler">
+            <summary> 服务端处理器 </summary>
+        </member>
+        <member name="M:Spear.Protocol.Tcp.DotNettyClientFactory.CreateClient(Spear.Core.Micro.Services.ServiceAddress)">
+            <inheritdoc />
+            <summary> 创建客户端 </summary>
+            <param name="serviceAddress">终结点。</param>
+            <returns>传输客户端实例。</returns>
+        </member>
+        <member name="T:Spear.Protocol.Tcp.Sender.DotNettyClientSender">
+            <summary>
+            基于DotNetty客户端的消息发送者。
+            </summary>
+        </member>
+        <member name="M:Spear.Protocol.Tcp.Sender.DotNettyClientSender.Send(Spear.Core.Message.MicroMessage,System.Boolean)">
+            <summary> 发送消息 </summary>
+            <param name="message">消息内容</param>
+            <param name="flush"></param>
+            <returns>一个任务。</returns>
+        </member>
+        <member name="T:Spear.Protocol.Tcp.Sender.DotNettyServerSender">
+            <summary>
+            基于DotNetty服务端的消息发送者。
+            </summary>
+        </member>
+        <member name="M:Spear.Protocol.Tcp.Sender.DotNettyServerSender.Send(Spear.Core.Message.MicroMessage,System.Boolean)">
+            <summary> 发送消息 </summary>
+            <param name="message">消息内容</param>
+            <param name="flush">清空缓冲池</param>
+            <returns>一个任务。</returns>
+        </member>
+        <member name="M:Spear.Protocol.Tcp.ServiceCollectionExtensions.AddTcpProtocol(Spear.Core.Micro.IMicroBuilder)">
+            <summary> 使用DotNetty的TCP传输协议 </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

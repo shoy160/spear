@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.ProxyGenerator</name>
+    </assembly>
+    <members>
+        <member name="T:Spear.ProxyGenerator.Impl.ProxyResolver">
+            <summary> 代理解析器 </summary>
+        </member>
+        <member name="T:Spear.ProxyGenerator.IProxyFactory">
+            <summary> 代理工厂 </summary>
+        </member>
+        <member name="M:Spear.ProxyGenerator.IProxyFactory.Create(System.Type,System.Object)">
+            <summary> 创建代理 </summary>
+            <param name="type"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.ProxyGenerator.IProxyProvider">
+            <summary> 代理提供者 </summary>
+        </member>
+        <member name="M:Spear.ProxyGenerator.IProxyProvider.Invoke(System.Reflection.MethodInfo,System.Collections.Generic.IDictionary{System.String,System.Object},System.Object)">
+            <summary> 执行代理 </summary>
+            <param name="method"></param>
+            <param name="parameters"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.ProxyGenerator.IProxyProvider.InvokeAsync(System.Reflection.MethodInfo,System.Collections.Generic.IDictionary{System.String,System.Object},System.Object)">
+            <summary> 执行代理 </summary>
+            <param name="method"></param>
+            <param name="parameters"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.ProxyGenerator.IProxyProvider.InvokeAsync``1(System.Reflection.MethodInfo,System.Collections.Generic.IDictionary{System.String,System.Object},System.Object)">
+            <summary> 执行代理 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="method"></param>
+            <param name="parameters"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.ProxyGenerator.IResolver.Register(System.Type,System.Object,System.Object)">
+            <summary> 注册 </summary>
+            <param name="type"></param>
+            <param name="value"></param>
+            <param name="key"></param>
+        </member>
+        <member name="M:Spear.ProxyGenerator.IResolver.Resolve(System.Type,System.Object)">
+            <summary> 获取服务 </summary>
+            <param name="type"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.ProxyGenerator.IResolver.Resolves(System.Type)">
+            <summary> 获取该类型所有服务 </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.ProxyGenerator.ResolverExtensions.Register(Spear.ProxyGenerator.IResolver,System.Object,System.Object)">
+            <summary> 注册 </summary>
+            <param name="resolver"></param>
+            <param name="value"></param>
+            <param name="key"></param>
+        </member>
+        <member name="M:Spear.ProxyGenerator.Proxy.AsyncProxyGenerator.CreateProxy(System.Type,System.Type,Spear.ProxyGenerator.IProxyProvider,System.Object)">
+            <summary> 创建代理 </summary>
+            <param name="interfaceType"></param>
+            <param name="baseType"></param>
+            <param name="proxyProvider"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.ProxyGenerator.Proxy.AsyncProxyGenerator.GetProxyType(System.Type,System.Type)">
+            <summary> 获取代理类型/// </summary>
+            <param name="baseType"></param>
+            <param name="interfaceType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.ProxyGenerator.Proxy.AsyncProxyGenerator.GenerateProxyType(System.Type,System.Type)">
+            <summary> 生成代理类型 </summary>
+            <param name="baseType"></param>
+            <param name="interfaceType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.ProxyGenerator.Proxy.ProxyBuilder.AddMethodImpl(System.Reflection.MethodInfo)">
+            <summary> 添加方法实现 </summary>
+            <param name="mi"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

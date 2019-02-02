@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Spear.Core.Message;
 using System.Threading.Tasks;
+using Spear.Core;
+using Spear.Core.Micro.Services;
 
 namespace Spear.Protocol.Http.Sender
 {
+    [Protocol(ServiceProtocol.Http)]
     public class HttpServerMessageSender : IMessageSender
     {
         private readonly IMessageEncoder _encoder;

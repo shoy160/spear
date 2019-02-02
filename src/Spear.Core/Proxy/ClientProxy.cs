@@ -19,15 +19,15 @@ namespace Spear.Core.Proxy
     {
         private readonly ILogger<ClientProxy> _logger;
 
-        private readonly IMicroClientFactory _clientFactory;
+        private readonly IServiceProvider _provider;
         private readonly IServiceFinder _serviceFinder;
 
         /// <inheritdoc />
         /// <summary> 构造函数 </summary>
-        public ClientProxy(ILogger<ClientProxy> logger, IMicroClientFactory clientFactory, IServiceFinder finder)
+        public ClientProxy(ILogger<ClientProxy> logger, IServiceProvider provider, IServiceFinder finder)
         {
             _logger = logger;
-            _clientFactory = clientFactory;
+            _provider = provider;
             _serviceFinder = finder;
         }
 
@@ -71,22 +71,19 @@ namespace Spear.Core.Proxy
 
         private static InvokeMessage Create(MethodInfo targetMethod, IDictionary<string, object> args)
         {
-            //var remoteIp = AcbHttpContext.RemoteIpAddress;
-            //var headers = new Dictionary<string, string>
-            //{
-            //    {"X-Forwarded-For", remoteIp},
-            //    {"X-Real-IP", remoteIp},
-            //    {
-            //        "User-Agent", AcbHttpContext.Current == null ? "micro_service_client" : AcbHttpContext.UserAgent
-            //    },
-            //    {"referer", AcbHttpContext.RawUrl}
-            //};
+            var remoteIp = Constants.LocalIp();
+            var headers = new Dictionary<string, string>
+            {
+                {"X-Forwarded-For", remoteIp},
+                {"X-Real-IP", remoteIp},
+                {"User-Agent", "spear-client"}
+            };
             var serviceId = targetMethod.ServiceKey();
             var invokeMessage = new InvokeMessage
             {
                 ServiceId = serviceId,
                 Parameters = args,
-                Headers = new Dictionary<string, string>()
+                Headers = headers
             };
             var type = targetMethod.ReturnType;
             if (type == typeof(void) || type == typeof(Task))
@@ -101,8 +98,8 @@ namespace Spear.Core.Proxy
         private async Task<ResultMessage> ClientInvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
         {
             //var protocol = serviceAddress.Protocol;
-            //:todo 不同的协议处理
-            var client = _clientFactory.CreateClient(serviceAddress);
+            var clientFactory = _provider.GetService<IMicroClientFactory>(serviceAddress.Protocol);
+            var client = clientFactory.CreateClient(serviceAddress);
             var result = await client.Send(message);
             return result;
         }

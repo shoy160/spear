@@ -1,0 +1,412 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Core</name>
+    </assembly>
+    <members>
+        <member name="M:Spear.Core.Constants.Md5(System.String,System.Text.Encoding)">
+            <summary> MD5加密 </summary>
+            <param name="data">数据</param>
+            <param name="encoding">编码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Constants.AssemblyKey(System.Reflection.Assembly)">
+            <summary> 程序集key </summary>
+            <param name="assembly"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Core.Constants.Mode">
+            <summary> 产品模式 </summary>
+        </member>
+        <member name="M:Spear.Core.Constants.LocalIp">
+            <summary> 获取本地IP </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Core.Constants.Protocol">
+            <summary> 服务协议 </summary>
+        </member>
+        <member name="F:Spear.Core.Message.ContentTypes.InvokeType">
+            <summary> 调用消息类型 </summary>
+        </member>
+        <member name="F:Spear.Core.Message.ContentTypes.InvokeResultType">
+            <summary> 调用结果消息类型 </summary>
+        </member>
+        <member name="T:Spear.Core.Message.IMessageEncoder">
+            <summary> 消息编码器 </summary>
+        </member>
+        <member name="M:Spear.Core.Message.IMessageEncoder.Encode(Spear.Core.Message.MicroMessage)">
+            <summary> 消息编码 </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Message.IMessageDecoder">
+            <summary> 消息解码器 </summary>
+        </member>
+        <member name="M:Spear.Core.Message.IMessageDecoder.Decode(System.Byte[])">
+            <summary> 消息解码 </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Message.IMessageCodecFactory.GetEncoder">
+            <summary> 获取编码器 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Message.IMessageCodecFactory.GetDecoder">
+            <summary> 获取解码器 </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Message.ReceivedDelegate">
+            <summary> 接受到消息的委托 </summary>
+            <param name="sender">消息发送者。</param>
+            <param name="message">接收到的消息。</param>
+        </member>
+        <member name="E:Spear.Core.Message.IMessageListener.Received">
+            <summary> 接收到消息的事件 </summary>
+        </member>
+        <member name="M:Spear.Core.Message.IMessageListener.OnReceived(Spear.Core.Message.IMessageSender,Spear.Core.Message.MicroMessage)">
+            <summary> 触发接收到消息事件 </summary>
+            <param name="sender">消息发送者。</param>
+            <param name="message">接收到的消息。</param>
+            <returns>一个任务。</returns>
+        </member>
+        <member name="T:Spear.Core.Message.IMessageSender">
+            <summary>  消息发送者 </summary>
+        </member>
+        <member name="M:Spear.Core.Message.IMessageSender.Send(Spear.Core.Message.MicroMessage,System.Boolean)">
+            <summary> 发送消息 </summary>
+            <param name="message"></param>
+            <param name="flush"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Message.Implementation.MessageListener">
+            <summary> 消息监听者 </summary>
+        </member>
+        <member name="E:Spear.Core.Message.Implementation.MessageListener.Received">
+            <inheritdoc />
+            <summary>
+            接收到消息的事件。
+            </summary>
+        </member>
+        <member name="T:Spear.Core.Message.InvokeMessage">
+            <summary> 调用消息 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.InvokeMessage.ServiceId">
+            <summary> 服务Id </summary>
+        </member>
+        <member name="P:Spear.Core.Message.InvokeMessage.IsNotice">
+            <summary> 是否是通知 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.InvokeMessage.Parameters">
+            <summary> 服务参数 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.MicroMessage.Id">
+            <summary> 消息ID </summary>
+        </member>
+        <member name="P:Spear.Core.Message.MicroMessage.ContentType">
+            <summary> 内容类型 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.MicroMessage.Content">
+            <summary> 消息内容 </summary>
+        </member>
+        <member name="M:Spear.Core.Message.MicroMessage.GetContent``1">
+            <summary> 获取内容 </summary>
+            <typeparam name="T">内容类型</typeparam>
+            <returns>内容实例</returns>
+        </member>
+        <member name="M:Spear.Core.Message.MicroMessage.CreateInvokeMessage(Spear.Core.Message.InvokeMessage)">
+            <summary> 创建调用消息 </summary>
+            <param name="invokeMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Message.MicroMessage.CreateResultMessage(System.String,Spear.Core.Message.ResultMessage)">
+            <summary> 创建调用结果消息 </summary>
+            <param name="id"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Core.Message.MicroMessage.IsInvoke">
+            <summary> 是否是调用消息 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.MicroMessage.IsResult">
+            <summary> 是否是调用结果消息 </summary>
+        </member>
+        <member name="M:Spear.Core.Message.MicroMessageExtension.Create(Spear.Core.Message.InvokeMessage)">
+            <summary> 创建调用消息 </summary>
+            <param name="invokeMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Message.MicroMessageExtension.Create(Spear.Core.Message.ResultMessage,System.String)">
+            <summary> 创建调用结果消息 </summary>
+            <param name="invokeResultMessage"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Message.ResultMessage">
+            <summary> 调用结果消息 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.ResultMessage.Code">
+            <summary> 状态码 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.ResultMessage.Message">
+            <summary> 错误消息 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.ResultMessage.Data">
+            <summary> 数据实体 </summary>
+        </member>
+        <member name="T:Spear.Core.Micro.IMicroClient">
+            <summary> 微服务客户端 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroClient.Send``1(System.Object)">
+            <summary> 发送消息 </summary>
+            <param name="message">远程调用消息模型。</param>
+            <returns>远程调用消息的传输消息。</returns>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroClient.Send(Spear.Core.Message.InvokeMessage)">
+            <summary> 发送消息 </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroClientFactory.CreateClient(Spear.Core.Micro.Services.ServiceAddress)">
+            <summary> 创建客户端 </summary>
+            <param name="serviceAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Micro.IMicroEntryFactory">
+            <summary> 服务发现工厂 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroEntryFactory.GetServices">
+            <summary> 获取所有服务程序集 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroEntryFactory.GetServiceId(System.Reflection.MethodInfo)">
+            <summary> 获取服务条码Id </summary>
+            <param name="method"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroEntryFactory.Find(System.String)">
+            <summary> 查找服务条目 </summary>
+            <param name="serviceId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Micro.IMicroExecutor">
+            <summary> 服务执行者 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroExecutor.Execute(Spear.Core.Message.IMessageSender,Spear.Core.Message.MicroMessage)">
+            <summary> 执行 </summary>
+            <param name="sender"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Micro.IMicroHost">
+            <summary> 微服务主机 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroHost.Start(Spear.Core.Micro.Services.ServiceAddress)">
+            <summary> 启动微服务 </summary>
+            <param name="serviceAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroHost.Start(System.String,System.Int32)">
+            <summary> 启动服务 </summary>
+            <param name="ip"></param>
+            <param name="port"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroHost.Stop">
+            <summary> 停止微服务 </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Micro.IMicroListener">
+            <summary> 微服务监听者 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroListener.Start(Spear.Core.Micro.Services.ServiceAddress)">
+            <summary> 启动监听 </summary>
+            <param name="serviceAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroListener.Stop">
+            <summary> 停止监听 </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Core.Micro.Implementation.DMicroHost.MicroListener">
+            <summary> 消息监听者。 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.DMicroHost.Dispose">
+            <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.DMicroHost.Start(Spear.Core.Micro.Services.ServiceAddress)">
+            <summary> 启动微服务 </summary>
+            <param name="serviceAddress">主机终结点。</param>
+            <returns>一个任务。</returns>
+        </member>
+        <member name="T:Spear.Core.Micro.Implementation.MicroClient">
+            <summary> 默认服务客户端 </summary>
+        </member>
+        <member name="T:Spear.Core.Micro.Implementation.MicroEntryFactory">
+            <summary>/// 本地服务工厂
+            </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroEntryFactory.InitServices">
+            <summary> 初始化服务 </summary>
+        </member>
+        <member name="T:Spear.Core.Micro.Implementation.MicroExecutor">
+            <inheritdoc />
+            <summary> 默认服务执行者 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroHost.Start(Spear.Core.Micro.Services.ServiceAddress)">
+            <inheritdoc />
+            <summary> 启动微服务 </summary>
+            <param name="serviceAddress">主机终结点。</param>
+            <returns>一个任务。</returns>
+        </member>
+        <member name="T:Spear.Core.Micro.Implementation.MicroListener">
+            <inheritdoc cref="T:Spear.Core.Message.Implementation.MessageListener" />
+            <summary> 默认服务监听者 </summary>
+        </member>
+        <member name="T:Spear.Core.Micro.Services.IServiceFinder">
+            <summary> 服务探测器 </summary>
+        </member>
+        <member name="T:Spear.Core.Micro.Services.IServiceRegister">
+            <summary> 服务注册器 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Services.IServiceRegister.Regist(System.Collections.Generic.IEnumerable{System.Reflection.Assembly},Spear.Core.Micro.Services.ServiceAddress)">
+            <summary> 注册服务 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Services.IServiceRegister.Deregist">
+            <summary> 注销服务 </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Services.ServiceAddress.Service">
+            <summary> 对外注册的服务地址(ip或DNS) </summary>
+        </member>
+        <member name="T:Spear.Core.ProductMode">
+            <summary> 产品模式 </summary>
+        </member>
+        <member name="F:Spear.Core.ProductMode.Dev">
+            <summary> 开发 </summary>
+        </member>
+        <member name="F:Spear.Core.ProductMode.Test">
+            <summary> 测试服务器 </summary>
+        </member>
+        <member name="F:Spear.Core.ProductMode.Ready">
+            <summary> 预发布 </summary>
+        </member>
+        <member name="F:Spear.Core.ProductMode.Prod">
+            <summary> 正式 </summary>
+        </member>
+        <member name="T:Spear.Core.ProtocolAttribute">
+            <summary> 协议属性 </summary>
+        </member>
+        <member name="T:Spear.Core.Proxy.ClientProxy">
+            <summary> 代理调用 </summary>
+        </member>
+        <member name="M:Spear.Core.Proxy.ClientProxy.#ctor(Microsoft.Extensions.Logging.ILogger{Spear.Core.Proxy.ClientProxy},System.IServiceProvider,Spear.Core.Micro.Services.IServiceFinder)">
+            <inheritdoc />
+            <summary> 构造函数 </summary>
+        </member>
+        <member name="M:Spear.Core.Proxy.ClientProxy.ClientInvokeAsync(Spear.Core.Micro.Services.ServiceAddress,Spear.Core.Message.InvokeMessage)">
+            <summary> 执行请求 </summary>
+            <param name="serviceAddress"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Reflection.DefaultAssemblyFinder.FindAll">
+            <summary> 查找所有程序集 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Reflection.DefaultAssemblyFinder.Find(System.Func{System.Reflection.Assembly,System.Boolean})">
+            <summary> 查找程序集 </summary>
+            <param name="assemblyFunc"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Reflection.IAssemblyFinder">
+            <summary> 程序集查找器 </summary>
+        </member>
+        <member name="T:Spear.Core.Reflection.ITypeFinder">
+            <summary> 类型查找器 </summary>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddCoder``1(Spear.Core.Micro.IMicroBuilder)">
+            <summary> 使用编解码器。 </summary>
+            <typeparam name="T">编解码器工厂实现类型。</typeparam>
+            <param name="builder">服务构建者。</param>
+            <returns>服务构建者。</returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCoder(Spear.Core.Micro.IMicroBuilder)">
+            <summary> 使用Json编解码器。 </summary>
+            <param name="builder">服务构建者。</param>
+            <returns>服务构建者。</returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Spear.Core.Micro.IMicroBuilder})">
+            <summary> 添加微服务客户端 </summary>
+            <param name="services"></param>
+            <param name="builderAction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroService(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Spear.Core.Micro.IMicroBuilder})">
+            <summary> 添加微服务 </summary>
+            <param name="services"></param>
+            <param name="builderAction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.UseMicroService(System.IServiceProvider,System.String,System.Int32)">
+            <summary> 开启微服务 </summary>
+            <param name="provider"></param>
+            <param name="host"></param>
+            <param name="port"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.UseMicroService(System.IServiceProvider,System.Action{Spear.Core.Micro.Services.ServiceAddress})">
+            <summary> 开启微服务 </summary>
+            <param name="provider"></param>
+            <param name="addressAction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.RandomSort``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary> 随机排序 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="array"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.Format(System.Exception,System.Boolean)">
+            <summary> 异常信息格式化 </summary>
+            <param name="ex"></param>
+            <param name="isHideStackTrace"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.IsNullableType(System.Type)">
+            <summary>
+            判断类型是否为Nullable类型
+            </summary>
+            <param name="type"> 要处理的类型 </param>
+            <returns> 是返回True，不是返回False </returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.GetUnNullableType(System.Type)">
+            <summary>
+            通过类型转换器获取Nullable类型的基础类型
+            </summary>
+            <param name="type"> 要处理的类型对象 </param>
+            <returns> </returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.CastTo``1(System.Object)">
+            <summary>
+            对象转换为泛型
+            </summary>
+            <param name="obj"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.CastTo``1(System.Object,``0)">
+            <summary>
+            对象转换为泛型
+            </summary>
+            <param name="obj"></param>
+            <param name="def"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.CastTo(System.Object,System.Type)">
+            <summary> 把对象类型转换为指定类型 </summary>
+            <param name="obj"></param>
+            <param name="conversionType"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,5 +1,9 @@
 ﻿using Spear.Core.Micro.Services;
 using System;
+using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 
@@ -45,6 +49,16 @@ namespace Spear.Core
                 //    mode = ModeConfigName.Config<string>();
                 return mode.CastTo(ProductMode.Dev);
             }
+        }
+
+        /// <summary> 获取本地IP </summary>
+        /// <returns></returns>
+        public static string LocalIp()
+        {
+            return "127.0.0.1";
+            //return NetworkInterface.GetAllNetworkInterfaces().Select(p => p.GetIPProperties())
+            //    .SelectMany(p => p.UnicastAddresses).FirstOrDefault(p =>
+            //        p.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(p.Address))?.Address?.ToString();
         }
 
         /// <summary> 服务协议 </summary>

@@ -44,6 +44,7 @@ namespace Spear.Core.Micro.Implementation
             }
 
             var assemblies = _entryFactory.GetServices();
+            serviceAddress.Protocol = Constants.Protocol;
             return _serviceRegister.Regist(assemblies, serviceAddress);
         }
 

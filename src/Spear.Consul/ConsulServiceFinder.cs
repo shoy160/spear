@@ -61,7 +61,7 @@ namespace Spear.Consul
                 }
             }
 
-            _cache.Set(key, services, TimeSpan.FromMinutes(5));
+            _cache.Set(key, services, TimeSpan.FromMinutes(2));
             return services;
         }
     }

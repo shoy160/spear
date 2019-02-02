@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Spear.Core.Message;
 using System;
 using System.Collections.Concurrent;
@@ -73,6 +74,7 @@ namespace Spear.Core.Micro.Implementation
                 var callback = RegistCallbackAsync<T>(microMessage.Id);
                 try
                 {
+                    _logger.LogDebug($"{_sender.GetType()}:send :{JsonConvert.SerializeObject(microMessage)}");
                     //发送
                     await _sender.Send(microMessage);
                 }

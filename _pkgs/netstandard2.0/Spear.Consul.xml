@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Consul</name>
+    </assembly>
+    <members>
+        <member name="M:Spear.Consul.ServiceCollectionExtensions.AddConsul(Spear.Core.Micro.IMicroBuilder,Spear.Consul.ConsulOption)">
+            <summary>
+            使用Consul作为服务注册和发现的组件
+            读取配置：micro:consul
+            </summary>
+            <param name="builder"></param>
+            <param name="option"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Consul.ServiceCollectionExtensions.AddConsul(Spear.Core.Micro.IMicroBuilder,System.String,System.String)">
+            <summary> 使用Consul作为服务注册和发现的组件 </summary>
+            <param name="builder"></param>
+            <param name="server"></param>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

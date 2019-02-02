@@ -1,6 +1,5 @@
 ﻿using DotNetty.Buffers;
 using Spear.Core.Message;
-using Spear.Core.Message.Implementation;
 
 namespace Spear.Protocol.Tcp.Sender
 {

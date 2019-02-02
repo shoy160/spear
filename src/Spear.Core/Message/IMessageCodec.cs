@@ -20,7 +20,7 @@ namespace Spear.Core.Message
         MicroMessage Decode(byte[] data);
     }
 
-    public interface IMessageCoderFactory
+    public interface IMessageCodecFactory
     {
         /// <summary> 获取编码器 </summary>
         /// <returns></returns>
