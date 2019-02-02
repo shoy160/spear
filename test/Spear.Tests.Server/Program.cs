@@ -1,4 +1,5 @@
 ﻿using Acb.Core.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Consul;
@@ -6,11 +7,11 @@ using Spear.Core;
 using Spear.Core.Micro;
 using Spear.Protocol.Http;
 using Spear.Tests.Contracts;
+using Spear.Tests.Server.Logging;
 using Spear.Tests.Server.Services;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace Spear.Tests.Server
 {
@@ -29,7 +30,11 @@ namespace Spear.Tests.Server
                     .AddConsul("http://192.168.0.252:8500");
             });
             services.AddTransient<ITestContract, TestService>();
-            services.AddLogging(builder => { builder.AddConsole(); });
+            services.AddLogging(builder =>
+            {
+                //builder.AddConsole();
+                builder.AddAcb();
+            });
             _provider = services.BuildServiceProvider();
             var port = 5002;
             if (args.Length > 0)
