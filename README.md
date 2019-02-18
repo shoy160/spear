@@ -3,7 +3,7 @@ Spear轻量级微服务框架，高扩展性，目前已支持TCP、HTTP协议�
 
 ### Contracts
 ``` c#
-[ServiceRoute("test")]
+[ServiceRoute("test")] //自定义路由键
 public interface ITestContract : ISpearService
 {
     Task Notice(string name);
@@ -39,8 +39,7 @@ var provider = services.BuildServiceProvider();
 
 provider.UseMicroService(address =>
 {
-    var m = root.GetSection("micro").Get<ServiceAddress>();
-    address.Service = "192.168.1.xx";//服务注册地址
+    address.Service = "192.168.1.xx";//服务注册地址,需要保持与客户端的网络访问
     address.Host = "localhost";  //主机地址
     address.Port = 5001; //端口地址
 });
@@ -54,7 +53,7 @@ var services = new ServiceCollection()
         opt.AddJsonCoder() //json编解码
             .AddHttpProtocol()
             .AddTcpProtocol() //客户端允许支持多种协议
-            .AddConsul("http://192.168.0.252:8500");
+            .AddConsul("http://127.0.0.1:8500");
     });
 var provider = services.BuildServiceProvider();
 var proxy = provider.GetService<IProxyFactory>();
