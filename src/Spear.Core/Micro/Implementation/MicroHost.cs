@@ -11,8 +11,9 @@ namespace Spear.Core.Micro.Implementation
         private readonly IMicroEntryFactory _entryFactory;
         private readonly ILogger<MicroHost> _logger;
 
-        public MicroHost(ILogger<MicroHost> logger, IMicroExecutor serviceExecutor, IMicroListener microListener, IServiceRegister serviceRegister,
-            IMicroEntryFactory entryFactory) : base(logger, serviceExecutor, microListener)
+        public MicroHost(ILogger<MicroHost> logger, IMicroExecutor serviceExecutor, IMicroListener microListener,
+            IServiceRegister serviceRegister, IMicroEntryFactory entryFactory)
+            : base(logger, serviceExecutor, microListener)
         {
             _serviceRegister = serviceRegister;
             _entryFactory = entryFactory;
@@ -48,6 +49,8 @@ namespace Spear.Core.Micro.Implementation
             return _serviceRegister.Regist(assemblies, serviceAddress);
         }
 
+        /// <summary> 停止服务 </summary>
+        /// <returns></returns>
         public override async Task Stop()
         {
             await _serviceRegister.Deregist();

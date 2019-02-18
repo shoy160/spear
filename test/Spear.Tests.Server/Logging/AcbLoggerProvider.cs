@@ -1,6 +1,4 @@
-﻿using Acb.Framework.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Spear.Tests.Server.Logging
 {
@@ -20,7 +18,7 @@ namespace Spear.Tests.Server.Logging
     {
         public static ILoggingBuilder AddAcb(this ILoggingBuilder builder)
         {
-            Acb.Core.Logging.LogManager.AddAdapter(new ConsoleAdapter(), Acb.Core.Logging.LogLevel.All);
+            //Acb.Core.Logging.LogManager.AddAdapter(new ConsoleAdapter(), Acb.Core.Logging.LogLevel.All);
             builder.AddProvider(new AcbLoggerProvider());
             return builder;
         }

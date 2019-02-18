@@ -1,17 +1,20 @@
 ﻿using Acb.Core.Extensions;
+using Acb.Core.Logging;
 using Acb.Core.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Consul;
 using Spear.Core;
 using Spear.Protocol.Http;
+using Spear.Protocol.Tcp;
 using Spear.ProxyGenerator;
+using Spear.Tests.Client.Logging;
 using Spear.Tests.Client.Services;
 using Spear.Tests.Client.Services.Impl;
 using Spear.Tests.Contracts;
 using System;
 using System.Threading.Tasks;
-using Spear.Protocol.Tcp;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Spear.Tests.Client
 {
@@ -29,12 +32,17 @@ namespace Spear.Tests.Client
                 });
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Information);
+                builder.SetMinimumLevel(LogLevel.Debug);
                 builder.AddConsole();
             });
+            services.AddSingleton<DefaultAdapter>();
             services.AddSingleton<IService, ServieA>();
             services.AddSingleton<IService, ServieB>();
             var provider = services.BuildServiceProvider();
+
+            LogManager.AddAdapter(provider.GetService<DefaultAdapter>());
+            LogManager.Logger<Client>().Info("test");
+
             var logger = provider.GetService<ILogger<Client>>();
             logger.LogInformation("请输入消息");
             while (true)
@@ -73,14 +81,22 @@ namespace Spear.Tests.Client
 
                     var result = await CodeTimer.Time("micro test", repeat, async () =>
                      {
-                         if (isNotice)
+                         try
                          {
-                             await service.Notice(message);
+                             if (isNotice)
+                             {
+                                 await service.Notice(message);
+                             }
+                             else
+                             {
+                                 var msg = await service.Get(message);
+                                 logger.LogInformation(msg);
+                             }
                          }
-                         else
+                         catch (Exception ex)
                          {
-                             var msg = await service.Get(message);
-                             logger.LogInformation(msg);
+                             logger.LogError(ex, ex.Message);
+                             throw;
                          }
                      }, thread);
                     logger.LogInformation(result.ToString());

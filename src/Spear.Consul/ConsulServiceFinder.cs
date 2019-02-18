@@ -61,7 +61,11 @@ namespace Spear.Consul
                 }
             }
 
-            _cache.Set(key, services, TimeSpan.FromMinutes(2));
+            if (services.Any())
+            {
+                _cache.Set(key, services, TimeSpan.FromMinutes(2));
+            }
+
             return services;
         }
     }

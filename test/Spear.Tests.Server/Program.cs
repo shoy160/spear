@@ -1,4 +1,4 @@
-﻿using Acb.Core.Extensions;
+﻿//using Acb.Core.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,18 +23,20 @@ namespace Spear.Tests.Server
         {
             var port = -1;
             if (args.Length > 0)
-                port = args[0].CastTo(port);
+                int.TryParse(args[0], out port);
             var protocol = ServiceProtocol.Tcp;
             if (args.Length > 1)
-                protocol = args[1].CastTo(ServiceProtocol.Tcp);
+                Enum.TryParse(args[1], out protocol);
+            var configBuilder = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json", false, true);
+            var root = configBuilder.Build();
+
             var services = new ServiceCollection();
             services.AddMicroService(builder =>
             {
                 builder
                     .AddJsonCoder()
-                    //.AddHttpProtocol()
-                    //.AddTcpProtocol()
-                    .AddConsul("http://192.168.0.252:8500");
+                    .AddConsul(root.GetSection("micro:consul").Get<ConsulOption>());
                 switch (protocol)
                 {
                     case ServiceProtocol.Tcp:
@@ -53,9 +55,10 @@ namespace Spear.Tests.Server
             });
             _provider = services.BuildServiceProvider();
 
+
             _provider.UseMicroService(address =>
             {
-                var m = "micro".Config<ServiceAddress>();
+                var m = root.GetSection("micro").Get<ServiceAddress>();
                 address.Service = m.Service;
                 address.Host = m.Host;
                 address.Port = port > 80 ? port : m.Port;
@@ -68,9 +71,6 @@ namespace Spear.Tests.Server
                 await Shutdown();
                 eventArgs.Cancel = true;
             };
-            var configBuilder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", false, true);
-            var root = configBuilder.Build();
             var config = root.GetValue<string>("logLevel");
             _provider.GetService<ILogger<Program>>().LogInformation(config);
             Console.ReadLine();

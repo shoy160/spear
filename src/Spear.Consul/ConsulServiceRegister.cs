@@ -24,6 +24,7 @@ namespace Spear.Consul
             _logger = logger;
             _services = new List<string>();
         }
+
         private IConsulClient CreateClient()
         {
             return new ConsulClient(cfg =>
@@ -34,6 +35,10 @@ namespace Spear.Consul
             });
         }
 
+        /// <summary> 服务注册 </summary>
+        /// <param name="assemblyList"></param>
+        /// <param name="serverAddress"></param>
+        /// <returns></returns>
         public async Task Regist(IEnumerable<Assembly> assemblyList, ServiceAddress serverAddress)
         {
             using (var client = CreateClient())
@@ -65,6 +70,9 @@ namespace Spear.Consul
             }
         }
 
+        /// <inheritdoc />
+        /// <summary> 服务注销 </summary>
+        /// <returns></returns>
         public async Task Deregist()
         {
             using (var client = CreateClient())
