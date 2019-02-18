@@ -31,6 +31,19 @@ namespace Spear.Core.Proxy
             _serviceFinder = finder;
         }
 
+        /// <summary> 执行请求 </summary>
+        /// <param name="serviceAddress"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private async Task<ResultMessage> ClientInvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
+        {
+            //获取不同协议的客户端工厂
+            var clientFactory = _provider.GetService<IMicroClientFactory>(serviceAddress.Protocol);
+            var client = clientFactory.CreateClient(serviceAddress);
+            var result = await client.Send(message);
+            return result;
+        }
+
         private async Task<ResultMessage> InternalInvoke(MethodInfo targetMethod, IDictionary<string, object> args)
         {
             var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>()).ToList();
@@ -89,19 +102,6 @@ namespace Spear.Core.Proxy
             if (type == typeof(void) || type == typeof(Task))
                 invokeMessage.IsNotice = true;
             return invokeMessage;
-        }
-
-        /// <summary> 执行请求 </summary>
-        /// <param name="serviceAddress"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        private async Task<ResultMessage> ClientInvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
-        {
-            //var protocol = serviceAddress.Protocol;
-            var clientFactory = _provider.GetService<IMicroClientFactory>(serviceAddress.Protocol);
-            var client = clientFactory.CreateClient(serviceAddress);
-            var result = await client.Send(message);
-            return result;
         }
 
         public object Invoke(MethodInfo method, IDictionary<string, object> parameters, object key = null)

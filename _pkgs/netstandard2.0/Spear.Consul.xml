@@ -4,6 +4,17 @@
         <name>Spear.Consul</name>
     </assembly>
     <members>
+        <member name="M:Spear.Consul.ConsulServiceRegister.Regist(System.Collections.Generic.IEnumerable{System.Reflection.Assembly},Spear.Core.Micro.Services.ServiceAddress)">
+            <summary> 服务注册 </summary>
+            <param name="assemblyList"></param>
+            <param name="serverAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Consul.ConsulServiceRegister.Deregist">
+            <inheritdoc />
+            <summary> 服务注销 </summary>
+            <returns></returns>
+        </member>
         <member name="M:Spear.Consul.ServiceCollectionExtensions.AddConsul(Spear.Core.Micro.IMicroBuilder,Spear.Consul.ConsulOption)">
             <summary>
             使用Consul作为服务注册和发现的组件

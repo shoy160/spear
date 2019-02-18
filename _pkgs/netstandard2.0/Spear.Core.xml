@@ -258,6 +258,10 @@
             <param name="serviceAddress">主机终结点。</param>
             <returns>一个任务。</returns>
         </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroHost.Stop">
+            <summary> 停止服务 </summary>
+            <returns></returns>
+        </member>
         <member name="T:Spear.Core.Micro.Implementation.MicroListener">
             <inheritdoc cref="T:Spear.Core.Message.Implementation.MessageListener" />
             <summary> 默认服务监听者 </summary>

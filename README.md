@@ -51,12 +51,15 @@ provider.UseMicroService(address =>
 var services = new ServiceCollection()
     .AddMicroClient(opt =>
     {
-        opt.AddJsonCoder()
+        opt.AddJsonCoder() //json编解码
             .AddHttpProtocol()
-            .AddTcpProtocol()
+            .AddTcpProtocol() //客户端允许支持多种协议
             .AddConsul("http://192.168.0.252:8500");
     });
 var provider = services.BuildServiceProvider();
 var proxy = provider.GetService<IProxyFactory>();
 var service = proxy.Create<ITestContract>();
 ```
+
+### BenchMark
+![image](benchmark.png)
