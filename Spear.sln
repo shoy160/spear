@@ -23,9 +23,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Protocol", "02.Protocol"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.Core", "01.Core", "{CEA05BAF-D308-4853-AB0A-F0B5C45C3E7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Tests", "test\Spear.Tests\Spear.Tests.csproj", "{B94FFC83-A18D-4DC8-90EF-4B7CEE8E5A41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Tests", "test\Spear.Tests\Spear.Tests.csproj", "{B94FFC83-A18D-4DC8-90EF-4B7CEE8E5A41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Protocol.Http", "src\Spear.Protocol.Http\Spear.Protocol.Http.csproj", "{2DBA1858-17B3-4D2D-AD13-93C1D30FA31E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Protocol.Http", "src\Spear.Protocol.Http\Spear.Protocol.Http.csproj", "{2DBA1858-17B3-4D2D-AD13-93C1D30FA31E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Solution Items", "00.Solution Items", "{E9EE214B-E10F-47A7-82C8-B0793EADF72E}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		benchmark.png = benchmark.png
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

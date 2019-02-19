@@ -3,15 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl></PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/shoy160/spear</PackageProjectUrl>
     <Authors>shoy</Authors>
     <Company>shoy@icb</Company>
     <Product>Spear - Consul服务注册与发现</Product>
     <RepositoryUrl>https://github.com/shoy160/spear.git</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
-    <AssemblyVersion>0.1.1.0</AssemblyVersion>
-    <FileVersion>0.1.1.0</FileVersion>
-    <Version>0.1.1</Version>
+    <AssemblyVersion>0.1.2.0</AssemblyVersion>
+    <FileVersion>0.1.2.0</FileVersion>
+    <Version>0.1.2</Version>
     <Description>Spear轻量级微服务框架，高扩展性，目前已支持TCP、HTTP协议。</Description>
     <PackageReleaseNotes>Spear轻量级微服务框架，高扩展性，目前已支持TCP、HTTP协议。</PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/shoy160/spear/blob/master/LICENSE</PackageLicenseUrl>

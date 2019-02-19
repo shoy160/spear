@@ -7,14 +7,14 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Spear.Core/0.1.1": {
+      "Spear.Core/0.1.2": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection": "2.2.0",
           "Microsoft.Extensions.DependencyModel": "2.1.0",
           "NETStandard.Library": "2.0.3",
           "Newtonsoft.Json": "12.0.1",
           "Polly": "6.1.2",
-          "Spear.ProxyGenerator": "0.1.1",
+          "Spear.ProxyGenerator": "0.1.2",
           "System.Reflection.Emit": "4.3.0",
           "System.Runtime.Loader": "4.3.0",
           "Microsoft.Extensions.Logging.Abstractions": "2.2.0.0"
@@ -417,7 +417,7 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "Spear.ProxyGenerator/0.1.1": {
+      "Spear.ProxyGenerator/0.1.2": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "2.2.0",
           "System.Reflection.Emit": "4.3.0"
@@ -437,7 +437,7 @@
     }
   },
   "libraries": {
-    "Spear.Core/0.1.1": {
+    "Spear.Core/0.1.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -708,7 +708,7 @@
       "path": "system.threading.tasks/4.3.0",
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
-    "Spear.ProxyGenerator/0.1.1": {
+    "Spear.ProxyGenerator/0.1.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
