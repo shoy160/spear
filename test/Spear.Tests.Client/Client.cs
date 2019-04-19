@@ -28,7 +28,7 @@ namespace Spear.Tests.Client
                     opt.AddJsonCoder()
                         .AddHttpProtocol()
                         .AddTcpProtocol()
-                        .AddConsul("http://192.168.0.252:8500");
+                        .AddConsul("http://192.168.0.231:8500");
                 });
             services.AddLogging(builder =>
             {

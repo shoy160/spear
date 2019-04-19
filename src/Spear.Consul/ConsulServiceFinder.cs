@@ -36,12 +36,12 @@ namespace Spear.Consul
         public async Task<List<ServiceAddress>> Find(Type serviceType)
         {
             var ass = serviceType.Assembly;
-            var key = ass.AssemblyKey();
-            var services = _cache.Get<List<ServiceAddress>>(key);
-            if (services != null)
-                return services;
+            //var key = ass.AssemblyKey();
+            //var services = _cache.Get<List<ServiceAddress>>(key);
+            //if (services != null)
+            //    return services;
             var name = ass.GetName();
-            services = new List<ServiceAddress>();
+            var services = new List<ServiceAddress>();
             using (var client = CreateClient())
             {
                 var list = await client.Catalog.Service(name.Name, $"{Constants.Mode}");
@@ -61,10 +61,10 @@ namespace Spear.Consul
                 }
             }
 
-            if (services.Any())
-            {
-                _cache.Set(key, services, TimeSpan.FromMinutes(2));
-            }
+            //if (services.Any())
+            //{
+            //    _cache.Set(key, services, TimeSpan.FromMinutes(2));
+            //}
 
             return services;
         }

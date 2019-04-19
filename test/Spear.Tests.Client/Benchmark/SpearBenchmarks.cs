@@ -18,7 +18,7 @@ namespace Spear.Tests.Client.Benchmark
         private IServiceProvider _provider;
         private ITestContract _contract;
 
-        [Params("shay", "12345")]
+        [Params("shay")]
         public string Name;
 
         [GlobalSetup]
@@ -30,7 +30,7 @@ namespace Spear.Tests.Client.Benchmark
                     opt.AddJsonCoder()
                         .AddHttpProtocol()
                         .AddTcpProtocol()
-                        .AddConsul("http://192.168.0.252:8500");
+                        .AddConsul("http://192.168.0.231:8500");
                 });
             _provider = services.BuildServiceProvider();
             var proxy = _provider.GetService<IProxyFactory>();

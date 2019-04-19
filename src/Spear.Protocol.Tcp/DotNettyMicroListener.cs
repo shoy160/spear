@@ -32,7 +32,7 @@ namespace Spear.Protocol.Tcp
         {
             _logger.LogDebug($"准备启动服务主机，监听地址：{serviceAddress}。");
             var bossGroup = new MultithreadEventLoopGroup(1);
-            var workerGroup = new MultithreadEventLoopGroup();//Default eventLoopCount is Environment.ProcessorCount * 2
+            var workerGroup = new MultithreadEventLoopGroup();
             var bootstrap = new ServerBootstrap();
             bootstrap
                 .Group(bossGroup, workerGroup)
@@ -51,9 +51,16 @@ namespace Spear.Protocol.Tcp
                         await OnReceived(sender, message);
                     }));
                 }));
-            var endPoint = serviceAddress.ToEndPoint();
-            _channel = await bootstrap.BindAsync(endPoint);
-            _logger.LogInformation($"服务主机启动成功，监听地址：{serviceAddress}。");
+            try
+            {
+                var endPoint = serviceAddress.ToEndPoint();
+                _channel = await bootstrap.BindAsync(endPoint);
+                _logger.LogInformation($"服务主机启动成功，监听地址：{serviceAddress}。");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"服务主机启动失败，监听地址：{serviceAddress}。 ");
+            }
         }
 
         public override Task Stop()

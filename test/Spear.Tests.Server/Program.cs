@@ -11,7 +11,6 @@ using Spear.Protocol.Tcp;
 using Spear.Tests.Contracts;
 using Spear.Tests.Server.Services;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Spear.Tests.Server
