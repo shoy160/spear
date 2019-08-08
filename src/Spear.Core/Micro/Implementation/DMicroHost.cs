@@ -42,7 +42,8 @@ namespace Spear.Core.Micro.Implementation
 
         private async Task MessageListenerReceived(IMessageSender sender, MicroMessage message)
         {
-            _logger.LogDebug($"receive:{JsonConvert.SerializeObject(message)}");
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug($"receive:{JsonConvert.SerializeObject(message)}");
             await _microExecutor.Execute(sender, message);
         }
     }

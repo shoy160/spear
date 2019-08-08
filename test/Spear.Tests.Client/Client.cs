@@ -32,7 +32,7 @@ namespace Spear.Tests.Client
                 });
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.SetMinimumLevel(LogLevel.Information);
                 builder.AddConsole();
             });
             services.AddSingleton<DefaultAdapter>();
@@ -99,7 +99,7 @@ namespace Spear.Tests.Client
                              throw;
                          }
                      }, thread);
-                    logger.LogInformation(result.ToString());
+                    Console.WriteLine(result.ToString());
                 });
             }
         }

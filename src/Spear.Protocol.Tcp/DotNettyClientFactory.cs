@@ -86,7 +86,7 @@ namespace Spear.Protocol.Tcp
             //_logger.Debug($"准备为服务端地址：{endPoint}创建客户端。");
             try
             {
-                var lazyClient = _clients.GetOrAdd(serviceAddress.ToString(), k => new Lazy<IMicroClient>(() =>
+                var lazyClient = _clients.GetOrAdd(serviceAddress.ToString(), k => new Lazy<IMicroClient>( () =>
                     {
                         _logger.LogDebug($"创建客户端：{serviceAddress}创建客户端。");
                         var bootstrap = _bootstrap;

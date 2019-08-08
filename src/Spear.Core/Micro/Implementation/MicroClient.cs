@@ -74,7 +74,8 @@ namespace Spear.Core.Micro.Implementation
                 var callback = RegistCallbackAsync<T>(microMessage.Id);
                 try
                 {
-                    _logger.LogDebug($"{_sender.GetType()}:send :{JsonConvert.SerializeObject(microMessage)}");
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                        _logger.LogDebug($"{_sender.GetType()}:send :{JsonConvert.SerializeObject(microMessage)}");
                     //发送
                     await _sender.Send(microMessage);
                 }

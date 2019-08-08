@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Core", "src\Spear.Core\Spear.Core.csproj", "{49FA78BA-946E-4828-9A81-ECC57298D921}"
 EndProject
@@ -34,6 +34,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00.Solution Items", "00.Sol
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Tests.Netty", "test\Spear.Tests.Netty\Spear.Tests.Netty.csproj", "{7E8EE046-66EA-4E15-B6F1-D46B52EBA551}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +79,10 @@ Global
 		{2DBA1858-17B3-4D2D-AD13-93C1D30FA31E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DBA1858-17B3-4D2D-AD13-93C1D30FA31E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DBA1858-17B3-4D2D-AD13-93C1D30FA31E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E8EE046-66EA-4E15-B6F1-D46B52EBA551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E8EE046-66EA-4E15-B6F1-D46B52EBA551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E8EE046-66EA-4E15-B6F1-D46B52EBA551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E8EE046-66EA-4E15-B6F1-D46B52EBA551}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +97,7 @@ Global
 		{FF31F054-0813-4468-AF9B-D6F33F27B2BB} = {D7FA77A3-C7C2-4F40-B252-BB9330740DEA}
 		{B94FFC83-A18D-4DC8-90EF-4B7CEE8E5A41} = {3D9793B2-FFDF-466B-8574-A6EC15B07CE2}
 		{2DBA1858-17B3-4D2D-AD13-93C1D30FA31E} = {D7FA77A3-C7C2-4F40-B252-BB9330740DEA}
+		{7E8EE046-66EA-4E15-B6F1-D46B52EBA551} = {3D9793B2-FFDF-466B-8574-A6EC15B07CE2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80C90B42-B34C-4BE9-8695-96E316D751E9}

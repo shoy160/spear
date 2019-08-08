@@ -45,11 +45,11 @@ namespace Spear.Consul
             {
                 foreach (var ass in assemblyList)
                 {
-                    var assName = ass.GetName();
+                    var serviceName = ass.GetName().Name;
                     var service = new AgentServiceRegistration
                     {
-                        ID = $"{ass.GetName().Name}_{serverAddress}".Md5(),
-                        Name = assName.Name,
+                        ID = $"{serviceName}_{serverAddress}".Md5(),
+                        Name = serviceName,
                         Tags = new[] { $"{Constants.Mode}" },
                         EnableTagOverride = true,
                         Address = serverAddress.Address(),
@@ -63,9 +63,9 @@ namespace Spear.Consul
                     var result = await client.Agent.ServiceRegister(service);
                     if (result.StatusCode != HttpStatusCode.OK)
                         _logger.LogWarning(
-                            $"服务注册失败 [{assName.Name},{serverAddress}]:{result.StatusCode},{result.RequestTime}");
+                            $"服务注册失败 [{serviceName},{serverAddress}]:{result.StatusCode},{result.RequestTime}");
                     else
-                        _logger.LogInformation($"服务注册成功 [{assName.Name},{serverAddress}]");
+                        _logger.LogInformation($"服务注册成功 [{serviceName},{serverAddress}]");
                 }
             }
         }

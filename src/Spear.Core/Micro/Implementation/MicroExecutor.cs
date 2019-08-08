@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Spear.Core.Message;
+using Spear.ProxyGenerator;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -38,14 +39,17 @@ namespace Spear.Core.Micro.Implementation
                         var arg = parameters[parameter.Name].CastTo(parameterType);
                         args.Add(arg);
                     }
-                    else
+                    else if (parameter.HasDefaultValue)
                     {
                         args.Add(parameter.DefaultValue);
                     }
                 }
 
                 var instance = _provider.GetService(service.DeclaringType);
-                var data = service.Invoke(instance, args.ToArray());
+
+                var fastInvoke = FastInvoke.GetMethodInvoker(service);
+                var data = fastInvoke(instance, args.ToArray());
+                //var data = service.Invoke(instance, args.ToArray());
                 if (!(data is Task task))
                 {
                     result.Data = data;

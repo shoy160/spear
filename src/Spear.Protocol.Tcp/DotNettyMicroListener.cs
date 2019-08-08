@@ -35,10 +35,10 @@ namespace Spear.Protocol.Tcp
             var workerGroup = new MultithreadEventLoopGroup();
             var bootstrap = new ServerBootstrap();
             bootstrap
-                .Group(bossGroup, workerGroup)
                 .Channel<TcpServerSocketChannel>()
-                .Option(ChannelOption.SoBacklog, 100)
+                .Option(ChannelOption.SoBacklog, 8192)
                 .ChildOption(ChannelOption.Allocator, PooledByteBufferAllocator.Default)
+                .Group(bossGroup, workerGroup)
                 .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
                     var pipeline = channel.Pipeline;

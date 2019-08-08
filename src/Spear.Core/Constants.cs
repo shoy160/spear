@@ -44,9 +44,6 @@ namespace Spear.Core
             get
             {
                 var mode = Environment.GetEnvironmentVariable("SPEAR_MODE");
-                //:todo 配置
-                //if (string.IsNullOrWhiteSpace(mode))
-                //    mode = ModeConfigName.Config<string>();
                 return mode.CastTo(ProductMode.Dev);
             }
         }
@@ -55,10 +52,9 @@ namespace Spear.Core
         /// <returns></returns>
         public static string LocalIp()
         {
-            return "127.0.0.1";
-            //return NetworkInterface.GetAllNetworkInterfaces().Select(p => p.GetIPProperties())
-            //    .SelectMany(p => p.UnicastAddresses).FirstOrDefault(p =>
-            //        p.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(p.Address))?.Address?.ToString();
+            return NetworkInterface.GetAllNetworkInterfaces().Select(p => p.GetIPProperties())
+                .SelectMany(p => p.UnicastAddresses).FirstOrDefault(p =>
+                    p.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(p.Address))?.Address?.ToString();
         }
 
         /// <summary> 服务协议 </summary>

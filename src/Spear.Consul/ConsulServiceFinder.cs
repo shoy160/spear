@@ -56,7 +56,12 @@ namespace Spear.Consul
                 if (Constants.Mode == ProductMode.Dev)
                 {
                     list = client.Catalog.Service(name.Name, $"{ProductMode.Test}").Result;
-                    items = list.Response.Select(t => new ServiceAddress(t.ServiceAddress, t.ServicePort)).ToArray();
+                    items = list.Response.Select(t =>
+                    {
+                        if (t.ServiceMeta.TryGetValue("serverAddress", out var json))
+                            return JsonConvert.DeserializeObject<ServiceAddress>(json);
+                        return new ServiceAddress(t.Address, t.ServicePort);
+                    }).ToArray();
                     services.AddRange(items);
                 }
             }
