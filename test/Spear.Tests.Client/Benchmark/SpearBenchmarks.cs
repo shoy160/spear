@@ -18,16 +18,16 @@ namespace Spear.Tests.Client.Benchmark
         private IServiceProvider _provider;
         private ITestContract _contract;
 
-        [Params("shay")]
+        [Params("shay", "123456")]
         public string Name;
 
         [GlobalSetup]
         public void Setup()
         {
             var services = new ServiceCollection()
-                .AddMicroClient(opt =>
+                .AddMicroClient(builder =>
                 {
-                    opt.AddJsonCoder()
+                    builder.AddJsonCoder()
                         .AddHttpProtocol()
                         .AddTcpProtocol()
                         .AddConsul("http://192.168.0.231:8500");

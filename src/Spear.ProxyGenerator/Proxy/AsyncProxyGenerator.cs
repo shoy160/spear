@@ -36,7 +36,7 @@ namespace Spear.ProxyGenerator.Proxy
             return Activator.CreateInstance(proxiedType, proxyProvider, key, new ProxyHandler(this));
         }
 
-        /// <summary> 获取代理类型/// </summary>
+        /// <summary> 获取代理类型 </summary>
         /// <param name="baseType"></param>
         /// <param name="interfaceType"></param>
         /// <returns></returns>

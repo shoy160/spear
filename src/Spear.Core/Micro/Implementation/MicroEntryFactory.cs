@@ -37,6 +37,8 @@ namespace Spear.Core.Micro.Implementation
                 .ToList();
             foreach (var service in services)
             {
+                if (!HasImpl(service))
+                    continue;
                 var methods = service.GetMethods(BindingFlags.Public | BindingFlags.Instance);
                 foreach (var method in methods)
                 {

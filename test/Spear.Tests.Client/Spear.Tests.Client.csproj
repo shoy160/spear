@@ -1,15 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acb.Core" Version="1.6.1" />
-    <PackageReference Include="BenchmarkDotNet" Version="0.11.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
+    <PackageReference Include="Acb.Core" Version="1.6.8" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+    <PackageReference Include="Google.Protobuf" Version="3.10.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.23.2" />
+    <PackageReference Include="Grpc.Tools" Version="2.24.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0" />
     <PackageReference Include="Microsoft.ML" Version="0.8.0" />
   </ItemGroup>
 
@@ -20,6 +25,10 @@
     <ProjectReference Include="..\..\src\Spear.Protocol.Tcp\Spear.Protocol.Tcp.csproj" />
     <ProjectReference Include="..\..\src\Spear.ProxyGenerator\Spear.ProxyGenerator.csproj" />
     <ProjectReference Include="..\Spear.Tests.Contracts\Spear.Tests.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\greet.proto" GrpcServices="Client" />
   </ItemGroup>
 
   <ItemGroup>

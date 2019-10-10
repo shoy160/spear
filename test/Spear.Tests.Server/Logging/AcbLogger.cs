@@ -1,12 +1,18 @@
-﻿using Acb.Core.Logging;
+﻿using Acb.Core;
+using Acb.Core.Logging;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions.Internal;
 using System;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Spear.Tests.Server.Logging
 {
+    public class NullDisposble : Disposable
+    {
+        private NullDisposble() { }
+        public static NullDisposble Instance => new NullDisposble();
+    }
+
     public class AcbLogger : ILogger
     {
         private readonly Acb.Core.Logging.ILogger _logger;
@@ -50,10 +56,9 @@ namespace Spear.Tests.Server.Logging
             return true;
         }
 
-
         public IDisposable BeginScope<TState>(TState state)
         {
-            return NullScope.Instance;
+            return NullDisposble.Instance;
         }
     }
 }

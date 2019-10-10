@@ -38,7 +38,12 @@
             <param name="flush">清空缓冲池</param>
             <returns>一个任务。</returns>
         </member>
-        <member name="M:Spear.Protocol.Tcp.ServiceCollectionExtensions.AddTcpProtocol(Spear.Core.Micro.IMicroBuilder)">
+        <member name="M:Spear.Protocol.Tcp.ServiceCollectionExtensions.AddTcpProtocol(Spear.Core.Micro.IMicroServerBuilder)">
+            <summary> 使用DotNetty的TCP传输协议 </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Protocol.Tcp.ServiceCollectionExtensions.AddTcpProtocol(Spear.Core.Micro.IMicroClientBuilder)">
             <summary> 使用DotNetty的TCP传输协议 </summary>
             <param name="builder"></param>
             <returns></returns>

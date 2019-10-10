@@ -27,11 +27,12 @@ namespace Spear.Core.Micro.Implementation
         {
             try
             {
-                _logger.LogDebug(JsonConvert.SerializeObject(invokeMessage));
-                var service = _entryFactory.Find(invokeMessage.ServiceId);
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug(JsonConvert.SerializeObject(invokeMessage));
+                var serviceMethod = _entryFactory.Find(invokeMessage.ServiceId);
                 var args = new List<object>();
                 var parameters = invokeMessage.Parameters ?? new Dictionary<string, object>();
-                foreach (var parameter in service.GetParameters())
+                foreach (var parameter in serviceMethod.GetParameters())
                 {
                     if (parameters.ContainsKey(parameter.Name))
                     {
@@ -45,24 +46,30 @@ namespace Spear.Core.Micro.Implementation
                     }
                 }
 
-                var instance = _provider.GetService(service.DeclaringType);
+                var instance = _provider.GetService(serviceMethod.DeclaringType);
 
-                var fastInvoke = FastInvoke.GetMethodInvoker(service);
-                var data = fastInvoke(instance, args.ToArray());
-                //var data = service.Invoke(instance, args.ToArray());
-                if (!(data is Task task))
+                var fastInvoke = FastInvoke.GetMethodInvoker(serviceMethod);
+                if (serviceMethod.ReturnType == typeof(void) || serviceMethod.ReturnType == typeof(Task))
                 {
-                    result.Data = data;
+                    fastInvoke(instance, args.ToArray());
                 }
                 else
                 {
-                    await task;
-                    var taskType = task.GetType().GetTypeInfo();
-                    if (taskType.IsGenericType)
+                    var data = fastInvoke(instance, args.ToArray());
+                    if (!(data is Task task))
                     {
-                        var prop = taskType.GetProperty("Result");
-                        if (prop != null)
-                            result.Data = prop.GetValue(task);
+                        result.Data = data;
+                    }
+                    else
+                    {
+                        await task;
+                        var taskType = task.GetType().GetTypeInfo();
+                        if (taskType.IsGenericType)
+                        {
+                            var prop = taskType.GetProperty("Result");
+                            if (prop != null)
+                                result.Data = prop.GetValue(task);
+                        }
                     }
                 }
             }

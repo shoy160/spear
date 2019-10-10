@@ -73,7 +73,7 @@
             <returns></returns>
         </member>
         <member name="M:Spear.ProxyGenerator.Proxy.AsyncProxyGenerator.GetProxyType(System.Type,System.Type)">
-            <summary> 获取代理类型/// </summary>
+            <summary> 获取代理类型 </summary>
             <param name="baseType"></param>
             <param name="interfaceType"></param>
             <returns></returns>

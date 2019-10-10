@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
 namespace Spear.Core.Micro
@@ -8,7 +9,10 @@ namespace Spear.Core.Micro
         IServiceCollection Services { get; }
     }
 
-    internal sealed class MicroBuilder : IMicroBuilder
+    public interface IMicroClientBuilder : IMicroBuilder { }
+    public interface IMicroServerBuilder : IMicroBuilder { }
+
+    internal sealed class MicroBuilder : IMicroClientBuilder, IMicroServerBuilder
     {
         public MicroBuilder(IServiceCollection services)
         {
@@ -33,10 +37,23 @@ namespace Spear.Core.Micro
             return builder;
         }
 
+        /// <summary> 覆盖 单例 </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TImp"></typeparam>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static IMicroBuilder TryAddSingleton<T, TImp>(this IMicroBuilder builder)
+            where T : class
+            where TImp : class, T
+        {
+            builder.Services.TryAddSingleton<T, TImp>();
+            return builder;
+        }
+
         public static IMicroBuilder AddSingleton<T>(this IMicroBuilder builder, Func<IServiceProvider, T> implementationFunc)
         where T : class
         {
-            builder.Services.AddSingleton(implementationFunc);
+            builder.Services.TryAddSingleton(implementationFunc);
             return builder;
         }
     }

@@ -56,8 +56,5 @@ namespace Spear.Core
                 .SelectMany(p => p.UnicastAddresses).FirstOrDefault(p =>
                     p.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(p.Address))?.Address?.ToString();
         }
-
-        /// <summary> 服务协议 </summary>
-        public static ServiceProtocol Protocol { get; set; }
     }
 }

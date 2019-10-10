@@ -37,7 +37,6 @@ namespace Spear.Protocol.Http
                 .UseKestrel(options =>
                 {
                     options.Listen(endpoint);
-
                 })
                 .ConfigureServices(ConfigureServices)
                 .Configure(AppResolve)

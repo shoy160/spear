@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Spear.Core;
 using Spear.Core.Message;
 using Spear.Core.Micro;
-using Spear.Core.Micro.Services;
 
 namespace Spear.Protocol.Tcp
 {
@@ -12,16 +11,23 @@ namespace Spear.Protocol.Tcp
         /// <summary> 使用DotNetty的TCP传输协议 </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static IMicroBuilder AddTcpProtocol(this IMicroBuilder builder)
+        public static IMicroServerBuilder AddTcpProtocol(this IMicroServerBuilder builder)
         {
-            Constants.Protocol = ServiceProtocol.Tcp;
-            builder.AddSingleton<IMicroClientFactory, DotNettyClientFactory>();
             builder.AddSingleton<IMicroListener>(provider =>
             {
                 var coderFactory = provider.GetService<IMessageCodecFactory>();
                 var logger = provider.GetService<ILogger<DotNettyMicroListener>>();
                 return new DotNettyMicroListener(logger, coderFactory);
             });
+            return builder;
+        }
+
+        /// <summary> 使用DotNetty的TCP传输协议 </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static IMicroClientBuilder AddTcpProtocol(this IMicroClientBuilder builder)
+        {
+            builder.AddSingleton<IMicroClientFactory, DotNettyClientFactory>();
             return builder;
         }
     }

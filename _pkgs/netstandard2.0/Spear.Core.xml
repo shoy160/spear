@@ -22,9 +22,6 @@
             <summary> 获取本地IP </summary>
             <returns></returns>
         </member>
-        <member name="P:Spear.Core.Constants.Protocol">
-            <summary> 服务协议 </summary>
-        </member>
         <member name="F:Spear.Core.Message.ContentTypes.InvokeType">
             <summary> 调用消息类型 </summary>
         </member>
@@ -152,6 +149,13 @@
         </member>
         <member name="P:Spear.Core.Message.ResultMessage.Data">
             <summary> 数据实体 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.MicroBuilderExtentions.TryAddSingleton``2(Spear.Core.Micro.IMicroBuilder)">
+            <summary> 覆盖 单例 </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TImp"></typeparam>
+            <param name="builder"></param>
+            <returns></returns>
         </member>
         <member name="T:Spear.Core.Micro.IMicroClient">
             <summary> 微服务客户端 </summary>
@@ -327,24 +331,25 @@
         <member name="T:Spear.Core.Reflection.ITypeFinder">
             <summary> 类型查找器 </summary>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.AddCoder``1(Spear.Core.Micro.IMicroBuilder)">
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddCoder``2(``0)">
             <summary> 使用编解码器。 </summary>
             <typeparam name="T">编解码器工厂实现类型。</typeparam>
+            <typeparam name="TCodec"></typeparam>
             <param name="builder">服务构建者。</param>
             <returns>服务构建者。</returns>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCoder(Spear.Core.Micro.IMicroBuilder)">
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCoder``1(``0)">
             <summary> 使用Json编解码器。 </summary>
             <param name="builder">服务构建者。</param>
             <returns>服务构建者。</returns>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Spear.Core.Micro.IMicroBuilder})">
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Spear.Core.Micro.IMicroClientBuilder})">
             <summary> 添加微服务客户端 </summary>
             <param name="services"></param>
             <param name="builderAction"></param>
             <returns></returns>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroService(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Spear.Core.Micro.IMicroBuilder})">
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroService(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Spear.Core.Micro.IMicroServerBuilder})">
             <summary> 添加微服务 </summary>
             <param name="services"></param>
             <param name="builderAction"></param>

@@ -16,13 +16,13 @@ namespace Spear.Tests.Server.Services
 
         public async Task Notice(string name)
         {
-            _logger.LogInformation($"{DateTime.Now:u} -> get name:{name}");
+            _logger.LogInformation($"{DateTime.Now:u} -> notify name:{name}");
             await Task.CompletedTask;
         }
 
         public async Task<string> Get(string name)
         {
-            return await Task.FromResult($"your name:{name}");
+            return await Task.FromResult($"get name:{name}");
         }
     }
 }

@@ -8,34 +8,27 @@ namespace Spear.ProxyGenerator
     {
         public delegate object FastInvokeHandler(object target, object[] paramters);
 
-
-        static object InvokeMethod(FastInvokeHandler invoke, object target, params object[] paramters)
-        {
-
-            return invoke(null, paramters);
-
-        }
-
         public static FastInvokeHandler GetMethodInvoker(MethodInfo methodInfo)
         {
-            var dynamicMethod = new DynamicMethod(string.Empty, typeof(object), new Type[] { typeof(object), typeof(object[]) }, methodInfo.DeclaringType.Module);
+            var dynamicMethod = new DynamicMethod(string.Empty, typeof(object),
+                new[] { typeof(object), typeof(object[]) }, methodInfo.DeclaringType?.Module);
             var il = dynamicMethod.GetILGenerator();
             var ps = methodInfo.GetParameters();
             var paramTypes = new Type[ps.Length];
-            for (int i = 0; i < paramTypes.Length; i++)
+            for (var i = 0; i < paramTypes.Length; i++)
             {
                 if (ps[i].ParameterType.IsByRef)
                     paramTypes[i] = ps[i].ParameterType.GetElementType();
                 else
                     paramTypes[i] = ps[i].ParameterType;
             }
-            LocalBuilder[] locals = new LocalBuilder[paramTypes.Length];
+            var locals = new LocalBuilder[paramTypes.Length];
 
-            for (int i = 0; i < paramTypes.Length; i++)
+            for (var i = 0; i < paramTypes.Length; i++)
             {
                 locals[i] = il.DeclareLocal(paramTypes[i], true);
             }
-            for (int i = 0; i < paramTypes.Length; i++)
+            for (var i = 0; i < paramTypes.Length; i++)
             {
                 il.Emit(OpCodes.Ldarg_1);
                 EmitFastInt(il, i);
@@ -47,7 +40,7 @@ namespace Spear.ProxyGenerator
             {
                 il.Emit(OpCodes.Ldarg_0);
             }
-            for (int i = 0; i < paramTypes.Length; i++)
+            for (var i = 0; i < paramTypes.Length; i++)
             {
                 if (ps[i].ParameterType.IsByRef)
                     il.Emit(OpCodes.Ldloca_S, locals[i]);
@@ -77,7 +70,7 @@ namespace Spear.ProxyGenerator
             }
 
             il.Emit(OpCodes.Ret);
-            FastInvokeHandler invoder = (FastInvokeHandler)dynamicMethod.CreateDelegate(typeof(FastInvokeHandler));
+            var invoder = (FastInvokeHandler)dynamicMethod.CreateDelegate(typeof(FastInvokeHandler));
             return invoder;
         }
 

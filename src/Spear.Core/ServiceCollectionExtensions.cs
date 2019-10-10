@@ -47,20 +47,23 @@ namespace Spear.Core
 
         /// <summary> 使用编解码器。 </summary>
         /// <typeparam name="T">编解码器工厂实现类型。</typeparam>
+        /// <typeparam name="TCodec"></typeparam>
         /// <param name="builder">服务构建者。</param>
         /// <returns>服务构建者。</returns>
-        public static IMicroBuilder AddCoder<T>(this IMicroBuilder builder) where T : class, IMessageCodecFactory
+        public static T AddCoder<T, TCodec>(this T builder)
+            where T : IMicroBuilder
+            where TCodec : class, IMessageCodecFactory
         {
-            builder.AddSingleton<IMessageCodecFactory, T>();
+            builder.TryAddSingleton<IMessageCodecFactory, TCodec>();
             return builder;
         }
 
         /// <summary> 使用Json编解码器。 </summary>
         /// <param name="builder">服务构建者。</param>
         /// <returns>服务构建者。</returns>
-        public static IMicroBuilder AddJsonCoder(this IMicroBuilder builder)
+        public static T AddJsonCoder<T>(this T builder) where T : IMicroBuilder
         {
-            builder.AddCoder<JsonMessageCodecFactory>();
+            builder.AddCoder<T, JsonMessageCodecFactory>();
             return builder;
         }
 
@@ -68,7 +71,7 @@ namespace Spear.Core
         /// <param name="services"></param>
         /// <param name="builderAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddMicroClient(this IServiceCollection services, Action<IMicroBuilder> builderAction)
+        public static IServiceCollection AddMicroClient(this IServiceCollection services, Action<IMicroClientBuilder> builderAction)
         {
             var builder = new MicroBuilder(services);
             builderAction.Invoke(builder);
@@ -80,7 +83,7 @@ namespace Spear.Core
         /// <param name="services"></param>
         /// <param name="builderAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddMicroService(this IServiceCollection services, Action<IMicroBuilder> builderAction)
+        public static IServiceCollection AddMicroService(this IServiceCollection services, Action<IMicroServerBuilder> builderAction)
         {
             var builder = new MicroBuilder(services);
             builderAction.Invoke(builder);

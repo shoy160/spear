@@ -15,13 +15,8 @@ namespace Spear.Consul
         /// <param name="builder"></param>
         /// <param name="option"></param>
         /// <returns></returns>
-        public static IMicroBuilder AddConsul(this IMicroBuilder builder, ConsulOption option)
+        public static IMicroClientBuilder AddConsul(this IMicroClientBuilder builder, ConsulOption option)
         {
-            builder.Services.AddSingleton<IServiceRegister>(provider =>
-            {
-                var logger = provider.GetService<ILogger<ConsulServiceRegister>>();
-                return new ConsulServiceRegister(logger, option.Server, option.Token);
-            });
             builder.Services.AddMemoryCache();
             builder.Services.AddSingleton<IServiceFinder>(provider =>
             {
@@ -31,24 +26,52 @@ namespace Spear.Consul
             return builder;
         }
 
+        /// <summary>
+        /// 使用Consul作为服务注册和发现的组件
+        /// 读取配置：micro:consul
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="option"></param>
+        /// <returns></returns>
+        public static IMicroServerBuilder AddConsul(this IMicroServerBuilder builder, ConsulOption option)
+        {
+            builder.Services.AddSingleton<IServiceRegister>(provider =>
+            {
+                var logger = provider.GetService<ILogger<ConsulServiceRegister>>();
+                return new ConsulServiceRegister(logger, option.Server, option.Token);
+            });
+            return builder;
+        }
+
         /// <summary> 使用Consul作为服务注册和发现的组件 </summary>
         /// <param name="builder"></param>
         /// <param name="server"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static IMicroBuilder AddConsul(this IMicroBuilder builder, string server,
+        public static IMicroClientBuilder AddConsul(this IMicroClientBuilder builder, string server,
+            string token = null)
+        {
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSingleton<IServiceFinder>(provider =>
+            {
+                var cache = provider.GetService<IMemoryCache>();
+                return new ConsulServiceFinder(cache, server, token);
+            });
+            return builder;
+        }
+
+        /// <summary> 使用Consul作为服务注册和发现的组件 </summary>
+        /// <param name="builder"></param>
+        /// <param name="server"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static IMicroServerBuilder AddConsul(this IMicroServerBuilder builder, string server,
             string token = null)
         {
             builder.Services.AddSingleton<IServiceRegister>(provider =>
             {
                 var logger = provider.GetService<ILogger<ConsulServiceRegister>>();
                 return new ConsulServiceRegister(logger, server, token);
-            });
-            builder.Services.AddMemoryCache();
-            builder.Services.AddSingleton<IServiceFinder>(provider =>
-            {
-                var cache = provider.GetService<IMemoryCache>();
-                return new ConsulServiceFinder(cache, server, token);
             });
             return builder;
         }

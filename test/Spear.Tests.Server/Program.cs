@@ -23,7 +23,7 @@ namespace Spear.Tests.Server
             var port = -1;
             if (args.Length > 0)
                 int.TryParse(args[0], out port);
-            var protocol = ServiceProtocol.Tcp;
+            var protocol = ServiceProtocol.Http;
             if (args.Length > 1)
                 Enum.TryParse(args[1], out protocol);
             var configBuilder = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -46,9 +46,10 @@ namespace Spear.Tests.Server
                         break;
                 }
             });
-            services.AddTransient<ITestContract, TestService>();
+            services.AddSingleton<ITestContract, TestService>();
             services.AddLogging(builder =>
             {
+                builder.SetMinimumLevel(LogLevel.Information);
                 builder.AddConsole();
                 //builder.AddAcb();
             });

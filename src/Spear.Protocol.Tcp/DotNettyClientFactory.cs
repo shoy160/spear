@@ -95,8 +95,8 @@ namespace Spear.Protocol.Tcp
                         var sender = new DotNettyClientSender(_codecFactory.GetEncoder(), channel);
                         channel.GetAttribute(ListenerKey).Set(listener);
                         channel.GetAttribute(SenderKey).Set(sender);
-
                         channel.GetAttribute(ServiceAddressKey).Set(serviceAddress);
+
                         return new MicroClient(_logger, sender, listener, _microExecutor);
                     }
                 ));

@@ -23,16 +23,16 @@ namespace Spear.Tests.Client
         public static void Start(params string[] args)
         {
             var services = new ServiceCollection()
-                .AddMicroClient(opt =>
+                .AddMicroClient(builder =>
                 {
-                    opt.AddJsonCoder()
+                    builder.AddJsonCoder()
                         .AddHttpProtocol()
                         .AddTcpProtocol()
                         .AddConsul("http://192.168.0.231:8500");
                 });
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Information);
+                builder.SetMinimumLevel(LogLevel.Warning);
                 builder.AddConsole();
             });
             services.AddSingleton<DefaultAdapter>();
@@ -80,25 +80,25 @@ namespace Spear.Tests.Client
                     var service = proxy.Create<ITestContract>();
 
                     var result = await CodeTimer.Time("micro test", repeat, async () =>
-                     {
-                         try
-                         {
-                             if (isNotice)
-                             {
-                                 await service.Notice(message);
-                             }
-                             else
-                             {
-                                 var msg = await service.Get(message);
-                                 logger.LogInformation(msg);
-                             }
-                         }
-                         catch (Exception ex)
-                         {
-                             logger.LogError(ex, ex.Message);
-                             throw;
-                         }
-                     }, thread);
+                    {
+                        try
+                        {
+                            if (isNotice)
+                            {
+                                await service.Notice(message);
+                            }
+                            else
+                            {
+                                var msg = await service.Get(message);
+                                logger.LogInformation(msg);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, ex.Message);
+                            throw;
+                        }
+                    }, thread);
                     Console.WriteLine(result.ToString());
                 });
             }

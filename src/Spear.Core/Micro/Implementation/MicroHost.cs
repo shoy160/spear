@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Spear.Core.Micro.Services;
 using System;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Spear.Core.Micro.Implementation
@@ -10,6 +11,7 @@ namespace Spear.Core.Micro.Implementation
         private readonly IServiceRegister _serviceRegister;
         private readonly IMicroEntryFactory _entryFactory;
         private readonly ILogger<MicroHost> _logger;
+        private readonly ServiceProtocol _protocol;
 
         public MicroHost(ILogger<MicroHost> logger, IMicroExecutor serviceExecutor, IMicroListener microListener,
             IServiceRegister serviceRegister, IMicroEntryFactory entryFactory)
@@ -18,6 +20,9 @@ namespace Spear.Core.Micro.Implementation
             _serviceRegister = serviceRegister;
             _entryFactory = entryFactory;
             _logger = logger;
+            var protocol = microListener.GetType().GetCustomAttribute<ProtocolAttribute>();
+            if (protocol != null)
+                _protocol = protocol.Protocol;
         }
 
         public override void Dispose()
@@ -45,7 +50,7 @@ namespace Spear.Core.Micro.Implementation
             }
 
             var assemblies = _entryFactory.GetServices();
-            serviceAddress.Protocol = Constants.Protocol;
+            serviceAddress.Protocol = _protocol;
             return _serviceRegister.Regist(assemblies, serviceAddress);
         }
 
