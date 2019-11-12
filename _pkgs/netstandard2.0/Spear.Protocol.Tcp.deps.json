@@ -7,12 +7,12 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Spear.Protocol.Tcp/0.1.2": {
+      "Spear.Protocol.Tcp/0.1.3": {
         "dependencies": {
           "DotNetty.Codecs": "0.6.0",
           "Microsoft.Extensions.Logging.Abstractions": "3.0.0",
           "NETStandard.Library": "2.0.3",
-          "Spear.Core": "0.1.2"
+          "Spear.Core": "0.1.3"
         },
         "runtime": {
           "Spear.Protocol.Tcp.dll": {}
@@ -697,14 +697,14 @@
           }
         }
       },
-      "Spear.Core/0.1.2": {
+      "Spear.Core/0.1.3": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.0.0",
           "Microsoft.Extensions.DependencyModel": "3.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "3.0.0",
           "Newtonsoft.Json": "12.0.2",
           "Polly": "7.1.1",
-          "Spear.ProxyGenerator": "0.1.2",
+          "Spear.ProxyGenerator": "0.1.3",
           "System.Reflection.Emit": "4.6.0",
           "System.Runtime.Loader": "4.3.0"
         },
@@ -712,7 +712,7 @@
           "Spear.Core.dll": {}
         }
       },
-      "Spear.ProxyGenerator/0.1.2": {
+      "Spear.ProxyGenerator/0.1.3": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.0.0",
           "System.Reflection.Emit": "4.6.0",
@@ -725,7 +725,7 @@
     }
   },
   "libraries": {
-    "Spear.Protocol.Tcp/0.1.2": {
+    "Spear.Protocol.Tcp/0.1.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1178,12 +1178,12 @@
       "path": "system.threading.threadpool/4.3.0",
       "hashPath": "system.threading.threadpool.4.3.0.nupkg.sha512"
     },
-    "Spear.Core/0.1.2": {
+    "Spear.Core/0.1.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Spear.ProxyGenerator/0.1.2": {
+    "Spear.ProxyGenerator/0.1.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

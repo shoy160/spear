@@ -343,6 +343,26 @@
             <param name="builder">服务构建者。</param>
             <returns>服务构建者。</returns>
         </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddSession(Spear.Core.Micro.IMicroClientBuilder)">
+            <summary> 使用Session。 </summary>
+            <param name="builder">服务构建者。</param>
+            <returns>服务构建者。</returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddSession``1(Spear.Core.Micro.IMicroClientBuilder)">
+            <summary> 使用Session。 </summary>
+            <param name="builder">服务构建者。</param>
+            <returns>服务构建者。</returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddSession(Spear.Core.Micro.IMicroServerBuilder)">
+            <summary> 使用Session。 </summary>
+            <param name="builder">服务构建者。</param>
+            <returns>服务构建者。</returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddSession``1(Spear.Core.Micro.IMicroServerBuilder)">
+            <summary> 使用Session。 </summary>
+            <param name="builder">服务构建者。</param>
+            <returns>服务构建者。</returns>
+        </member>
         <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Spear.Core.Micro.IMicroClientBuilder})">
             <summary> 添加微服务客户端 </summary>
             <param name="services"></param>
@@ -367,6 +387,88 @@
             <param name="provider"></param>
             <param name="addressAction"></param>
             <returns></returns>
+        </member>
+        <member name="P:Spear.Core.Session.IMicroSession.UserId">
+            <summary> 用户ID </summary>
+        </member>
+        <member name="P:Spear.Core.Session.IMicroSession.TenantId">
+            <summary> 租户ID </summary>
+        </member>
+        <member name="P:Spear.Core.Session.IMicroSession.UserName">
+            <summary> 用户名 </summary>
+        </member>
+        <member name="P:Spear.Core.Session.IMicroSession.Role">
+            <summary> 角色 </summary>
+        </member>
+        <member name="P:Spear.Core.Session.IMicroSession.TenancySides">
+            <summary> 多租户类型 </summary>
+        </member>
+        <member name="M:Spear.Core.Session.IMicroSession.Use(Spear.Core.Session.MicroSessionDto)">
+            <summary> 使用租户 </summary>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Session.MicroSessionExtensions.GetUserId``1(Spear.Core.Session.IMicroSession,``0)">
+            <summary> 获取UserId </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"></param>
+            <param name="def"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Session.MicroSessionExtensions.GetTenantId``1(Spear.Core.Session.IMicroSession,``0)">
+            <summary> 获取TenantId </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"></param>
+            <param name="def"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Session.MicroSessionExtensions.GetRequiredUserId``1(Spear.Core.Session.IMicroSession)">
+            <summary> 获取必须的UserId(没有将抛出异常) </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Session.MicroSessionExtensions.GetRequiredTenantId``1(Spear.Core.Session.IMicroSession)">
+            <summary> 获取必须的TenantId(如果没有将抛出异常) </summary>
+            <typeparam name="T"></typeparam>
+            <param name="session"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Core.Session.MicroClaimTypes.UserName">
+            <summary>
+            UserId.
+            Default: <see cref="F:System.Security.Claims.ClaimTypes.Name"/>
+            </summary>
+        </member>
+        <member name="P:Spear.Core.Session.MicroClaimTypes.UserId">
+            <summary>
+            UserId.
+            Default: <see cref="F:System.Security.Claims.ClaimTypes.NameIdentifier"/>
+            </summary>
+        </member>
+        <member name="P:Spear.Core.Session.MicroClaimTypes.Role">
+            <summary>
+            UserId.
+            Default: <see cref="F:System.Security.Claims.ClaimTypes.Role"/>
+            </summary>
+        </member>
+        <member name="P:Spear.Core.Session.MicroClaimTypes.TenantId">
+            <summary>
+            TenantId.
+            Default: http://www.acb.com/identity/claims/tenantId
+            </summary>
+        </member>
+        <member name="P:Spear.Core.Session.MicroSessionDto.UserId">
+            <summary> 用户ID </summary>
+        </member>
+        <member name="P:Spear.Core.Session.MicroSessionDto.TenantId">
+            <summary> 租户ID </summary>
+        </member>
+        <member name="P:Spear.Core.Session.MicroSessionDto.UserName">
+            <summary> 用户名 </summary>
+        </member>
+        <member name="P:Spear.Core.Session.MicroSessionDto.Role">
+            <summary> 角色 </summary>
         </member>
         <member name="M:Spear.Core.SpearExtensions.RandomSort``1(System.Collections.Generic.IEnumerable{``0})">
             <summary> 随机排序 </summary>
@@ -416,6 +518,22 @@
             <param name="obj"></param>
             <param name="conversionType"></param>
             <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Tenant.ITenantResolver">
+            <summary> 租户解析器 </summary>
+        </member>
+        <member name="M:Spear.Core.Tenant.ITenantResolver.ResolveTenantId">
+            <summary> 获取租户ID </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Tenant.TenancySides">
+            <summary> 租户站点类型 </summary>
+        </member>
+        <member name="F:Spear.Core.Tenant.TenancySides.Tenant">
+            <summary> 租户 </summary>
+        </member>
+        <member name="F:Spear.Core.Tenant.TenancySides.Host">
+            <summary> 主机 </summary>
         </member>
     </members>
 </doc>
