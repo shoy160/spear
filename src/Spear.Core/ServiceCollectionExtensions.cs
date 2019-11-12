@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 using Spear.Core.Micro;
@@ -6,6 +7,8 @@ using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Core.Proxy;
 using Spear.Core.Reflection;
+using Spear.Core.Session;
+using Spear.Core.Session.Impl;
 using Spear.ProxyGenerator;
 using System;
 using System.Linq;
@@ -64,6 +67,50 @@ namespace Spear.Core
         public static T AddJsonCoder<T>(this T builder) where T : IMicroBuilder
         {
             builder.AddCoder<T, JsonMessageCodecFactory>();
+            return builder;
+        }
+
+        /// <summary> 使用Session。 </summary>
+        /// <param name="builder">服务构建者。</param>
+        /// <returns>服务构建者。</returns>
+        public static IMicroClientBuilder AddSession(this IMicroClientBuilder builder)
+        {
+            //Session
+            builder.AddSession<DefaultPrincipalAccessor>();
+            return builder;
+        }
+
+        /// <summary> 使用Session。 </summary>
+        /// <param name="builder">服务构建者。</param>
+        /// <returns>服务构建者。</returns>
+        public static IMicroClientBuilder AddSession<T>(this IMicroClientBuilder builder)
+            where T : class, IPrincipalAccessor
+        {
+            //Session
+            builder.Services.AddScoped<IPrincipalAccessor, T>();
+            builder.Services.AddScoped<IMicroSession, ClaimMicroSession>();
+            return builder;
+        }
+
+        /// <summary> 使用Session。 </summary>
+        /// <param name="builder">服务构建者。</param>
+        /// <returns>服务构建者。</returns>
+        public static IMicroServerBuilder AddSession(this IMicroServerBuilder builder)
+        {
+            //Session
+            builder.AddSession<DefaultPrincipalAccessor>();
+            return builder;
+        }
+
+        /// <summary> 使用Session。 </summary>
+        /// <param name="builder">服务构建者。</param>
+        /// <returns>服务构建者。</returns>
+        public static IMicroServerBuilder AddSession<T>(this IMicroServerBuilder builder)
+            where T : class, IPrincipalAccessor
+        {
+            //Session
+            builder.Services.AddScoped<IPrincipalAccessor, T>();
+            builder.Services.AddScoped<IMicroSession, ClaimMicroSession>();
             return builder;
         }
 

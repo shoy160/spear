@@ -1,10 +1,13 @@
 ﻿using Acb.Core.Extensions;
+using Acb.Core.Helper;
 using Acb.Core.Logging;
 using Acb.Core.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Consul;
 using Spear.Core;
+using Spear.Core.Micro;
+using Spear.Core.Session;
 using Spear.Protocol.Http;
 using Spear.Protocol.Tcp;
 using Spear.ProxyGenerator;
@@ -26,13 +29,14 @@ namespace Spear.Tests.Client
                 .AddMicroClient(builder =>
                 {
                     builder.AddJsonCoder()
+                        .AddSession()
                         .AddHttpProtocol()
                         .AddTcpProtocol()
                         .AddConsul("http://192.168.0.231:8500");
                 });
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Warning);
+                builder.SetMinimumLevel(LogLevel.Debug);
                 builder.AddConsole();
             });
             services.AddSingleton<DefaultAdapter>();
@@ -78,18 +82,41 @@ namespace Spear.Tests.Client
                 {
                     var proxy = provider.GetService<IProxyFactory>();
                     var service = proxy.Create<ITestContract>();
+                    //if (message.StartsWith("s"))
+                    //{
+                    //    var accessor = provider.GetService<IPrincipalAccessor>();
+                    //    accessor.SetSession(new MicroSessionDto
+                    //    {
+                    //        UserId = RandomHelper.Random().Next(10000, 99999),
+                    //        UserName = RandomHelper.RandomLetters(5),
+                    //        Role = "admin"
+                    //    });
+                    //}
 
                     var result = await CodeTimer.Time("micro test", repeat, async () =>
                     {
                         try
                         {
+                            var name = RandomHelper.RandomLetters(5);
+                            var m = $"hello {name}";
+                            if (RandomHelper.Random().Next(10) > 5)
+                            {
+                                m += " loged";
+                                var accessor = provider.GetService<IPrincipalAccessor>();
+                                accessor.SetSession(new MicroSessionDto
+                                {
+                                    UserId = name,
+                                    UserName = name,
+                                    Role = name
+                                });
+                            }
                             if (isNotice)
                             {
-                                await service.Notice(message);
+                                await service.Notice(m);
                             }
                             else
                             {
-                                var msg = await service.Get(message);
+                                var msg = await service.Get(m);
                                 logger.LogInformation(msg);
                             }
                         }

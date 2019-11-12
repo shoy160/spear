@@ -35,6 +35,7 @@ namespace Spear.Tests.Server
             {
                 builder
                     .AddJsonCoder()
+                    .AddSession()
                     .AddConsul(root.GetSection("micro:consul").Get<ConsulOption>());
                 switch (protocol)
                 {

@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Spear.Core.Message;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
+using Spear.Core.Session;
 using Spear.ProxyGenerator;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Spear.Core.Proxy
 {
@@ -49,7 +52,7 @@ namespace Spear.Core.Proxy
             var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>()).ToList();
             if (!services.Any())
             {
-                throw new SpearException("没有可用的服务");
+                throw new SpearException("没有可用的服务", 20001);
             }
             var invokeMessage = Create(targetMethod, args);
             ServiceAddress service = null;
@@ -73,7 +76,7 @@ namespace Spear.Core.Proxy
             {
                 if (!services.Any())
                 {
-                    throw new SpearException("没有可用的服务");
+                    throw new SpearException("没有可用的服务", 20001);
                 }
 
                 service = services.RandomSort().First();
@@ -82,15 +85,30 @@ namespace Spear.Core.Proxy
             });
         }
 
-        private static InvokeMessage Create(MethodInfo targetMethod, IDictionary<string, object> args)
+        private InvokeMessage Create(MethodInfo targetMethod, IDictionary<string, object> args)
         {
             var remoteIp = Constants.LocalIp();
             var headers = new Dictionary<string, string>
             {
-                {"X-Forwarded-For", remoteIp},
-                {"X-Real-IP", remoteIp},
-                {"User-Agent", "spear-client"}
+                {MicroClaimTypes.HeaderForward, remoteIp},
+                {MicroClaimTypes.HeaderRealIp, remoteIp},
+                {MicroClaimTypes.HeaderUserAgent, "spear-client"}
+                //{MicroClaimTypes.HeaderReferer, string.Empty}
             };
+            var session = _provider.GetService<IMicroSession>();
+            if (session != null)
+            {
+                if (session.UserId != null)
+                {
+                    headers.Add(MicroClaimTypes.HeaderUserId, session.GetUserId<string>());
+                    headers.Add(MicroClaimTypes.HeaderUserName,
+                        HttpUtility.UrlEncode(session.UserName ?? string.Empty));
+                    headers.Add(MicroClaimTypes.HeaderRole, HttpUtility.UrlEncode(session.Role ?? string.Empty));
+                }
+
+                if (session.TenantId != null)
+                    headers.Add(MicroClaimTypes.HeaderTenantId, session.GetTenantId<string>());
+            }
             var serviceId = targetMethod.ServiceKey();
             var invokeMessage = new InvokeMessage
             {

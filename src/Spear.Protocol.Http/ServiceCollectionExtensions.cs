@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Spear.Core;
 using Spear.Core.Message;
 using Spear.Core.Micro;
-using Spear.Core.Micro.Implementation;
-using Spear.Core.Micro.Services;
 
 namespace Spear.Protocol.Http
 {
@@ -24,6 +23,8 @@ namespace Spear.Protocol.Http
         /// <returns></returns>
         public static IMicroServerBuilder AddHttpProtocol(this IMicroServerBuilder builder)
         {
+            builder.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.AddSession<HttpPrincipalAccessor>();
             builder.AddSingleton<IMicroListener>(provider =>
             {
                 var coderFactory = provider.GetService<IMessageCodecFactory>();
