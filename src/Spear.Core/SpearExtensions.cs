@@ -1,22 +1,47 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Spear.Core.Config;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Spear.Core
 {
-    internal static class SpearExtensions
+    public static class SpearExtensions
     {
         private const string IpRegex = @"^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$";
+
+        private static readonly List<Type> SimpleTypes = new List<Type>
+        {
+            typeof(byte),
+            typeof(sbyte),
+            typeof(short),
+            typeof(ushort),
+            typeof(int),
+            typeof(uint),
+            typeof(long),
+            typeof(ulong),
+            typeof(float),
+            typeof(double),
+            typeof(decimal),
+            typeof(bool),
+            typeof(string),
+            typeof(char),
+            typeof(Guid),
+            typeof(DateTime),
+            typeof(DateTimeOffset),
+            typeof(byte[])
+        };
 
         public static bool IsIp(this string str)
         {
             return !string.IsNullOrWhiteSpace(str) && Regex.IsMatch(str, IpRegex);
         }
 
-        
+
 
         /// <summary> 随机排序 </summary>
         /// <typeparam name="T"></typeparam>
@@ -80,6 +105,15 @@ namespace Spear.Core
             if (!IsNullableType(type)) return type;
             var nullableConverter = new NullableConverter(type);
             return nullableConverter.UnderlyingType;
+        }
+
+        /// <summary> 是否是简单类型 </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsSimpleType(this Type type)
+        {
+            var actualType = type.GetUnNullableType();
+            return SimpleTypes.Contains(actualType);
         }
 
         /// <summary>
@@ -157,6 +191,76 @@ namespace Spear.Core
             catch
             {
                 return null;
+            }
+        }
+
+        /// <summary> 获取环境变量 </summary>
+        /// <param name="name">变量名称</param>
+        /// <param name="target">存储目标</param>
+        /// <returns></returns>
+        public static string Env(this string name, EnvironmentVariableTarget? target = null)
+        {
+            return target.HasValue
+                ? Environment.GetEnvironmentVariable(name, target.Value)
+                : Environment.GetEnvironmentVariable(name);
+        }
+
+        /// <summary> 获取环境变量 </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="name">变量名称</param>
+        /// <param name="def">默认值</param>
+        /// <param name="target">存储目标</param>
+        /// <returns></returns>
+        public static T Env<T>(this string name, T def = default(T), EnvironmentVariableTarget? target = null)
+        {
+            var env = name.Env(target);
+            return string.IsNullOrWhiteSpace(env) ? def : env.CastTo(def);
+        }
+
+        /// <summary> 读取配置文件 </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="configName"></param>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        public static T Config<T>(this string configName, T def = default)
+        {
+            var helper = ConfigManager.Instance;
+            return helper.Get(configName, def);
+        }
+
+        public static T Const<T>(this string key, T def = default)
+        {
+            return string.IsNullOrWhiteSpace(key) ? def : $"const:{key}".Config(def);
+        }
+
+        public static string Site(this string site)
+        {
+            return string.IsNullOrWhiteSpace(site) ? string.Empty : $"sites:{site}".Config<string>();
+        }
+
+        public static string Site(this Enum site)
+        {
+            return $"sites:{site}".Config<string>();
+        }
+
+        /// <summary> 使用本地文件配置 </summary>
+        public static void UseLocal(this ConfigManager manager, string configDir)
+        {
+            if (string.IsNullOrWhiteSpace(configDir))
+                return;
+            configDir = Path.Combine(Directory.GetCurrentDirectory(), configDir);
+            if (!Directory.Exists(configDir))
+                return;
+            var jsons = Directory.GetFiles(configDir, "*.json");
+            if (jsons.Any())
+            {
+                manager.Build(b =>
+                {
+                    foreach (var json in jsons)
+                    {
+                        b.AddJsonFile(json, false, true);
+                    }
+                });
             }
         }
     }

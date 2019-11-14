@@ -7,6 +7,7 @@ namespace Spear.Core
     [AttributeUsage(AttributeTargets.Class)]
     public class ProtocolAttribute : Attribute
     {
+        /// <summary> 协议 </summary>
         public ServiceProtocol Protocol { get; }
 
         public ProtocolAttribute(ServiceProtocol protocol)

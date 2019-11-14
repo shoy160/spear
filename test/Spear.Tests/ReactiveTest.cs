@@ -1,15 +1,14 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Spear.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class ReactiveTest
     {
         [TestMethod]
         public void TestMethod1()

@@ -19,18 +19,31 @@ namespace Spear.Core
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary> 获取服务 </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="provider"></param>
+        /// <param name="protocol"></param>
+        /// <returns></returns>
         public static T GetService<T>(this IServiceProvider provider, ServiceProtocol protocol)
         {
             var list = provider.GetServices<T>();
             return list.First(t => t.GetType().GetCustomAttribute<ProtocolAttribute>()?.Protocol == protocol);
         }
 
+        /// <summary> 获取服务 </summary>
+        /// <param name="provider"></param>
+        /// <param name="type"></param>
+        /// <param name="protocol"></param>
+        /// <returns></returns>
         public static object GetService(this IServiceProvider provider, Type type, ServiceProtocol protocol)
         {
             var list = provider.GetServices(type);
             return list.First(t => t.GetType().GetCustomAttribute<ProtocolAttribute>()?.Protocol == protocol);
         }
 
+        /// <summary> 获取服务主键 </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
         public static string ServiceKey(this MethodInfo method)
         {
             var key = string.Empty;
@@ -87,8 +100,8 @@ namespace Spear.Core
             where T : class, IPrincipalAccessor
         {
             //Session
-            builder.Services.AddScoped<IPrincipalAccessor, T>();
-            builder.Services.AddScoped<IMicroSession, ClaimMicroSession>();
+            builder.AddScoped<IPrincipalAccessor, T>();
+            builder.AddScoped<IMicroSession, ClaimMicroSession>();
             return builder;
         }
 
@@ -109,8 +122,8 @@ namespace Spear.Core
             where T : class, IPrincipalAccessor
         {
             //Session
-            builder.Services.AddScoped<IPrincipalAccessor, T>();
-            builder.Services.AddScoped<IMicroSession, ClaimMicroSession>();
+            builder.AddScoped<IPrincipalAccessor, T>();
+            builder.AddScoped<IMicroSession, ClaimMicroSession>();
             return builder;
         }
 
@@ -118,10 +131,9 @@ namespace Spear.Core
         /// <param name="services"></param>
         /// <param name="builderAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddMicroClient(this IServiceCollection services, Action<IMicroClientBuilder> builderAction)
+        public static IServiceCollection AddMicroClient(this IMicroClientBuilder services, Action<IMicroClientBuilder> builderAction)
         {
-            var builder = new MicroBuilder(services);
-            builderAction.Invoke(builder);
+            builderAction.Invoke(services);
             services.AddProxy<ClientProxy>();
             return services;
         }
@@ -130,10 +142,9 @@ namespace Spear.Core
         /// <param name="services"></param>
         /// <param name="builderAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddMicroService(this IServiceCollection services, Action<IMicroServerBuilder> builderAction)
+        public static IServiceCollection AddMicroService(this IMicroServerBuilder services, Action<IMicroServerBuilder> builderAction)
         {
-            var builder = new MicroBuilder(services);
-            builderAction.Invoke(builder);
+            builderAction.Invoke(services);
             services.AddSingleton<IAssemblyFinder, DefaultAssemblyFinder>();
             services.AddSingleton<ITypeFinder, DefaultTypeFinder>();
             services.AddSingleton<IMicroEntryFactory, MicroEntryFactory>();

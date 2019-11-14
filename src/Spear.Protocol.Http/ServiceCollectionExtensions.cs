@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Spear.Core;
 using Spear.Core.Message;
 using Spear.Core.Micro;
@@ -13,7 +14,7 @@ namespace Spear.Protocol.Http
         /// <returns></returns>
         public static IMicroClientBuilder AddHttpProtocol(this IMicroClientBuilder builder)
         {
-            builder.Services.AddHttpClient();
+            builder.AddHttpClient();
             builder.AddSingleton<IMicroClientFactory, HttpClientFactory>();
             return builder;
         }

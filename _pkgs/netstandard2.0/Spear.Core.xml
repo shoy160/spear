@@ -4,6 +4,62 @@
         <name>Spear.Core</name>
     </assembly>
     <members>
+        <member name="T:Spear.Core.Config.ConfigManager">
+            <summary> 配置管理器 </summary>
+        </member>
+        <member name="E:Spear.Core.Config.ConfigManager.ConfigChanged">
+            <summary> 配置文件变更事件 </summary>
+        </member>
+        <member name="P:Spear.Core.Config.ConfigManager.Config">
+            <summary> 当前配置 </summary>
+        </member>
+        <member name="P:Spear.Core.Config.ConfigManager.Instance">
+            <summary> 单例 </summary>
+        </member>
+        <member name="M:Spear.Core.Config.ConfigManager.Build(System.Action{Microsoft.Extensions.Configuration.IConfigurationBuilder})">
+            <summary> 构建配置 </summary>
+            <param name="builderAction"></param>
+        </member>
+        <member name="M:Spear.Core.Config.ConfigManager.Get``1(``0,System.String,System.String)">
+            <summary> 配置文件读取 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="defaultValue">默认值</param>
+            <param name="key">配置名</param>
+            <param name="supressKey">配置别名</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Config.ConfigManager.Reload">
+            <summary> 重新加载配置 </summary>
+        </member>
+        <member name="M:Spear.Core.Config.ConfigManager.UseLocal(System.String)">
+            <summary> 使用本地文件配置 </summary>
+        </member>
+        <member name="T:Spear.Core.Config.DConfigProvider">
+            <summary> 基础配置提供者 </summary>
+        </member>
+        <member name="F:Spear.Core.Config.DConfigProvider.Logger">
+            <summary> 日志 </summary>
+        </member>
+        <member name="M:Spear.Core.Config.DConfigProvider.ConvertKey(System.String)">
+            <summary> 键转换 </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Config.DConfigProvider.LoadJson(System.String,System.Boolean)">
+            <summary> 加载配置 </summary>
+            <param name="json"></param>
+            <param name="clean"></param>
+        </member>
+        <member name="M:Spear.Core.Config.JsonConfigurationParser.Parse(System.String)">
+            <summary> 转换Json字符 </summary>
+            <param name="json"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Config.JsonConfigurationParser.Parse(System.IO.Stream)">
+            <summary> 转换json流 </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
         <member name="M:Spear.Core.Constants.Md5(System.String,System.Text.Encoding)">
             <summary> MD5加密 </summary>
             <param name="data">数据</param>
@@ -303,6 +359,9 @@
         <member name="T:Spear.Core.ProtocolAttribute">
             <summary> 协议属性 </summary>
         </member>
+        <member name="P:Spear.Core.ProtocolAttribute.Protocol">
+            <summary> 协议 </summary>
+        </member>
         <member name="T:Spear.Core.Proxy.ClientProxy">
             <summary> 代理调用 </summary>
         </member>
@@ -330,6 +389,25 @@
         </member>
         <member name="T:Spear.Core.Reflection.ITypeFinder">
             <summary> 类型查找器 </summary>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.GetService``1(System.IServiceProvider,Spear.Core.Micro.Services.ServiceProtocol)">
+            <summary> 获取服务 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="provider"></param>
+            <param name="protocol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.GetService(System.IServiceProvider,System.Type,Spear.Core.Micro.Services.ServiceProtocol)">
+            <summary> 获取服务 </summary>
+            <param name="provider"></param>
+            <param name="type"></param>
+            <param name="protocol"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.ServiceKey(System.Reflection.MethodInfo)">
+            <summary> 获取服务主键 </summary>
+            <param name="method"></param>
+            <returns></returns>
         </member>
         <member name="M:Spear.Core.ServiceCollectionExtensions.AddCoder``2(``0)">
             <summary> 使用编解码器。 </summary>
@@ -496,6 +574,11 @@
             <param name="type"> 要处理的类型对象 </param>
             <returns> </returns>
         </member>
+        <member name="M:Spear.Core.SpearExtensions.IsSimpleType(System.Type)">
+            <summary> 是否是简单类型 </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
         <member name="M:Spear.Core.SpearExtensions.CastTo``1(System.Object)">
             <summary>
             对象转换为泛型
@@ -517,6 +600,27 @@
             <summary> 把对象类型转换为指定类型 </summary>
             <param name="obj"></param>
             <param name="conversionType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.Env(System.String,System.Nullable{System.EnvironmentVariableTarget})">
+            <summary> 获取环境变量 </summary>
+            <param name="name">变量名称</param>
+            <param name="target">存储目标</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.Env``1(System.String,``0,System.Nullable{System.EnvironmentVariableTarget})">
+            <summary> 获取环境变量 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="name">变量名称</param>
+            <param name="def">默认值</param>
+            <param name="target">存储目标</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.Config``1(System.String,``0)">
+            <summary> 读取配置文件 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="configName"></param>
+            <param name="def"></param>
             <returns></returns>
         </member>
         <member name="T:Spear.Core.Tenant.ITenantResolver">

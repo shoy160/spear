@@ -1,11 +1,12 @@
 ﻿//using Acb.Core.Extensions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Consul;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
+using Spear.Nacos;
 using Spear.Protocol.Http;
 using Spear.Protocol.Tcp;
 using Spear.Tests.Contracts;
@@ -18,6 +19,7 @@ namespace Spear.Tests.Server
     internal class Program
     {
         private static IServiceProvider _provider;
+
         private static void Main(string[] args)
         {
             var port = -1;
@@ -26,17 +28,27 @@ namespace Spear.Tests.Server
             var protocol = ServiceProtocol.Http;
             if (args.Length > 1)
                 Enum.TryParse(args[1], out protocol);
-            var configBuilder = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json", false, true);
-            var root = configBuilder.Build();
 
-            var services = new ServiceCollection();
+            ConfigManager.Instance.UseLocal("_config");
+
+            Console.WriteLine("shay".Config<string>());
+
+            var opt = "micro:consul".Config<ConsulOption>();
+
+            var services = new MicroBuilder();
+            services.AddNacos(c =>
+            {
+                c.Host = "http://192.168.0.231:8848/";
+                c.Tenant = "ef950bae-865b-409b-9c3b-bc113cf7bf37";
+                c.Applications = "basic,oss";
+                c.Interval = 10;
+            });
             services.AddMicroService(builder =>
             {
                 builder
                     .AddJsonCoder()
                     .AddSession()
-                    .AddConsul(root.GetSection("micro:consul").Get<ConsulOption>());
+                    .AddConsul(opt);
                 switch (protocol)
                 {
                     case ServiceProtocol.Tcp:
@@ -55,11 +67,11 @@ namespace Spear.Tests.Server
                 //builder.AddAcb();
             });
             _provider = services.BuildServiceProvider();
-
+            _provider.UseNacosConfig();
 
             _provider.UseMicroService(address =>
             {
-                var m = root.GetSection("micro").Get<ServiceAddress>();
+                var m = "micro".Config<ServiceAddress>();
                 address.Service = m.Service;
                 address.Host = m.Host;
                 address.Port = port > 80 ? port : m.Port;
@@ -72,7 +84,7 @@ namespace Spear.Tests.Server
                 await Shutdown();
                 eventArgs.Cancel = true;
             };
-            var config = root.GetValue<string>("logLevel");
+            var config = "oss:keyId".Config<string>();
             _provider.GetService<ILogger<Program>>().LogInformation(config);
             Console.ReadLine();
         }

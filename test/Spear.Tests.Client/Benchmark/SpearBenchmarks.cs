@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Consul;
 using Spear.Core;
+using Spear.Core.Micro;
 using Spear.Protocol.Http;
 using Spear.Protocol.Tcp;
 using Spear.ProxyGenerator;
@@ -24,7 +25,7 @@ namespace Spear.Tests.Client.Benchmark
         [GlobalSetup]
         public void Setup()
         {
-            var services = new ServiceCollection()
+            var services = new MicroBuilder()
                 .AddMicroClient(builder =>
                 {
                     builder.AddJsonCoder()

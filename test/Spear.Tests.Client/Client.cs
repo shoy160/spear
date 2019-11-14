@@ -1,5 +1,4 @@
-﻿using Acb.Core.Extensions;
-using Acb.Core.Helper;
+﻿using Acb.Core.Helper;
 using Acb.Core.Logging;
 using Acb.Core.Tests;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +24,7 @@ namespace Spear.Tests.Client
     {
         public static void Start(params string[] args)
         {
-            var services = new ServiceCollection()
+            var services = new MicroBuilder()
                 .AddMicroClient(builder =>
                 {
                     builder.AddJsonCoder()
