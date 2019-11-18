@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Spear.Nacos.Sdk.Requests
+namespace Spear.Nacos.Sdk.Requests.Config
 {
     public class RemoveListenerRequest : ConfigRequest
     {

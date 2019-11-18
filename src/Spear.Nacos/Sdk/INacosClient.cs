@@ -3,7 +3,7 @@ using WebApiClient.Attributes;
 
 namespace Spear.Nacos.Sdk
 {
-    //[TraceFilter(OutputTarget = OutputTarget.Console)]
+    //    [TraceFilter(OutputTarget = OutputTarget.Console)]
     public partial interface INacosClient : IHttpApi
     {
 

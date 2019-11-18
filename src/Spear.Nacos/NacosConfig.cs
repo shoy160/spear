@@ -9,10 +9,13 @@ namespace Spear.Nacos
         public string Group { get; set; } = "DEFAULT_GROUP";
         public string Applications { get; set; }
 
-        /// <summary> 轮询间隔(秒) </summary>
-        public long Interval { get; set; } = 120;
+        /// <summary> 轮询间隔(秒,默认：120) </summary>
+        public int Interval { get; set; } = 120;
 
-        public long LongPollingTimeout { get; set; } = 30000;
+        /// <summary>
+        /// 长轮询超时时间(毫秒,默认:30000)
+        /// </summary>
+        public int LongPollingTimeout { get; set; } = 30000;
 
         public static NacosConfig Config()
         {

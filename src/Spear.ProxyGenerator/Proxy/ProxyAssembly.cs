@@ -62,7 +62,7 @@ namespace Spear.ProxyGenerator.Proxy
         // This method returns the TypeInfo of the generated attribute.
         private TypeInfo GenerateTypeInfoOfIgnoresAccessChecksToAttribute()
         {
-            TypeBuilder attributeTypeBuilder =
+            var attributeTypeBuilder =
                 _mb.DefineType("System.Runtime.CompilerServices.IgnoresAccessChecksToAttribute",
                                TypeAttributes.Public | TypeAttributes.Class,
                                typeof(Attribute));

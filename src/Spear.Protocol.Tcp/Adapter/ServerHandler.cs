@@ -10,13 +10,13 @@ namespace Spear.Protocol.Tcp.Adapter
     /// <summary> 服务端处理器 </summary>
     internal class ServerHandler : ChannelHandlerAdapter
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<ServerHandler> _logger;
         private readonly Action<IChannelHandlerContext, MicroMessage> _readAction;
 
-        public ServerHandler(ILogger logger, Action<IChannelHandlerContext, MicroMessage> readAction)
+        public ServerHandler(ILoggerFactory loggerFactory, Action<IChannelHandlerContext, MicroMessage> readAction)
         {
             _readAction = readAction;
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<ServerHandler>();
         }
 
         public override Task ConnectAsync(IChannelHandlerContext context, EndPoint remoteAddress, EndPoint localAddress)

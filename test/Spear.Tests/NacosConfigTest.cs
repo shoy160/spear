@@ -6,6 +6,7 @@ using Spear.Nacos.Sdk;
 using Spear.Nacos.Sdk.Requests;
 using System;
 using System.Threading.Tasks;
+using Spear.Nacos.Sdk.Requests.Config;
 
 namespace Spear.Tests
 {
@@ -20,7 +21,7 @@ namespace Spear.Tests
 
         protected override void MapServices(IServiceCollection services)
         {
-            services.AddNacos(config =>
+            services.AddNacosCore(config =>
             {
                 config.Host = "http://192.168.0.231:8848/";
                 config.Tenant = "ef950bae-865b-409b-9c3b-bc113cf7bf37";

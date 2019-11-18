@@ -1,5 +1,6 @@
 ﻿using Spear.Nacos.Sdk.Filters;
 using Spear.Nacos.Sdk.Requests;
+using Spear.Nacos.Sdk.Requests.Config;
 using WebApiClient;
 using WebApiClient.Attributes;
 

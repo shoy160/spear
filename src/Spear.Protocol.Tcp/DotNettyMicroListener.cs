@@ -20,11 +20,13 @@ namespace Spear.Protocol.Tcp
     {
         private IChannel _channel;
         private readonly ILogger<DotNettyMicroListener> _logger;
+        private readonly ILoggerFactory _loggerFactory;
         private readonly IMessageCodecFactory _codecFactory;
 
-        public DotNettyMicroListener(ILogger<DotNettyMicroListener> logger, IMessageCodecFactory codecFactory)
+        public DotNettyMicroListener(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory)
         {
-            _logger = logger;
+            _loggerFactory = loggerFactory;
+            _logger = loggerFactory.CreateLogger<DotNettyMicroListener>();
             _codecFactory = codecFactory;
         }
 
@@ -45,7 +47,7 @@ namespace Spear.Protocol.Tcp
                     pipeline.AddLast(new LengthFieldPrepender(4));
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(int.MaxValue, 0, 4, 0, 4));
                     pipeline.AddLast(new MicroMessageHandler(_codecFactory.GetDecoder()));
-                    pipeline.AddLast(new ServerHandler(_logger, async (contenxt, message) =>
+                    pipeline.AddLast(new ServerHandler(_loggerFactory, async (contenxt, message) =>
                     {
                         var sender = new DotNettyServerSender(_codecFactory.GetEncoder(), contenxt);
                         await OnReceived(sender, message);

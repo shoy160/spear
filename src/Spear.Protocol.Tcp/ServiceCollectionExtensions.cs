@@ -16,8 +16,8 @@ namespace Spear.Protocol.Tcp
             builder.AddSingleton<IMicroListener>(provider =>
             {
                 var coderFactory = provider.GetService<IMessageCodecFactory>();
-                var logger = provider.GetService<ILogger<DotNettyMicroListener>>();
-                return new DotNettyMicroListener(logger, coderFactory);
+                var loggerFactory = provider.GetService<ILoggerFactory>();
+                return new DotNettyMicroListener(loggerFactory, coderFactory);
             });
             return builder;
         }

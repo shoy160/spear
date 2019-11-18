@@ -126,7 +126,7 @@ namespace Spear.Core.Micro.Implementation
                 await SendResult(sender, message.Id, result);
 
                 //确保新起一个线程执行，不堵塞当前线程
-                await Task.Factory.StartNew(async () =>
+                Task.Factory.StartNew(async () =>
                 {
                     //执行本地代码
                     await LocalExecute(invokeMessage, result);

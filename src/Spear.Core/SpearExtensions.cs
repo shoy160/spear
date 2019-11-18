@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -41,7 +42,14 @@ namespace Spear.Core
             return !string.IsNullOrWhiteSpace(str) && Regex.IsMatch(str, IpRegex);
         }
 
-
+        /// <summary> 服务命名 </summary>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static string ServiceName(this Assembly assembly)
+        {
+            var assName = assembly.GetName();
+            return $"{assName.Name}_v{assName.Version.Major}";
+        }
 
         /// <summary> 随机排序 </summary>
         /// <typeparam name="T"></typeparam>

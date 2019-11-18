@@ -1,5 +1,6 @@
 ﻿using Spear.ProxyGenerator.Impl;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -10,7 +11,7 @@ namespace Spear.ProxyGenerator.Proxy
 {
     public class AsyncProxyGenerator : IDisposable
     {
-        private readonly Dictionary<Type, Dictionary<Type, Type>> _proxyTypeCaches;
+        private readonly ConcurrentDictionary<Type, Dictionary<Type, Type>> _proxyTypeCaches;
 
         private readonly ProxyAssembly _proxyAssembly;
 
@@ -20,7 +21,7 @@ namespace Spear.ProxyGenerator.Proxy
 
         public AsyncProxyGenerator()
         {
-            _proxyTypeCaches = new Dictionary<Type, Dictionary<Type, Type>>();
+            _proxyTypeCaches = new ConcurrentDictionary<Type, Dictionary<Type, Type>>();
             _proxyAssembly = new ProxyAssembly();
         }
 
@@ -42,22 +43,19 @@ namespace Spear.ProxyGenerator.Proxy
         /// <returns></returns>
         private Type GetProxyType(Type baseType, Type interfaceType)
         {
-            lock (_proxyTypeCaches)
+            if (!_proxyTypeCaches.TryGetValue(baseType, out var interfaceToProxy))
             {
-                if (!_proxyTypeCaches.TryGetValue(baseType, out var interfaceToProxy))
-                {
-                    interfaceToProxy = new Dictionary<Type, Type>();
-                    _proxyTypeCaches[baseType] = interfaceToProxy;
-                }
-
-                if (!interfaceToProxy.TryGetValue(interfaceType, out var generatedProxy))
-                {
-                    generatedProxy = GenerateProxyType(baseType, interfaceType);
-                    interfaceToProxy[interfaceType] = generatedProxy;
-                }
-
-                return generatedProxy;
+                interfaceToProxy = new Dictionary<Type, Type>();
+                _proxyTypeCaches[baseType] = interfaceToProxy;
             }
+
+            if (!interfaceToProxy.TryGetValue(interfaceType, out var generatedProxy))
+            {
+                generatedProxy = GenerateProxyType(baseType, interfaceType);
+                interfaceToProxy[interfaceType] = generatedProxy;
+            }
+
+            return generatedProxy;
         }
 
         /// <summary> 生成代理类型 </summary>

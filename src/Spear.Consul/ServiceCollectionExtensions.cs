@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Core.Config;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
+using System;
 
 namespace Spear.Consul
 {
@@ -11,33 +11,35 @@ namespace Spear.Consul
     {
         /// <summary>
         /// 使用Consul作为服务注册和发现的组件
-        /// 读取配置：micro:consul
+        /// 读取配置：consul
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="option"></param>
+        /// <param name="optionAction"></param>
         /// <returns></returns>
-        public static IMicroClientBuilder AddConsul(this IMicroClientBuilder builder, ConsulOption option)
+        public static IMicroClientBuilder AddConsul(this IMicroClientBuilder builder, Action<ConsulOption> optionAction = null)
         {
-            builder.AddMemoryCache();
             builder.AddSingleton<IServiceFinder>(provider =>
             {
-                var cache = provider.GetService<IMemoryCache>();
-                return new ConsulServiceFinder(cache, option.Server, option.Token);
+                var option = ConsulOption.Config();
+                optionAction?.Invoke(option);
+                return new ConsulServiceFinder(option.Server, option.Token);
             });
             return builder;
         }
 
         /// <summary>
         /// 使用Consul作为服务注册和发现的组件
-        /// 读取配置：micro:consul
+        /// 读取配置：consul
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="option"></param>
+        /// <param name="optionAction"></param>
         /// <returns></returns>
-        public static IMicroServerBuilder AddConsul(this IMicroServerBuilder builder, ConsulOption option)
+        public static IMicroServerBuilder AddConsul(this IMicroServerBuilder builder, Action<ConsulOption> optionAction = null)
         {
             builder.AddSingleton<IServiceRegister>(provider =>
             {
+                var option = ConsulOption.Config();
+                optionAction?.Invoke(option);
                 var logger = provider.GetService<ILogger<ConsulServiceRegister>>();
                 return new ConsulServiceRegister(logger, option.Server, option.Token);
             });
@@ -52,12 +54,7 @@ namespace Spear.Consul
         public static IMicroClientBuilder AddConsul(this IMicroClientBuilder builder, string server,
             string token = null)
         {
-            builder.AddMemoryCache();
-            builder.AddSingleton<IServiceFinder>(provider =>
-            {
-                var cache = provider.GetService<IMemoryCache>();
-                return new ConsulServiceFinder(cache, server, token);
-            });
+            builder.AddSingleton<IServiceFinder>(provider => new ConsulServiceFinder(server, token));
             return builder;
         }
 
@@ -77,6 +74,8 @@ namespace Spear.Consul
             return builder;
         }
 
+        /// <summary> 使用Consul配置中心 </summary>
+        /// <param name="manager"></param>
         public static void UseConsul(this ConfigManager manager)
         {
             //配置中心

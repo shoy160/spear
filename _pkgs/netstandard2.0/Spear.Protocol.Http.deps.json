@@ -2028,6 +2028,7 @@
           "Microsoft.Extensions.Configuration": "3.0.0",
           "Microsoft.Extensions.Configuration.Binder": "3.0.0",
           "Microsoft.Extensions.Configuration.Json": "3.0.0",
+          "Microsoft.Extensions.DependencyInjection": "3.0.0",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.0.0",
           "Microsoft.Extensions.DependencyModel": "3.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "3.0.0",

@@ -1,7 +1,7 @@
 ﻿using Spear.Core;
 using WebApiClient.DataAnnotations;
 
-namespace Spear.Nacos.Sdk.Requests
+namespace Spear.Nacos.Sdk.Requests.Config
 {
     public class AddListenerRequest : ConfigRequest
     {

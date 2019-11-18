@@ -33,22 +33,15 @@ namespace Spear.Tests.Server
 
             Console.WriteLine("shay".Config<string>());
 
-            var opt = "micro:consul".Config<ConsulOption>();
-
             var services = new MicroBuilder();
-            services.AddNacos(c =>
-            {
-                c.Host = "http://192.168.0.231:8848/";
-                c.Tenant = "ef950bae-865b-409b-9c3b-bc113cf7bf37";
-                c.Applications = "basic,oss";
-                c.Interval = 10;
-            });
             services.AddMicroService(builder =>
             {
                 builder
                     .AddJsonCoder()
                     .AddSession()
-                    .AddConsul(opt);
+                    .AddNacos()
+                    //.AddConsul()
+                    ;
                 switch (protocol)
                 {
                     case ServiceProtocol.Tcp:
@@ -77,6 +70,7 @@ namespace Spear.Tests.Server
                 address.Port = port > 80 ? port : m.Port;
                 if (address.Port < 80)
                     address.Port = 5000;
+                address.Weight = m.Weight;
             });
             AppDomain.CurrentDomain.ProcessExit += async (sender, eventArgs) => await Shutdown();
             Console.CancelKeyPress += async (sender, eventArgs) =>

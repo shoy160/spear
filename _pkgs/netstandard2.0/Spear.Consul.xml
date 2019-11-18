@@ -15,22 +15,22 @@
             <summary> 服务注销 </summary>
             <returns></returns>
         </member>
-        <member name="M:Spear.Consul.ServiceCollectionExtensions.AddConsul(Spear.Core.Micro.IMicroClientBuilder,Spear.Consul.ConsulOption)">
+        <member name="M:Spear.Consul.ServiceCollectionExtensions.AddConsul(Spear.Core.Micro.IMicroClientBuilder,System.Action{Spear.Consul.ConsulOption})">
             <summary>
             使用Consul作为服务注册和发现的组件
-            读取配置：micro:consul
+            读取配置：consul
             </summary>
             <param name="builder"></param>
-            <param name="option"></param>
+            <param name="optionAction"></param>
             <returns></returns>
         </member>
-        <member name="M:Spear.Consul.ServiceCollectionExtensions.AddConsul(Spear.Core.Micro.IMicroServerBuilder,Spear.Consul.ConsulOption)">
+        <member name="M:Spear.Consul.ServiceCollectionExtensions.AddConsul(Spear.Core.Micro.IMicroServerBuilder,System.Action{Spear.Consul.ConsulOption})">
             <summary>
             使用Consul作为服务注册和发现的组件
-            读取配置：micro:consul
+            读取配置：consul
             </summary>
             <param name="builder"></param>
-            <param name="option"></param>
+            <param name="optionAction"></param>
             <returns></returns>
         </member>
         <member name="M:Spear.Consul.ServiceCollectionExtensions.AddConsul(Spear.Core.Micro.IMicroClientBuilder,System.String,System.String)">
@@ -46,6 +46,10 @@
             <param name="server"></param>
             <param name="token"></param>
             <returns></returns>
+        </member>
+        <member name="M:Spear.Consul.ServiceCollectionExtensions.UseConsul(Spear.Core.Config.ConfigManager)">
+            <summary> 使用Consul配置中心 </summary>
+            <param name="manager"></param>
         </member>
     </members>
 </doc>

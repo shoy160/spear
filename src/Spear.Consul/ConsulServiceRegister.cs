@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Spear.Consul
 {
-    public class ConsulServiceRegister : IServiceRegister
+    public class ConsulServiceRegister : DServiceRegister
     {
         private readonly string _consulServer;
         private readonly string _consulToken;
@@ -39,24 +39,26 @@ namespace Spear.Consul
         /// <param name="assemblyList"></param>
         /// <param name="serverAddress"></param>
         /// <returns></returns>
-        public async Task Regist(IEnumerable<Assembly> assemblyList, ServiceAddress serverAddress)
+        public override async Task Regist(IEnumerable<Assembly> assemblyList, ServiceAddress serverAddress)
         {
             using (var client = CreateClient())
             {
                 foreach (var ass in assemblyList)
                 {
-                    var serviceName = ass.GetName().Name;
+                    var serviceName = ass.ServiceName();
                     var service = new AgentServiceRegistration
                     {
                         ID = $"{serviceName}_{serverAddress}".Md5(),
                         Name = serviceName,
-                        Tags = new[] { $"{Constants.Mode}" },
+                        Tags = new[] { $"{Constants.Mode}", ass.GetName().Version.ToString() },
                         EnableTagOverride = true,
-                        Address = serverAddress.Address(),
+                        Address = serverAddress.IpAddress,
                         Port = serverAddress.Port,
                         Meta = new Dictionary<string, string>
                         {
-                            {"serverAddress", serverAddress.ToJson()}
+                            {KeyService, serverAddress.ToJson()},
+                            {KeyMode,Constants.Mode.ToString() },
+                            {KeyVersion,ass.GetName().Version.ToString() }
                         }
                     };
                     _services.Add(service.ID);
@@ -73,7 +75,7 @@ namespace Spear.Consul
         /// <inheritdoc />
         /// <summary> 服务注销 </summary>
         /// <returns></returns>
-        public async Task Deregist()
+        public override async Task Deregist()
         {
             using (var client = CreateClient())
             {

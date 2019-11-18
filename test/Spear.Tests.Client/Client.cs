@@ -16,6 +16,7 @@ using Spear.Tests.Client.Services.Impl;
 using Spear.Tests.Contracts;
 using System;
 using System.Threading.Tasks;
+using Spear.Nacos;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Spear.Tests.Client
@@ -31,11 +32,17 @@ namespace Spear.Tests.Client
                         .AddSession()
                         .AddHttpProtocol()
                         .AddTcpProtocol()
-                        .AddConsul("http://192.168.0.231:8500");
+                        .AddNacos(opt =>
+                        {
+                            opt.Host = "http://192.168.0.231:8848/";
+                            opt.Tenant = "ef950bae-865b-409b-9c3b-bc113cf7bf37";
+                        })
+                        //.AddConsul("http://192.168.0.231:8500")
+                        ;
                 });
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.SetMinimumLevel(LogLevel.Information);
                 builder.AddConsole();
             });
             services.AddSingleton<DefaultAdapter>();

@@ -19,7 +19,7 @@ namespace Spear.Tests.Server.Services
 
         public async Task Notice(string name)
         {
-            _logger.LogInformation($"{_session.UserName} {DateTime.Now:u} -> notify name:{name}");
+            _logger.LogInformation($"{DateTime.Now:u} ->{_session.UserName} notify name:{name}");
             await Task.CompletedTask;
         }
 

@@ -5,6 +5,7 @@ using Spear.Nacos.Sdk;
 using Spear.Nacos.Sdk.Requests;
 using System;
 using System.Threading.Tasks;
+using Spear.Nacos.Sdk.Requests.Config;
 
 namespace Spear.Nacos
 {
@@ -30,7 +31,7 @@ namespace Spear.Nacos
         {
             if (string.IsNullOrWhiteSpace(_application) || _config.Interval <= 0)
                 return this;
-            _listenerHelper.Add(new AddListenerRequest
+            _listenerHelper.AddConfig(new AddListenerRequest
             {
                 DataId = _application,
                 Group = _config.Group,

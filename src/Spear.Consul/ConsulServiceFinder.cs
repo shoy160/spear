@@ -10,15 +10,13 @@ using System.Threading.Tasks;
 
 namespace Spear.Consul
 {
-    public class ConsulServiceFinder : IServiceFinder
+    public class ConsulServiceFinder : DServiceFinder
     {
-        private readonly IMemoryCache _cache;
         private readonly string _consulServer;
         private readonly string _consulToken;
 
-        public ConsulServiceFinder(IMemoryCache cache, string server, string token = null)
+        public ConsulServiceFinder(string server, string token = null)
         {
-            _cache = cache;
             _consulServer = server;
             _consulToken = token;
         }
@@ -33,45 +31,29 @@ namespace Spear.Consul
             });
         }
 
-        public async Task<List<ServiceAddress>> Find(Type serviceType)
+        protected override async Task<List<ServiceAddress>> QueryService(Type serviceType, ProductMode[] modes)
         {
             var ass = serviceType.Assembly;
-            //var key = ass.AssemblyKey();
-            //var services = _cache.Get<List<ServiceAddress>>(key);
-            //if (services != null)
-            //    return services;
-            var name = ass.GetName();
             var services = new List<ServiceAddress>();
             using (var client = CreateClient())
             {
-                var list = await client.Catalog.Service(name.Name, $"{Constants.Mode}");
-                var items = list.Response.Select(t =>
+                var list = await client.Catalog.Service(ass.ServiceName());
+                foreach (var service in list.Response)
                 {
-                    if (t.ServiceMeta.TryGetValue("serverAddress", out var json))
-                        return JsonConvert.DeserializeObject<ServiceAddress>(json);
-                    return new ServiceAddress(t.Address, t.ServicePort);
-                }).ToArray();
-                services.AddRange(items);
-                //开发环境 可调用测试环境的微服务
-                if (Constants.Mode == ProductMode.Dev)
-                {
-                    list = client.Catalog.Service(name.Name, $"{ProductMode.Test}").Result;
-                    items = list.Response.Select(t =>
+                    if (service.ServiceMeta.TryGetValue(KeyMode, out var modeValue))
                     {
-                        if (t.ServiceMeta.TryGetValue("serverAddress", out var json))
-                            return JsonConvert.DeserializeObject<ServiceAddress>(json);
-                        return new ServiceAddress(t.Address, t.ServicePort);
-                    }).ToArray();
-                    services.AddRange(items);
+                        var mode = modeValue.CastTo(ProductMode.Dev);
+                        if (!modes.Contains(mode))
+                            continue;
+                    }
+
+                    services.Add(service.ServiceMeta.TryGetValue(KeyService, out var json)
+                        ? JsonConvert.DeserializeObject<ServiceAddress>(json)
+                        : new ServiceAddress(service.Address, service.ServicePort));
                 }
+
+                return services;
             }
-
-            //if (services.Any())
-            //{
-            //    _cache.Set(key, services, TimeSpan.FromMinutes(2));
-            //}
-
-            return services;
         }
     }
 }

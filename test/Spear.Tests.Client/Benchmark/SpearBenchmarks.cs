@@ -10,6 +10,7 @@ using Spear.ProxyGenerator;
 using Spear.Tests.Contracts;
 using System;
 using System.Threading.Tasks;
+using Spear.Nacos;
 
 namespace Spear.Tests.Client.Benchmark
 {
@@ -29,9 +30,15 @@ namespace Spear.Tests.Client.Benchmark
                 .AddMicroClient(builder =>
                 {
                     builder.AddJsonCoder()
+                        .AddSession()
                         .AddHttpProtocol()
                         .AddTcpProtocol()
-                        .AddConsul("http://192.168.0.231:8500");
+                        //.AddConsul("http://192.168.0.231:8500")
+                        .AddNacos(opt =>
+                        {
+                            opt.Host = "http://192.168.0.231:8848/";
+                            opt.Tenant = "ef950bae-865b-409b-9c3b-bc113cf7bf37";
+                        });
                 });
             _provider = services.BuildServiceProvider();
             var proxy = _provider.GetService<IProxyFactory>();
@@ -45,10 +52,11 @@ namespace Spear.Tests.Client.Benchmark
         }
 
         [Benchmark]
-        public async Task Get()
+        public async Task<string> Get()
         {
             var result = await _contract.Get(Name);
-            _provider.GetService<ILogger<SpearBenchmarks>>().LogInformation(result);
+            return result;
+            //_provider.GetService<ILogger<SpearBenchmarks>>().LogInformation(result);
         }
     }
 }

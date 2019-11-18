@@ -8,6 +8,7 @@ using Spear.Core.Session;
 using Spear.ProxyGenerator;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -43,46 +44,61 @@ namespace Spear.Core.Proxy
             //获取不同协议的客户端工厂
             var clientFactory = _provider.GetService<IMicroClientFactory>(serviceAddress.Protocol);
             var client = clientFactory.CreateClient(serviceAddress);
-            var result = await client.Send(message);
-            return result;
+            return await client.Send(message);
+
         }
 
         private async Task<ResultMessage> InternalInvoke(MethodInfo targetMethod, IDictionary<string, object> args)
         {
-            var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>()).ToList();
-            if (!services.Any())
+            var watch = Stopwatch.StartNew();
+            try
             {
-                throw new SpearException("没有可用的服务", 20001);
-            }
-            var invokeMessage = Create(targetMethod, args);
-            ServiceAddress service = null;
-            var builder = Policy
-                .Handle<Exception>(ex => ex.GetBaseException() is SocketException || ex.GetBaseException() is HttpRequestException) //服务器异常
-                .OrResult<ResultMessage>(r => r.Code != 200); //服务未找到
-            //熔断,3次异常,熔断5分钟
-            var breaker = builder.CircuitBreakerAsync(3, TimeSpan.FromMinutes(5));
-            //重试3次
-            var retry = builder.RetryAsync(3, (result, count) =>
-            {
-                _logger.LogWarning(result.Exception != null
-                    ? $"{service}{targetMethod.Name}:retry,{count},{result.Exception.Format()}"
-                    : $"{service}{targetMethod.Name}:retry,{count},{result.Result.Code}");
-                services.Remove(service);
-            });
-
-            var policy = Policy.WrapAsync(retry, breaker);
-
-            return await policy.ExecuteAsync(async () =>
-            {
+                var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>())
+                    .ToList();
                 if (!services.Any())
                 {
                     throw new SpearException("没有可用的服务", 20001);
                 }
 
-                service = services.RandomSort().First();
+                var invokeMessage = Create(targetMethod, args);
+                ServiceAddress service = null;
+                //service = services.Random();
+                //return await ClientInvokeAsync(service, invokeMessage);
+                var builder = Policy
+                    .Handle<Exception>(ex =>
+                        ex.GetBaseException() is SocketException ||
+                        ex.GetBaseException() is HttpRequestException) //服务器异常
+                    .OrResult<ResultMessage>(r => r.Code != 200); //服务未找到
+                //熔断,3次异常,熔断5分钟
+                var breaker = builder.CircuitBreakerAsync(3, TimeSpan.FromMinutes(5));
+                //重试3次
+                var retry = builder.RetryAsync(3, (result, count) =>
+                {
+                    _logger.LogWarning(result.Exception != null
+                        ? $"{service}{targetMethod.Name}:retry,{count},{result.Exception.Format()}"
+                        : $"{service}{targetMethod.Name}:retry,{count},{result.Result.Code}");
+                    services.Remove(service);
+                });
 
-                return await ClientInvokeAsync(service, invokeMessage);
-            });
+                var policy = Policy.WrapAsync(retry, breaker);
+
+                return await policy.ExecuteAsync(async () =>
+                {
+                    if (!services.Any())
+                    {
+                        throw new SpearException("没有可用的服务", 20001);
+                    }
+
+                    service = services.Random();
+
+                    return await ClientInvokeAsync(service, invokeMessage);
+                });
+            }
+            finally
+            {
+                watch.Stop();
+                _logger.LogInformation($"InternalInvoke invoke time: {watch.ElapsedMilliseconds} ms");
+            }
         }
 
         private InvokeMessage Create(MethodInfo targetMethod, IDictionary<string, object> args)
