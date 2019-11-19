@@ -3,10 +3,10 @@ using Acb.Core.Logging;
 using Acb.Core.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Micro;
 using Spear.Core.Session;
+using Spear.Nacos;
 using Spear.Protocol.Http;
 using Spear.Protocol.Tcp;
 using Spear.ProxyGenerator;
@@ -16,7 +16,7 @@ using Spear.Tests.Client.Services.Impl;
 using Spear.Tests.Contracts;
 using System;
 using System.Threading.Tasks;
-using Spear.Nacos;
+using Spear.Consul;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Spear.Tests.Client
@@ -42,7 +42,7 @@ namespace Spear.Tests.Client
                 });
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Information);
+                builder.SetMinimumLevel(LogLevel.Warning);
                 builder.AddConsole();
             });
             services.AddSingleton<DefaultAdapter>();

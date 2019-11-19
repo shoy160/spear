@@ -144,6 +144,12 @@
             接收到消息的事件。
             </summary>
         </member>
+        <member name="M:Spear.Core.Message.Implementation.MessageListener.OnReceived(Spear.Core.Message.IMessageSender,Spear.Core.Message.MicroMessage)">
+            <summary> 接收到消息 </summary>
+            <param name="sender"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
         <member name="T:Spear.Core.Message.InvokeMessage">
             <summary> 调用消息 </summary>
         </member>
@@ -210,6 +216,18 @@
         <member name="P:Spear.Core.Message.ResultMessage.Data">
             <summary> 数据实体 </summary>
         </member>
+        <member name="T:Spear.Core.Micro.IMicroBuilder">
+            <summary> Spear 服务构建器 </summary>
+        </member>
+        <member name="T:Spear.Core.Micro.IMicroClientBuilder">
+            <summary> Spear客户端构建器 </summary>
+        </member>
+        <member name="T:Spear.Core.Micro.IMicroServerBuilder">
+            <summary> Spear服务端构建器 </summary>
+        </member>
+        <member name="T:Spear.Core.Micro.MicroBuilder">
+            <summary> Spear构建器 </summary>
+        </member>
         <member name="T:Spear.Core.Micro.IMicroClient">
             <summary> 微服务客户端 </summary>
         </member>
@@ -223,6 +241,9 @@
             <param name="message"></param>
             <returns></returns>
         </member>
+        <member name="T:Spear.Core.Micro.IMicroClientFactory">
+            <summary> Spear客户端工厂 </summary>
+        </member>
         <member name="M:Spear.Core.Micro.IMicroClientFactory.CreateClient(Spear.Core.Micro.Services.ServiceAddress)">
             <summary> 创建客户端 </summary>
             <param name="serviceAddress"></param>
@@ -231,7 +252,10 @@
         <member name="T:Spear.Core.Micro.IMicroEntryFactory">
             <summary> 服务发现工厂 </summary>
         </member>
-        <member name="M:Spear.Core.Micro.IMicroEntryFactory.GetServices">
+        <member name="P:Spear.Core.Micro.IMicroEntryFactory.Services">
+            <summary> 方法列表 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.IMicroEntryFactory.GetContracts">
             <summary> 获取所有服务程序集 </summary>
             <returns></returns>
         </member>
@@ -258,7 +282,7 @@
             <summary> 微服务主机 </summary>
         </member>
         <member name="M:Spear.Core.Micro.IMicroHost.Start(Spear.Core.Micro.Services.ServiceAddress)">
-            <summary> 启动微服务 </summary>
+            <summary> 启动服务 </summary>
             <param name="serviceAddress"></param>
             <returns></returns>
         </member>
@@ -269,7 +293,7 @@
             <returns></returns>
         </member>
         <member name="M:Spear.Core.Micro.IMicroHost.Stop">
-            <summary> 停止微服务 </summary>
+            <summary> 停止服务 </summary>
             <returns></returns>
         </member>
         <member name="T:Spear.Core.Micro.IMicroListener">
@@ -280,9 +304,18 @@
             <param name="serviceAddress"></param>
             <returns></returns>
         </member>
+        <member name="M:Spear.Core.Micro.IMicroListener.Start(System.String,System.Int32)">
+            <summary> 启动监听 </summary>
+            <param name="host"></param>
+            <param name="port"></param>
+            <returns></returns>
+        </member>
         <member name="M:Spear.Core.Micro.IMicroListener.Stop">
             <summary> 停止监听 </summary>
             <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Micro.Implementation.DMicroHost">
+            <summary> 服务宿主基类 </summary>
         </member>
         <member name="P:Spear.Core.Micro.Implementation.DMicroHost.MicroListener">
             <summary> 消息监听者。 </summary>
@@ -298,6 +331,25 @@
         <member name="T:Spear.Core.Micro.Implementation.MicroClient">
             <summary> 默认服务客户端 </summary>
         </member>
+        <member name="P:Spear.Core.Micro.Implementation.MicroEntry.Method">
+            <summary> 方法 </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Implementation.MicroEntry.Invoke">
+            <summary> 执行代理 </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Implementation.MicroEntry.IsTask">
+            <summary> 是否是Task </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Implementation.MicroEntry.IsNotify">
+            <summary> 是否是通知 </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Implementation.MicroEntry.Parameters">
+            <summary> 参数 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroEntry.#ctor(System.Reflection.MethodInfo)">
+            <summary> Ctor </summary>
+            <param name="method"></param>
+        </member>
         <member name="T:Spear.Core.Micro.Implementation.MicroEntryFactory">
             <summary>/// 本地服务工厂
             </summary>
@@ -305,13 +357,44 @@
         <member name="M:Spear.Core.Micro.Implementation.MicroEntryFactory.InitServices">
             <summary> 初始化服务 </summary>
         </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroEntryFactory.GenerateServiceId(System.Reflection.MethodInfo)">
+            <summary> 生成服务ID </summary>
+            <param name="method"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroEntryFactory.GetContracts">
+            <summary> 获取服务列表 </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Core.Micro.Implementation.MicroEntryFactory.Services">
+            <summary> 服务方法 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroEntryFactory.GetServiceId(System.Reflection.MethodInfo)">
+            <summary> 获取服务ID </summary>
+            <param name="method"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroEntryFactory.Find(System.String)">
+            <summary> 查找服务 </summary>
+            <param name="serviceId"></param>
+            <returns></returns>
+        </member>
         <member name="T:Spear.Core.Micro.Implementation.MicroExecutor">
             <inheritdoc />
             <summary> 默认服务执行者 </summary>
         </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroExecutor.Execute(Spear.Core.Message.IMessageSender,Spear.Core.Message.MicroMessage)">
+            <summary> 执行 </summary>
+            <param name="sender"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Core.Micro.Implementation.MicroHost">
+            <summary> 服务宿主 </summary>
+        </member>
         <member name="M:Spear.Core.Micro.Implementation.MicroHost.Start(Spear.Core.Micro.Services.ServiceAddress)">
             <inheritdoc />
-            <summary> 启动微服务 </summary>
+            <summary> 启动服务 </summary>
             <param name="serviceAddress">主机终结点。</param>
             <returns>一个任务。</returns>
         </member>
@@ -322,6 +405,21 @@
         <member name="T:Spear.Core.Micro.Implementation.MicroListener">
             <inheritdoc cref="T:Spear.Core.Message.Implementation.MessageListener" />
             <summary> 默认服务监听者 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroListener.Start(Spear.Core.Micro.Services.ServiceAddress)">
+            <summary> 开启监听 </summary>
+            <param name="serviceAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroListener.Start(System.String,System.Int32)">
+            <summary> 开启监听 </summary>
+            <param name="host"></param>
+            <param name="port"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.Implementation.MicroListener.Stop">
+            <summary> 停止监听 </summary>
+            <returns></returns>
         </member>
         <member name="M:Spear.Core.Micro.Services.DServiceFinder.QueryService(System.Type,Spear.Core.ProductMode[])">
             <summary> 查询服务 </summary>

@@ -7,6 +7,7 @@ using Spear.Core.Micro.Services;
 using Spear.Nacos.Sdk;
 using System;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using WebApiClient;
 
 namespace Spear.Nacos
@@ -20,13 +21,15 @@ namespace Spear.Nacos
         public static IMicroClientBuilder AddNacos(this IMicroClientBuilder builder,
             Action<NacosConfig> configAction = null)
         {
+            builder.AddMemoryCache();
             builder.AddNacosCore(configAction);
             builder.AddSingleton<IServiceFinder>(provider =>
             {
                 var config = provider.GetService<NacosConfig>();
                 var client = provider.GetService<INacosClient>();
                 var loggerFactory = provider.GetService<ILoggerFactory>();
-                return new NacosServiceFinder(config, client, loggerFactory);
+                var cache = provider.GetService<IMemoryCache>();
+                return new NacosServiceFinder(config, client, loggerFactory, cache);
             });
             return builder;
         }

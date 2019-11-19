@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Spear.Core;
 using Spear.Core.Message;
 using Spear.Core.Micro;
@@ -29,7 +30,9 @@ namespace Spear.Protocol.Http
             builder.AddSingleton<IMicroListener>(provider =>
             {
                 var coderFactory = provider.GetService<IMessageCodecFactory>();
-                return new HttpMicroListener(coderFactory);
+                var entryFactory = provider.GetService<IMicroEntryFactory>();
+                var loggerFactory = provider.GetService<ILoggerFactory>();
+                return new HttpMicroListener(coderFactory, entryFactory, loggerFactory);
             });
             return builder;
         }

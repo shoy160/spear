@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Spear.Nacos
 {
@@ -17,7 +18,8 @@ namespace Spear.Nacos
         private readonly INacosClient _client;
         private readonly ILogger<NacosServiceFinder> _logger;
 
-        public NacosServiceFinder(NacosConfig config, INacosClient client, ILoggerFactory loggerFactory)
+        public NacosServiceFinder(NacosConfig config, INacosClient client, ILoggerFactory loggerFactory, IMemoryCache cache) 
+            : base(cache)
         {
             _config = config;
             _client = client;

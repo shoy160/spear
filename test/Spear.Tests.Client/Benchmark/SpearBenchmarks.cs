@@ -38,7 +38,8 @@ namespace Spear.Tests.Client.Benchmark
                         {
                             opt.Host = "http://192.168.0.231:8848/";
                             opt.Tenant = "ef950bae-865b-409b-9c3b-bc113cf7bf37";
-                        });
+                        })
+                        ;
                 });
             _provider = services.BuildServiceProvider();
             var proxy = _provider.GetService<IProxyFactory>();

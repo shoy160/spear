@@ -15,7 +15,7 @@ namespace Spear.Consul
         private readonly string _consulServer;
         private readonly string _consulToken;
 
-        public ConsulServiceFinder(string server, string token = null)
+        public ConsulServiceFinder(IMemoryCache cache, string server, string token = null) : base(cache)
         {
             _consulServer = server;
             _consulToken = token;

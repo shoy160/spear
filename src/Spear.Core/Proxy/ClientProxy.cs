@@ -41,73 +41,69 @@ namespace Spear.Core.Proxy
         /// <returns></returns>
         private async Task<ResultMessage> ClientInvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
         {
-            //获取不同协议的客户端工厂
-            var clientFactory = _provider.GetService<IMicroClientFactory>(serviceAddress.Protocol);
-            var client = clientFactory.CreateClient(serviceAddress);
-            return await client.Send(message);
-
+            var watch = Stopwatch.StartNew();
+            try
+            {
+                //获取不同协议的客户端工厂
+                var clientFactory = _provider.GetService<IMicroClientFactory>(serviceAddress.Protocol);
+                var client = await clientFactory.CreateClient(serviceAddress);
+                return await client.Send(message);
+            }
+            finally
+            {
+                watch.Stop();
+                _logger.LogInformation($"ClientInvokeAsync {watch.ElapsedMilliseconds} ms");
+            }
         }
 
         private async Task<ResultMessage> InternalInvoke(MethodInfo targetMethod, IDictionary<string, object> args)
         {
-            var watch = Stopwatch.StartNew();
-            try
+            var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>())
+                .ToList();
+            if (!services.Any())
             {
-                var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>())
-                    .ToList();
+                throw new SpearException("没有可用的服务", 20001);
+            }
+            var invokeMessage = Create(targetMethod, args);
+            ServiceAddress service = null;
+            var builder = Policy
+                .Handle<Exception>(ex =>
+                    ex.GetBaseException() is SocketException ||
+                    ex.GetBaseException() is HttpRequestException) //服务器异常
+                .OrResult<ResultMessage>(r => r.Code != 200); //服务未找到
+                                                              //熔断,3次异常,熔断5分钟
+            var breaker = builder.CircuitBreakerAsync(3, TimeSpan.FromMinutes(5));
+            //重试3次
+            var retry = builder.RetryAsync(3, (result, count) =>
+            {
+                _logger.LogWarning(result.Exception != null
+                    ? $"{service}{targetMethod.Name}:retry,{count},{result.Exception.Format()}"
+                    : $"{service}{targetMethod.Name}:retry,{count},{result.Result.Code}");
+                services.Remove(service);
+            });
+
+            var policy = Policy.WrapAsync(retry, breaker);
+
+            return await policy.ExecuteAsync(async () =>
+            {
                 if (!services.Any())
                 {
                     throw new SpearException("没有可用的服务", 20001);
                 }
 
-                var invokeMessage = Create(targetMethod, args);
-                ServiceAddress service = null;
-                //service = services.Random();
-                //return await ClientInvokeAsync(service, invokeMessage);
-                var builder = Policy
-                    .Handle<Exception>(ex =>
-                        ex.GetBaseException() is SocketException ||
-                        ex.GetBaseException() is HttpRequestException) //服务器异常
-                    .OrResult<ResultMessage>(r => r.Code != 200); //服务未找到
-                //熔断,3次异常,熔断5分钟
-                var breaker = builder.CircuitBreakerAsync(3, TimeSpan.FromMinutes(5));
-                //重试3次
-                var retry = builder.RetryAsync(3, (result, count) =>
-                {
-                    _logger.LogWarning(result.Exception != null
-                        ? $"{service}{targetMethod.Name}:retry,{count},{result.Exception.Format()}"
-                        : $"{service}{targetMethod.Name}:retry,{count},{result.Result.Code}");
-                    services.Remove(service);
-                });
+                service = services.Random();
 
-                var policy = Policy.WrapAsync(retry, breaker);
-
-                return await policy.ExecuteAsync(async () =>
-                {
-                    if (!services.Any())
-                    {
-                        throw new SpearException("没有可用的服务", 20001);
-                    }
-
-                    service = services.Random();
-
-                    return await ClientInvokeAsync(service, invokeMessage);
-                });
-            }
-            finally
-            {
-                watch.Stop();
-                _logger.LogInformation($"InternalInvoke invoke time: {watch.ElapsedMilliseconds} ms");
-            }
+                return await ClientInvokeAsync(service, invokeMessage);
+            });
         }
 
         private InvokeMessage Create(MethodInfo targetMethod, IDictionary<string, object> args)
         {
-            var remoteIp = Constants.LocalIp();
+            var localIp = Constants.LocalIp();
             var headers = new Dictionary<string, string>
             {
-                {MicroClaimTypes.HeaderForward, remoteIp},
-                {MicroClaimTypes.HeaderRealIp, remoteIp},
+                {MicroClaimTypes.HeaderForward, localIp},
+                {MicroClaimTypes.HeaderRealIp, localIp},
                 {MicroClaimTypes.HeaderUserAgent, "spear-client"}
                 //{MicroClaimTypes.HeaderReferer, string.Empty}
             };

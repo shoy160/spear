@@ -5,7 +5,6 @@ using Spear.Core.Message;
 using Spear.Core.Session;
 using Spear.ProxyGenerator;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -20,6 +19,7 @@ namespace Spear.Core.Micro.Implementation
         private readonly ILogger<MicroExecutor> _logger;
         private readonly IMicroEntryFactory _entryFactory;
         private readonly IServiceProvider _provider;
+
         public MicroExecutor(ILogger<MicroExecutor> logger, IServiceProvider provider, IMicroEntryFactory entryFactory)
         {
             _entryFactory = entryFactory;
@@ -33,33 +33,15 @@ namespace Spear.Core.Micro.Implementation
             {
                 if (_logger.IsEnabled(LogLevel.Debug))
                     _logger.LogDebug(JsonConvert.SerializeObject(invokeMessage));
-                var serviceMethod = _entryFactory.Find(invokeMessage.ServiceId);
-                var args = new List<object>();
-                var parameters = invokeMessage.Parameters ?? new Dictionary<string, object>();
-                foreach (var parameter in serviceMethod.GetParameters())
-                {
-                    if (parameters.ContainsKey(parameter.Name))
-                    {
-                        var parameterType = parameter.ParameterType;
-                        var arg = parameters[parameter.Name].CastTo(parameterType);
-                        args.Add(arg);
-                    }
-                    else if (parameter.HasDefaultValue)
-                    {
-                        args.Add(parameter.DefaultValue);
-                    }
-                }
+                var entry = _entryFactory.Find(invokeMessage.ServiceId);
 
-                var instance = _provider.GetService(serviceMethod.DeclaringType);
-
-                var fastInvoke = FastInvoke.GetMethodInvoker(serviceMethod);
-                if (serviceMethod.ReturnType == typeof(void) || serviceMethod.ReturnType == typeof(Task))
+                if (entry.IsNotify)
                 {
-                    fastInvoke(instance, args.ToArray());
+                    await entry.Invoke(invokeMessage.Parameters);
                 }
                 else
                 {
-                    var data = fastInvoke(instance, args.ToArray());
+                    var data = await entry.Invoke(invokeMessage.Parameters);
                     if (!(data is Task task))
                     {
                         result.Data = data;
@@ -97,6 +79,10 @@ namespace Spear.Core.Micro.Implementation
             }
         }
 
+        /// <summary> 执行 </summary>
+        /// <param name="sender"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task Execute(IMessageSender sender, MicroMessage message)
         {
             if (!message.IsInvoke)
@@ -126,7 +112,7 @@ namespace Spear.Core.Micro.Implementation
                 await SendResult(sender, message.Id, result);
 
                 //确保新起一个线程执行，不堵塞当前线程
-                Task.Factory.StartNew(async () =>
+                await Task.Factory.StartNew(async () =>
                 {
                     //执行本地代码
                     await LocalExecute(invokeMessage, result);

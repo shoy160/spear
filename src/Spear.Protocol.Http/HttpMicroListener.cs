@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Spear.Core;
 using Spear.Core.Message;
+using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Protocol.Http.Filters;
@@ -13,7 +15,10 @@ using Spear.Protocol.Http.Sender;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Spear.Protocol.Http
@@ -22,18 +27,22 @@ namespace Spear.Protocol.Http
     public class HttpMicroListener : MicroListener, IDisposable
     {
         private readonly IMessageCodecFactory _codecFactory;
+        private readonly IMicroEntryFactory _entryFactory;
+        private readonly ILogger<HttpMicroListener> _logger;
         private IWebHost _host;
 
-        public HttpMicroListener(IMessageCodecFactory codecFactory)
+        public HttpMicroListener(IMessageCodecFactory codecFactory, IMicroEntryFactory entryFactory, ILoggerFactory loggerFactory)
         {
             _codecFactory = codecFactory;
+            _entryFactory = entryFactory;
+            _logger = loggerFactory.CreateLogger<HttpMicroListener>();
         }
 
         public override async Task Start(ServiceAddress serviceAddress)
         {
             var endpoint = serviceAddress.ToEndPoint() as IPEndPoint;
             _host = new WebHostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
                 .UseKestrel(options =>
                 {
                     options.Listen(endpoint);
@@ -57,11 +66,16 @@ namespace Spear.Protocol.Http
         {
             app.UseMvc(routes =>
             {
-                //routes.MapGet("micro", async ctx => await MicroServiceRunner.Methods(ctx));
-                routes.MapPost("micro", async (request, response, route) =>
+                routes.MapGet("micro", async ctx =>
                 {
-                    //route.Values.TryGetValue("contract", out var contract);
-                    //route.Values.TryGetValue("method", out var method);
+                    var services = _entryFactory.Services.ToDictionary(k => $"micro/{k.Key}",
+                        v => v.Value.Parameters.ToDictionary(pk => pk.Name, pv => pv.ParameterType.GetTypeInfo().Name));
+                    ctx.Response.ContentType = "application/json";
+                    await ctx.Response.WriteAsync(JsonConvert.SerializeObject(services), Encoding.UTF8);
+                });
+                routes.MapPost("micro/executor", async (request, response, route) =>
+                {
+                    //route.Values.TryGetValue("serviceId", out var serviceId);
                     var sender = new HttpServerMessageSender(_codecFactory.GetEncoder(), response);
                     try
                     {
@@ -77,8 +91,7 @@ namespace Spear.Protocol.Http
                         }
                         else
                         {
-                            var logger = app.ApplicationServices.GetService<ILogger<HttpMicroListener>>();
-                            logger.LogError(ex, ex.Message);
+                            _logger.LogError(ex, ex.Message);
                             result.Code = (int)HttpStatusCode.InternalServerError;
                             result.Message = ex.Message;
                         }
@@ -86,6 +99,8 @@ namespace Spear.Protocol.Http
                         await sender.Send(MicroMessage.CreateResultMessage(Guid.NewGuid().ToString("N"), result));
                     }
                 });
+
+                //routes.MapRoute("default", "{controller=Home}/{action=Index}/{Id?}");
             });
         }
 
@@ -97,7 +112,7 @@ namespace Spear.Protocol.Http
             byte[] buffers;
             using (var memstream = new MemoryStream())
             {
-                input.CopyTo(memstream);
+                await input.CopyToAsync(memstream);
                 buffers = memstream.ToArray();
             }
             var message = _codecFactory.GetDecoder().Decode(buffers);

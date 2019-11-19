@@ -11,6 +11,10 @@ namespace Spear.Core.Message.Implementation
         /// </summary>
         public event ReceivedDelegate Received;
 
+        /// <summary> 接收到消息 </summary>
+        /// <param name="sender"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public async Task OnReceived(IMessageSender sender, MicroMessage message)
         {
             if (Received == null)

@@ -7,6 +7,20 @@
         <member name="T:Spear.Protocol.Tcp.Adapter.ClientHandler">
             <summary> 客户端处理器 </summary>
         </member>
+        <member name="M:Spear.Protocol.Tcp.Adapter.ClientHandler.ChannelInactive(DotNetty.Transport.Channels.IChannelHandlerContext)">
+            <summary> 连接断开 </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Spear.Protocol.Tcp.Adapter.ClientHandler.ChannelRead(DotNetty.Transport.Channels.IChannelHandlerContext,System.Object)">
+            <summary> 收到数据 </summary>
+            <param name="context"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:Spear.Protocol.Tcp.Adapter.ClientHandler.ExceptionCaught(DotNetty.Transport.Channels.IChannelHandlerContext,System.Exception)">
+            <summary> 发生异常 </summary>
+            <param name="context"></param>
+            <param name="exception"></param>
+        </member>
         <member name="T:Spear.Protocol.Tcp.Adapter.ServerHandler">
             <summary> 服务端处理器 </summary>
         </member>

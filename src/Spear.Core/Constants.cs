@@ -1,5 +1,4 @@
-﻿using Spear.Core.Micro.Services;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -48,11 +47,15 @@ namespace Spear.Core
             }
         }
 
+        private static string _localIp;
+
         /// <summary> 获取本地IP </summary>
         /// <returns></returns>
         public static string LocalIp()
         {
-            return NetworkInterface.GetAllNetworkInterfaces().Select(p => p.GetIPProperties())
+            if (!string.IsNullOrWhiteSpace(_localIp))
+                return _localIp;
+            return _localIp = NetworkInterface.GetAllNetworkInterfaces().Select(p => p.GetIPProperties())
                 .SelectMany(p => p.UnicastAddresses).FirstOrDefault(p =>
                     p.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(p.Address))?.Address?.ToString();
         }

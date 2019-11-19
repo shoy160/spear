@@ -12,6 +12,10 @@ namespace Spear.Core.Micro
         /// <returns></returns>
         Task Start(ServiceAddress serviceAddress);
 
+        /// <summary> 启动监听 </summary>
+        /// <param name="host"></param>
+        /// <param name="port"></param>
+        /// <returns></returns>
         Task Start(string host, int port);
 
         /// <summary> 停止监听 </summary>

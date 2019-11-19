@@ -2,10 +2,12 @@
 using Newtonsoft.Json;
 using Spear.Core.Message;
 using Spear.Core.Micro.Services;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Spear.Core.Micro.Implementation
 {
+    /// <summary> 服务宿主基类 </summary>
     public abstract class DMicroHost : IMicroHost
     {
         private readonly IMicroExecutor _microExecutor;
@@ -14,9 +16,9 @@ namespace Spear.Core.Micro.Implementation
         /// <summary> 消息监听者。 </summary>
         protected IMicroListener MicroListener { get; set; }
 
-        protected DMicroHost(ILogger<DMicroHost> logger, IMicroExecutor microExecutor, IMicroListener microListener)
+        protected DMicroHost(IMicroExecutor microExecutor, IMicroListener microListener, ILoggerFactory loggerFactory)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<DMicroHost>();
             _microExecutor = microExecutor;
             MicroListener = microListener;
             MicroListener.Received += MessageListenerReceived;

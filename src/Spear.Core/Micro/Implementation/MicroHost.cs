@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Spear.Core.Micro.Implementation
 {
+    /// <summary> 服务宿主 </summary>
     public class MicroHost : DMicroHost
     {
         private readonly IServiceRegister _serviceRegister;
@@ -13,13 +14,13 @@ namespace Spear.Core.Micro.Implementation
         private readonly ILogger<MicroHost> _logger;
         private readonly ServiceProtocol _protocol;
 
-        public MicroHost(ILogger<MicroHost> logger, IMicroExecutor serviceExecutor, IMicroListener microListener,
-            IServiceRegister serviceRegister, IMicroEntryFactory entryFactory)
-            : base(logger, serviceExecutor, microListener)
+        public MicroHost(IMicroExecutor serviceExecutor, IMicroListener microListener,
+            IServiceRegister serviceRegister, IMicroEntryFactory entryFactory, ILoggerFactory loggerFactory)
+            : base(serviceExecutor, microListener, loggerFactory)
         {
             _serviceRegister = serviceRegister;
             _entryFactory = entryFactory;
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<MicroHost>();
             var protocol = microListener.GetType().GetCustomAttribute<ProtocolAttribute>();
             if (protocol != null)
                 _protocol = protocol.Protocol;
@@ -31,7 +32,7 @@ namespace Spear.Core.Micro.Implementation
         }
 
         /// <inheritdoc />
-        /// <summary> 启动微服务 </summary>
+        /// <summary> 启动服务 </summary>
         /// <param name="serviceAddress">主机终结点。</param>
         /// <returns>一个任务。</returns>
         public override Task Start(ServiceAddress serviceAddress)
@@ -42,14 +43,14 @@ namespace Spear.Core.Micro.Implementation
                 {
                     await MicroListener.Start(serviceAddress);
                 });
-                _logger.LogInformation("Micro Host Started");
+                Console.WriteLine($"Service Start At {serviceAddress}");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
             }
 
-            var assemblies = _entryFactory.GetServices();
+            var assemblies = _entryFactory.GetContracts();
             serviceAddress.Protocol = _protocol;
             return _serviceRegister.Regist(assemblies, serviceAddress);
         }
@@ -60,7 +61,7 @@ namespace Spear.Core.Micro.Implementation
         {
             await _serviceRegister.Deregist();
             await MicroListener.Stop();
-            _logger.LogInformation("Micro Host Stoped");
+            Console.WriteLine("Service Stoped");
         }
     }
 }

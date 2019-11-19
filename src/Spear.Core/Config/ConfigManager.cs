@@ -34,7 +34,7 @@ namespace Spear.Core.Config
 
         private void InitBuilder()
         {
-            var currentDir = Directory.GetCurrentDirectory();
+            var currentDir = AppDomain.CurrentDomain.BaseDirectory;
             _builder = new ConfigurationBuilder().SetBasePath(currentDir);
             var path = Path.Combine(currentDir, ConfigName);
             if (File.Exists(path))
@@ -127,6 +127,6 @@ namespace Spear.Core.Config
         /// <summary> 重新加载配置 </summary>
         public void Reload() { _config.Reload(); }
 
-        
+
     }
 }

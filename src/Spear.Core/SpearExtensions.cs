@@ -256,7 +256,7 @@ namespace Spear.Core
         {
             if (string.IsNullOrWhiteSpace(configDir))
                 return;
-            configDir = Path.Combine(Directory.GetCurrentDirectory(), configDir);
+            configDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configDir);
             if (!Directory.Exists(configDir))
                 return;
             var jsons = Directory.GetFiles(configDir, "*.json");

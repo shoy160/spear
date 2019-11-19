@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Spear.Core.Message;
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Spear.Core.Micro.Implementation
@@ -13,16 +14,16 @@ namespace Spear.Core.Micro.Implementation
         private readonly IMessageSender _sender;
         private readonly IMessageListener _listener;
         private readonly IMicroExecutor _executor;
-        private readonly ILogger _logger;
+        private readonly ILogger<MicroClient> _logger;
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>> _resultDictionary;
 
-        public MicroClient(ILogger logger, IMessageSender sender, IMessageListener listener, IMicroExecutor executor)
+        public MicroClient(IMessageSender sender, IMessageListener listener, IMicroExecutor executor, ILoggerFactory loggerFactory)
         {
             _sender = sender;
             _listener = listener;
             _executor = executor;
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<MicroClient>();
             _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>>();
             listener.Received += ListenerOnReceived;
         }
@@ -67,6 +68,7 @@ namespace Spear.Core.Micro.Implementation
 
         public async Task<T> Send<T>(object message)
         {
+            var watch = Stopwatch.StartNew();
             try
             {
                 _logger.LogDebug("准备发送消息");
@@ -81,9 +83,12 @@ namespace Spear.Core.Micro.Implementation
                 }
                 catch (Exception exception)
                 {
+                    if (exception is SpearException)
+                        throw;
                     _logger.LogError(exception, "与服务端通讯时发生了异常");
                     throw new SpearException("与服务端通讯时发生了异常");
                 }
+
                 _logger.LogDebug("消息发送成功");
                 return await callback;
             }
@@ -91,6 +96,11 @@ namespace Spear.Core.Micro.Implementation
             {
                 _logger.LogError(ex, "消息发送失败。");
                 throw new SpearException("消息发送失败");
+            }
+            finally
+            {
+                watch.Stop();
+                _logger.LogDebug($"send message {watch.ElapsedMilliseconds} ms");
             }
         }
 

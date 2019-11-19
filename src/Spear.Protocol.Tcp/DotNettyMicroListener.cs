@@ -47,11 +47,11 @@ namespace Spear.Protocol.Tcp
                     pipeline.AddLast(new LengthFieldPrepender(4));
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(int.MaxValue, 0, 4, 0, 4));
                     pipeline.AddLast(new MicroMessageHandler(_codecFactory.GetDecoder()));
-                    pipeline.AddLast(new ServerHandler(_loggerFactory, async (contenxt, message) =>
+                    pipeline.AddLast(new ServerHandler(async (contenxt, message) =>
                     {
                         var sender = new DotNettyServerSender(_codecFactory.GetEncoder(), contenxt);
                         await OnReceived(sender, message);
-                    }));
+                    }, _loggerFactory));
                 }));
             try
             {
@@ -77,12 +77,7 @@ namespace Spear.Protocol.Tcp
 
         public void Dispose()
         {
-            if (_channel == null)
-                return;
-            Task.Run(async () =>
-            {
-                await _channel.DisconnectAsync();
-            }).Wait();
+            _channel?.DisconnectAsync().GetAwaiter().GetResult();
         }
     }
 }

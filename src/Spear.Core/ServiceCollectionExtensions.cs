@@ -11,6 +11,7 @@ using Spear.Core.Session;
 using Spear.Core.Session.Impl;
 using Spear.ProxyGenerator;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace Spear.Core
 {
     public static class ServiceCollectionExtensions
     {
+        private static IDictionary<MethodInfo, string> _routeCache = new Dictionary<MethodInfo, string>();
         /// <summary> 获取服务 </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
@@ -46,19 +48,26 @@ namespace Spear.Core
         /// <returns></returns>
         public static string ServiceKey(this MethodInfo method)
         {
+            if (_routeCache.TryGetValue(method, out var route))
+                return route;
             var key = string.Empty;
             var attr = method.DeclaringType?.GetCustomAttribute<ServiceRouteAttribute>();
             if (attr != null)
                 key = attr.Route;
             attr = method.GetCustomAttribute<ServiceRouteAttribute>();
             if (attr != null && !string.IsNullOrWhiteSpace(attr.Route))
-                return (attr.Route.StartsWith("/") ? attr.Route.TrimStart('/') : $"{key}/{attr.Route}").ToLower();
-            if (!string.IsNullOrWhiteSpace(key))
+                route = (attr.Route.StartsWith("/") ? attr.Route.TrimStart('/') : $"{key}/{attr.Route}").ToLower();
+            else if (!string.IsNullOrWhiteSpace(key))
             {
-                return $"{key}/{method.Name}".ToLower();
+                route = $"{key}/{method.Name}".ToLower();
             }
+            else
+            {
+                route = $"{method.DeclaringType?.Name}/{method.Name}".ToLower();
+            }
+            _routeCache.Add(method, route);
 
-            return $"{method.DeclaringType?.Name}/{method.Name}".ToLower();
+            return route;
         }
 
         /// <summary> 使用编解码器。 </summary>

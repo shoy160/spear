@@ -1,54 +1,30 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
 
 namespace Spear.Core.Micro
 {
+    /// <summary> Spear 服务构建器 </summary>
     public interface IMicroBuilder : IServiceCollection
     {
     }
 
+    /// <summary> Spear客户端构建器 </summary>
     public interface IMicroClientBuilder : IMicroBuilder { }
+
+    /// <summary> Spear服务端构建器 </summary>
     public interface IMicroServerBuilder : IMicroBuilder { }
 
+    /// <summary> Spear构建器 </summary>
     public class MicroBuilder : ServiceCollection, IMicroClientBuilder, IMicroServerBuilder
     {
-    }
+        public MicroBuilder() { }
 
-    public static class MicroBuilderExtentions
-    {
-        public static IMicroBuilder Register(this IMicroBuilder builder, Action<IServiceCollection> configServices)
+        public MicroBuilder(IServiceCollection services)
         {
-            configServices.Invoke(builder);
-            return builder;
-        }
-
-        //public static IMicroBuilder AddSingleton<T, TImp>(this IMicroBuilder builder)
-        //    where T : class
-        //    where TImp : class, T
-        //{
-        //    builder.AddSingleton<T, TImp>();
-        //    return builder;
-        //}
-
-        ///// <summary> 覆盖 单例 </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <typeparam name="TImp"></typeparam>
-        ///// <param name="builder"></param>
-        ///// <returns></returns>
-        //public static IMicroBuilder TryAddSingleton<T, TImp>(this IMicroBuilder builder)
-        //    where T : class
-        //    where TImp : class, T
-        //{
-        //    builder.TryAddSingleton<T, TImp>();
-        //    return builder;
-        //}
-
-        public static IMicroBuilder AddSingleton<T>(this IMicroBuilder builder, Func<IServiceProvider, T> implementationFunc)
-        where T : class
-        {
-            builder.TryAddSingleton(implementationFunc);
-            return builder;
+            foreach (var service in services)
+            {
+                this.Add(service);
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ using Spear.Protocol.Tcp.Sender;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Spear.Protocol.Tcp
 {
@@ -23,11 +24,12 @@ namespace Spear.Protocol.Tcp
     public class DotNettyClientFactory : IMicroClientFactory, IDisposable
     {
         private readonly Bootstrap _bootstrap;
+        private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<DotNettyClientFactory> _logger;
         private readonly IMessageCodecFactory _codecFactory;
         private readonly IMicroExecutor _microExecutor;
 
-        private readonly ConcurrentDictionary<string, Lazy<IMicroClient>> _clients;
+        private readonly ConcurrentDictionary<string, Lazy<Task<IMicroClient>>> _clients;
 
         private static readonly AttributeKey<ServiceAddress> ServiceAddressKey =
             AttributeKey<ServiceAddress>.ValueOf(typeof(DotNettyClientFactory), nameof(ServiceAddress));
@@ -37,20 +39,31 @@ namespace Spear.Protocol.Tcp
         private static readonly AttributeKey<IMessageListener> ListenerKey =
             AttributeKey<IMessageListener>.ValueOf(typeof(DotNettyClientFactory), nameof(IMessageListener));
 
-        public DotNettyClientFactory(ILogger<DotNettyClientFactory> logger, IMessageCodecFactory codecFactory, IMicroExecutor executor = null)
+        public DotNettyClientFactory(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory, IMicroExecutor executor = null)
         {
             _codecFactory = codecFactory;
             _microExecutor = executor;
-            _logger = logger;
+            _loggerFactory = loggerFactory;
+            _logger = loggerFactory.CreateLogger<DotNettyClientFactory>();
             _bootstrap = GetBootstrap();
-            _clients = new ConcurrentDictionary<string, Lazy<IMicroClient>>();
+            _clients = new ConcurrentDictionary<string, Lazy<Task<IMicroClient>>>();
             _bootstrap.Handler(new ActionChannelInitializer<ISocketChannel>(c =>
             {
                 var pipeline = c.Pipeline;
                 pipeline.AddLast(new LengthFieldPrepender(4));
                 pipeline.AddLast(new LengthFieldBasedFrameDecoder(int.MaxValue, 0, 4, 0, 4));
                 pipeline.AddLast(new MicroMessageHandler(_codecFactory.GetDecoder()));
-                pipeline.AddLast(new DefaultChannelHandler(this));
+                pipeline.AddLast(new ClientHandler((context, message) =>
+                {
+                    var messageListener = context.Channel.GetAttribute(ListenerKey).Get();
+                    var messageSender = context.Channel.GetAttribute(SenderKey).Get();
+                    messageListener.OnReceived(messageSender, message);
+                }, channel =>
+                {
+                    var k = channel.GetAttribute(ServiceAddressKey).Get();
+                    _logger.LogDebug($"删除客户端：{k}");
+                    _clients.TryRemove(k.ToString(), out _);
+                }, loggerFactory));
             }));
         }
 
@@ -81,24 +94,23 @@ namespace Spear.Protocol.Tcp
         /// <summary> 创建客户端 </summary>
         /// <param name="serviceAddress">终结点。</param>
         /// <returns>传输客户端实例。</returns>
-        public IMicroClient CreateClient(ServiceAddress serviceAddress)
+        public Task<IMicroClient> CreateClient(ServiceAddress serviceAddress)
         {
             //_logger.Debug($"准备为服务端地址：{endPoint}创建客户端。");
             try
             {
-                var lazyClient = _clients.GetOrAdd(serviceAddress.ToString(), k => new Lazy<IMicroClient>( () =>
-                    {
-                        _logger.LogDebug($"创建客户端：{serviceAddress}创建客户端。");
-                        var bootstrap = _bootstrap;
-                        var channel = bootstrap.ConnectAsync(serviceAddress.ToEndPoint(false)).Result;
-                        var listener = new MessageListener();
-                        var sender = new DotNettyClientSender(_codecFactory.GetEncoder(), channel);
-                        channel.GetAttribute(ListenerKey).Set(listener);
-                        channel.GetAttribute(SenderKey).Set(sender);
-                        channel.GetAttribute(ServiceAddressKey).Set(serviceAddress);
-
-                        return new MicroClient(_logger, sender, listener, _microExecutor);
-                    }
+                var lazyClient = _clients.GetOrAdd(serviceAddress.ToString(), k => new Lazy<Task<IMicroClient>>(async () =>
+                  {
+                      _logger.LogDebug($"创建客户端：{serviceAddress}创建客户端。");
+                      var bootstrap = _bootstrap;
+                      var channel = await bootstrap.ConnectAsync(serviceAddress.ToEndPoint(false));
+                      var listener = new MessageListener();
+                      var sender = new DotNettyClientSender(_codecFactory.GetEncoder(), channel);
+                      channel.GetAttribute(ListenerKey).Set(listener);
+                      channel.GetAttribute(SenderKey).Set(sender);
+                      channel.GetAttribute(ServiceAddressKey).Set(serviceAddress);
+                      return new MicroClient(sender, listener, _microExecutor, _loggerFactory);
+                  }
                 ));
                 return lazyClient.Value;
             }
@@ -116,36 +128,6 @@ namespace Spear.Protocol.Tcp
             {
                 (client.Value as IDisposable)?.Dispose();
             }
-        }
-
-        protected class DefaultChannelHandler : ChannelHandlerAdapter
-        {
-            private readonly DotNettyClientFactory _factory;
-
-            public DefaultChannelHandler(DotNettyClientFactory factory)
-            {
-                _factory = factory;
-            }
-
-            #region Overrides of ChannelHandlerAdapter
-
-            public override void ChannelInactive(IChannelHandlerContext context)
-            {
-                var k = context.Channel.GetAttribute(ServiceAddressKey).Get();
-                _factory._logger.LogDebug($"删除客户端：{k}");
-                _factory._clients.TryRemove(k.ToString(), out _);
-            }
-
-            public override void ChannelRead(IChannelHandlerContext context, object message)
-            {
-                var transportMessage = message as MicroMessage;
-
-                var messageListener = context.Channel.GetAttribute(ListenerKey).Get();
-                var messageSender = context.Channel.GetAttribute(SenderKey).Get();
-                messageListener.OnReceived(messageSender, transportMessage);
-            }
-
-            #endregion Overrides of ChannelHandlerAdapter
         }
     }
 }

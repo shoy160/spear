@@ -6,7 +6,7 @@ namespace Spear.Core.Micro
     /// <summary> 微服务主机 </summary>
     public interface IMicroHost
     {
-        /// <summary> 启动微服务 </summary>
+        /// <summary> 启动服务 </summary>
         /// <param name="serviceAddress"></param>
         /// <returns></returns>
         Task Start(ServiceAddress serviceAddress);
@@ -17,7 +17,7 @@ namespace Spear.Core.Micro
         /// <returns></returns>
         Task Start(string ip, int port);
 
-        /// <summary> 停止微服务 </summary>
+        /// <summary> 停止服务 </summary>
         /// <returns></returns>
         Task Stop();
     }

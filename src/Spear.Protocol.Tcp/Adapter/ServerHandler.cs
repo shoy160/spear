@@ -13,7 +13,7 @@ namespace Spear.Protocol.Tcp.Adapter
         private readonly ILogger<ServerHandler> _logger;
         private readonly Action<IChannelHandlerContext, MicroMessage> _readAction;
 
-        public ServerHandler(ILoggerFactory loggerFactory, Action<IChannelHandlerContext, MicroMessage> readAction)
+        public ServerHandler(Action<IChannelHandlerContext, MicroMessage> readAction, ILoggerFactory loggerFactory)
         {
             _readAction = readAction;
             _logger = loggerFactory.CreateLogger<ServerHandler>();
@@ -53,6 +53,7 @@ namespace Spear.Protocol.Tcp.Adapter
                 return;
             Task.Run(() => _readAction(context, msg));
         }
+
 
         public override void ChannelReadComplete(IChannelHandlerContext context)
         {

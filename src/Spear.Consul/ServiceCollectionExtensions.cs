@@ -4,6 +4,7 @@ using Spear.Core.Config;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
 using System;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Spear.Consul
 {
@@ -18,11 +19,13 @@ namespace Spear.Consul
         /// <returns></returns>
         public static IMicroClientBuilder AddConsul(this IMicroClientBuilder builder, Action<ConsulOption> optionAction = null)
         {
+            builder.AddMemoryCache();
             builder.AddSingleton<IServiceFinder>(provider =>
             {
                 var option = ConsulOption.Config();
                 optionAction?.Invoke(option);
-                return new ConsulServiceFinder(option.Server, option.Token);
+                var cache = provider.GetService<IMemoryCache>();
+                return new ConsulServiceFinder(cache, option.Server, option.Token);
             });
             return builder;
         }
@@ -54,7 +57,12 @@ namespace Spear.Consul
         public static IMicroClientBuilder AddConsul(this IMicroClientBuilder builder, string server,
             string token = null)
         {
-            builder.AddSingleton<IServiceFinder>(provider => new ConsulServiceFinder(server, token));
+            builder.AddMemoryCache();
+            builder.AddSingleton<IServiceFinder>(provider =>
+            {
+                var cache = provider.GetService<IMemoryCache>();
+                return new ConsulServiceFinder(cache, server, token);
+            });
             return builder;
         }
 

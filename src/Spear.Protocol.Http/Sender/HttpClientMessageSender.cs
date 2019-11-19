@@ -14,13 +14,13 @@ namespace Spear.Protocol.Http.Sender
         private readonly IMessageCodecFactory _codecFactory;
         private readonly IMessageListener _messageListener;
         private readonly IHttpClientFactory _clientFactory;
-        private readonly ILogger _logger;
+        private readonly ILogger<HttpClientMessageSender> _logger;
         private readonly string _url;
 
-        public HttpClientMessageSender(ILogger logger, IHttpClientFactory clientFactory,
+        public HttpClientMessageSender(ILoggerFactory loggerFactory, IHttpClientFactory clientFactory,
             IMessageCodecFactory codecFactory, string url, IMessageListener listener)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<HttpClientMessageSender>();
             _codecFactory = codecFactory;
             _url = url;
             _messageListener = listener;
@@ -32,7 +32,7 @@ namespace Spear.Protocol.Http.Sender
             if (!message.IsInvoke)
                 return;
             var invoke = message.GetContent<InvokeMessage>();
-            var uri = new Uri(new Uri(_url), "micro");
+            var uri = new Uri(new Uri(_url), "micro/executor");
             var client = _clientFactory.CreateClient();
             var req = new HttpRequestMessage(HttpMethod.Post, uri.AbsoluteUri);
             if (invoke.Headers != null)
@@ -45,8 +45,11 @@ namespace Spear.Protocol.Http.Sender
 
             var data = _codecFactory.GetEncoder().Encode(message);
             req.Content = new ByteArrayContent(data);
-            //req.Content = new StringContent(data Encoding.UTF8, "application/json");
             var resp = await client.SendAsync(req);
+            if (!resp.IsSuccessStatusCode)
+            {
+                throw new SpearException($"服务请求异常，状态码{(int)resp.StatusCode}");
+            }
             var content = await resp.Content.ReadAsByteArrayAsync();
             var result = _codecFactory.GetDecoder().Decode(content);
             await _messageListener.OnReceived(this, result);

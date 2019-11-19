@@ -25,7 +25,7 @@ namespace Spear.Tests.Server
             var port = -1;
             if (args.Length > 0)
                 int.TryParse(args[0], out port);
-            var protocol = ServiceProtocol.Http;
+            var protocol = ServiceProtocol.Tcp;
             if (args.Length > 1)
                 Enum.TryParse(args[1], out protocol);
 
@@ -57,7 +57,6 @@ namespace Spear.Tests.Server
             {
                 builder.SetMinimumLevel(LogLevel.Information);
                 builder.AddConsole();
-                //builder.AddAcb();
             });
             _provider = services.BuildServiceProvider();
             _provider.UseNacosConfig();
@@ -65,6 +64,7 @@ namespace Spear.Tests.Server
             _provider.UseMicroService(address =>
             {
                 var m = "micro".Config<ServiceAddress>();
+                if (m == null) return;
                 address.Service = m.Service;
                 address.Host = m.Host;
                 address.Port = port > 80 ? port : m.Port;
