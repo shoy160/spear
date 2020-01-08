@@ -16,9 +16,5 @@ namespace Spear.Core.Session.Impl
                 return principal;
             }
         }
-
-        public void Dispose()
-        {
-        }
     }
 }

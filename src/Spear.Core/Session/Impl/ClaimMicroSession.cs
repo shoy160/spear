@@ -21,8 +21,10 @@ namespace Spear.Core.Session.Impl
             return string.IsNullOrWhiteSpace(claim?.Value) ? null : claim.Value;
         }
 
-        public override string UserName => TempSession?.UserName ?? GetClaimValue(MicroClaimTypes.UserName);
-        public override string Role => TempSession?.Role ?? GetClaimValue(MicroClaimTypes.Role);
+        public override string UserName =>
+            TempSession != null ? TempSession.UserName : GetClaimValue(MicroClaimTypes.UserName);
+
+        public override string Role => TempSession != null ? TempSession.Role : GetClaimValue(MicroClaimTypes.Role);
 
         protected override object GetUserId()
         {
