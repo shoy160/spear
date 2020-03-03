@@ -43,7 +43,7 @@ namespace Spear.Protocol.Http.Sender
                 }
             }
 
-            var data = _codecFactory.GetEncoder().Encode(message);
+            var data = await _codecFactory.GetEncoder().EncodeAsync(message);
             req.Content = new ByteArrayContent(data);
             var resp = await client.SendAsync(req);
             if (!resp.IsSuccessStatusCode)
@@ -51,7 +51,7 @@ namespace Spear.Protocol.Http.Sender
                 throw new SpearException($"服务请求异常，状态码{(int)resp.StatusCode}");
             }
             var content = await resp.Content.ReadAsByteArrayAsync();
-            var result = _codecFactory.GetDecoder().Decode(content);
+            var result = await _codecFactory.GetDecoder().DecodeAsync<MicroMessage>(content);
             await _messageListener.OnReceived(this, result);
 
         }

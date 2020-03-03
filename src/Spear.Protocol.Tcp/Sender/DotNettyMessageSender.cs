@@ -1,4 +1,5 @@
-﻿using DotNetty.Buffers;
+﻿using System.Threading.Tasks;
+using DotNetty.Buffers;
 using Spear.Core.Message;
 
 namespace Spear.Protocol.Tcp.Sender
@@ -12,9 +13,9 @@ namespace Spear.Protocol.Tcp.Sender
             _messageEncoder = messageEncoder;
         }
 
-        protected IByteBuffer GetByteBuffer(MicroMessage message)
+        protected async Task<IByteBuffer> GetByteBuffer(MicroMessage message)
         {
-            var data = _messageEncoder.Encode(message);
+            var data = await _messageEncoder.EncodeAsync(message);
             return Unpooled.WrappedBuffer(data);
         }
     }

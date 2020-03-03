@@ -13,6 +13,7 @@ using Spear.Tests.Contracts;
 using Spear.Tests.Server.Services;
 using System;
 using System.Threading.Tasks;
+using Spear.Codec;
 
 namespace Spear.Tests.Server
 {
@@ -37,10 +38,11 @@ namespace Spear.Tests.Server
             services.AddMicroService(builder =>
             {
                 builder
-                    .AddJsonCoder()
+                    //.AddJsonCodec()
+                    .AddMessagePackCodec()
                     .AddSession()
-                    .AddNacos()
-                    //.AddConsul()
+                    //.AddNacos()
+                    .AddConsul()
                     ;
                 switch (protocol)
                 {
@@ -59,7 +61,7 @@ namespace Spear.Tests.Server
                 builder.AddConsole();
             });
             _provider = services.BuildServiceProvider();
-            _provider.UseNacosConfig();
+            //_provider.UseNacosConfig();
 
             _provider.UseMicroService(address =>
             {

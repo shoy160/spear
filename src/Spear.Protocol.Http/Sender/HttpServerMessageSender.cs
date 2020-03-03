@@ -22,7 +22,7 @@ namespace Spear.Protocol.Http.Sender
         {
             if (!message.IsResult)
                 return;
-            var data = _encoder.Encode(message);
+            var data = await _encoder.EncodeAsync(message);
             var contentLength = data.Length;
             _response.Headers.Add("Content-Type", "application/json");
             _response.Headers.Add("Content-Length", contentLength.ToString());

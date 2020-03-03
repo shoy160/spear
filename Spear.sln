@@ -61,6 +61,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Apollo", "src\Spear.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Zookeeper", "src\Spear.Zookeeper\Spear.Zookeeper.csproj", "{B79D6032-BFB1-4160-B6D0-EA3032253CFE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Codec.MessagePack", "src\Spear.Codec.MessagePack\Spear.Codec.MessagePack.csproj", "{4CE49E02-41CA-4242-99F5-5565AB238D10}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Codec.ProtoBuffer", "src\Spear.Codec.ProtoBuffer\Spear.Codec.ProtoBuffer.csproj", "{6A0676C5-3220-48D3-ABEE-5C96664DE00C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +155,14 @@ Global
 		{B79D6032-BFB1-4160-B6D0-EA3032253CFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B79D6032-BFB1-4160-B6D0-EA3032253CFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B79D6032-BFB1-4160-B6D0-EA3032253CFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CE49E02-41CA-4242-99F5-5565AB238D10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CE49E02-41CA-4242-99F5-5565AB238D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CE49E02-41CA-4242-99F5-5565AB238D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CE49E02-41CA-4242-99F5-5565AB238D10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A0676C5-3220-48D3-ABEE-5C96664DE00C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A0676C5-3220-48D3-ABEE-5C96664DE00C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A0676C5-3220-48D3-ABEE-5C96664DE00C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A0676C5-3220-48D3-ABEE-5C96664DE00C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +189,8 @@ Global
 		{88AEE715-8891-45C2-868C-3D11186F4AA5} = {D7FA77A3-C7C2-4F40-B252-BB9330740DEA}
 		{937D24BD-381A-4BD5-931C-3B9E85A6235A} = {67C57E6D-E13C-4053-AA48-F72DD00FA398}
 		{B79D6032-BFB1-4160-B6D0-EA3032253CFE} = {67C57E6D-E13C-4053-AA48-F72DD00FA398}
+		{4CE49E02-41CA-4242-99F5-5565AB238D10} = {CEA05BAF-D308-4853-AB0A-F0B5C45C3E7B}
+		{6A0676C5-3220-48D3-ABEE-5C96664DE00C} = {CEA05BAF-D308-4853-AB0A-F0B5C45C3E7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80C90B42-B34C-4BE9-8695-96E316D751E9}

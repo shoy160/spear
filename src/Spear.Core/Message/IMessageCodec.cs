@@ -1,4 +1,5 @@
-﻿using Spear.Core.Message.Implementation;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace Spear.Core.Message
 {
@@ -8,7 +9,7 @@ namespace Spear.Core.Message
         /// <summary> 消息编码 </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        byte[] Encode(MicroMessage message);
+        Task<byte[]> EncodeAsync(object message);
     }
 
     /// <summary> 消息解码器 </summary>
@@ -16,9 +17,12 @@ namespace Spear.Core.Message
     {
         /// <summary> 消息解码 </summary>
         /// <param name="data"></param>
+        /// <param name="type"></param>
         /// <returns></returns>
-        MicroMessage Decode(byte[] data);
+        Task<object> DecodeAsync(byte[] data, Type type);
     }
+
+    public interface IMessageCodec : IMessageEncoder, IMessageDecoder { }
 
     public interface IMessageCodecFactory
     {
@@ -28,5 +32,30 @@ namespace Spear.Core.Message
         /// <summary> 获取解码器 </summary>
         /// <returns></returns>
         IMessageDecoder GetDecoder();
+    }
+
+    public static class MessageCodecExtensions
+    {
+        public static async Task<T> DecodeAsync<T>(this IMessageDecoder decoder, byte[] data)
+        {
+            var obj = await decoder.DecodeAsync(data, typeof(T));
+            return obj.CastTo<T>();
+        }
+
+        public static byte[] Encode(this IMessageEncoder encoder, object message)
+        {
+            return encoder.EncodeAsync(message).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        public static object Decode(this IMessageDecoder decoder, byte[] data, Type type)
+        {
+            return decoder.DecodeAsync(data, type).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        public static T Decode<T>(this IMessageDecoder decoder, byte[] data)
+        {
+            var obj = decoder.Decode(data, typeof(T));
+            return obj.CastTo<T>();
+        }
     }
 }

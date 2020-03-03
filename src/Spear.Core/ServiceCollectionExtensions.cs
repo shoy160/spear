@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
@@ -10,17 +15,12 @@ using Spear.Core.Reflection;
 using Spear.Core.Session;
 using Spear.Core.Session.Impl;
 using Spear.ProxyGenerator;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Spear.Core
 {
     public static class ServiceCollectionExtensions
     {
-        private static IDictionary<MethodInfo, string> _routeCache = new Dictionary<MethodInfo, string>();
+        private static readonly IDictionary<MethodInfo, string> RouteCache = new Dictionary<MethodInfo, string>();
         /// <summary> 获取服务 </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
@@ -48,7 +48,7 @@ namespace Spear.Core
         /// <returns></returns>
         public static string ServiceKey(this MethodInfo method)
         {
-            if (_routeCache.TryGetValue(method, out var route))
+            if (RouteCache.TryGetValue(method, out var route))
                 return route;
             var key = string.Empty;
             var attr = method.DeclaringType?.GetCustomAttribute<ServiceRouteAttribute>();
@@ -65,7 +65,7 @@ namespace Spear.Core
             {
                 route = $"{method.DeclaringType?.Name}/{method.Name}".ToLower();
             }
-            _routeCache.Add(method, route);
+            RouteCache.Add(method, route);
 
             return route;
         }
@@ -86,9 +86,9 @@ namespace Spear.Core
         /// <summary> 使用Json编解码器。 </summary>
         /// <param name="builder">服务构建者。</param>
         /// <returns>服务构建者。</returns>
-        public static T AddJsonCoder<T>(this T builder) where T : IMicroBuilder
+        public static T AddJsonCodec<T>(this T builder) where T : IMicroBuilder
         {
-            builder.AddCoder<T, JsonMessageCodecFactory>();
+            builder.AddCoder<T, DMessageCodecFactory<JsonCodec>>();
             return builder;
         }
 

@@ -29,7 +29,7 @@ namespace Spear.Tests.Client.Benchmark
             var services = new MicroBuilder()
                 .AddMicroClient(builder =>
                 {
-                    builder.AddJsonCoder()
+                    builder.AddJsonCodec()
                         .AddSession()
                         .AddHttpProtocol()
                         .AddTcpProtocol()

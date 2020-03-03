@@ -115,7 +115,7 @@ namespace Spear.Protocol.Http
                 await input.CopyToAsync(memstream);
                 buffers = memstream.ToArray();
             }
-            var message = _codecFactory.GetDecoder().Decode(buffers);
+            var message = await _codecFactory.GetDecoder().DecodeAsync<MicroMessage>(buffers);
             var invoke = message.GetContent<InvokeMessage>();
             invoke.Headers = invoke.Headers ?? new Dictionary<string, string>();
             foreach (var header in request.Headers)

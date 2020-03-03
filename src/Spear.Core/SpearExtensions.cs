@@ -1,13 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
-using Spear.Core.Config;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Spear.Core.Config;
 
 namespace Spear.Core
 {
@@ -269,6 +271,50 @@ namespace Spear.Core
                         b.AddJsonFile(json, false, true);
                     }
                 });
+            }
+        }
+
+        /// <summary> zip压缩 </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
+        public static async Task<byte[]> Zip(this byte[] buffer)
+        {
+            if (buffer == null || buffer.Length == 0)
+                return buffer;
+            using (var stream = new MemoryStream())
+            {
+                using (var zip = new GZipStream(stream, CompressionMode.Compress, true))
+                {
+                    await zip.WriteAsync(buffer, 0, buffer.Length);
+                }
+                return stream.ToArray();
+            }
+        }
+
+        /// <summary> zip解压 </summary>
+        /// <param name="zipBuffer"></param>
+        /// <returns></returns>
+        public static async Task<byte[]> UnZip(this byte[] zipBuffer)
+        {
+            if (zipBuffer == null || zipBuffer.Length == 0)
+                return zipBuffer;
+
+            using (var zipStream = new MemoryStream(zipBuffer))
+            {
+                using (var zip = new GZipStream(zipStream, CompressionMode.Decompress))
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        var buffer = new byte[2048];
+                        while (true)
+                        {
+                            var count = await zip.ReadAsync(buffer, 0, buffer.Length);
+                            if (count == 0) break;
+                            await stream.WriteAsync(buffer, 0, count);
+                        }
+                        return stream.ToArray();
+                    }
+                }
             }
         }
     }

@@ -34,7 +34,7 @@ namespace Spear.Protocol.Tcp.Sender
         /// <returns>一个任务。</returns>
         public async Task Send(MicroMessage message, bool flush = true)
         {
-            var buffer = GetByteBuffer(message);
+            var buffer = await GetByteBuffer(message);
             if (flush)
                 await _channel.WriteAndFlushAsync(buffer);
             else

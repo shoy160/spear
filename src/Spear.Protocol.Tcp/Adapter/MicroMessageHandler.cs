@@ -19,7 +19,7 @@ namespace Spear.Protocol.Tcp.Adapter
             var buffer = (IByteBuffer)message;
             var data = new byte[buffer.ReadableBytes];
             buffer.ReadBytes(data);
-            var microMessage = _messageDecoder.Decode(data);
+            var microMessage = _messageDecoder.DecodeAsync<MicroMessage>(data);
             context.FireChannelRead(microMessage);
             ReferenceCountUtil.Release(buffer);
         }
