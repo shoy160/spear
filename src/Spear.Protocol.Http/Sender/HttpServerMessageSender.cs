@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Spear.Core.Message;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Spear.Core;
+using Spear.Core.Message;
+using Spear.Core.Message.Models;
 using Spear.Core.Micro.Services;
 
 namespace Spear.Protocol.Http.Sender
@@ -18,11 +19,11 @@ namespace Spear.Protocol.Http.Sender
             _response = response;
         }
 
-        public async Task Send(MicroMessage message, bool flush = true)
+        public async Task Send(DMessage message, bool flush = true)
         {
-            if (!message.IsResult)
+            if (!(message is ResultMessage result))
                 return;
-            var data = await _encoder.EncodeAsync(message);
+            var data = await _encoder.EncodeAsync(result);
             var contentLength = data.Length;
             _response.Headers.Add("Content-Type", "application/json");
             _response.Headers.Add("Content-Length", contentLength.ToString());

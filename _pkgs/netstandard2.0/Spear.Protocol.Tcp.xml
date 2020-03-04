@@ -35,7 +35,7 @@
             基于DotNetty客户端的消息发送者。
             </summary>
         </member>
-        <member name="M:Spear.Protocol.Tcp.Sender.DotNettyClientSender.Send(Spear.Core.Message.MicroMessage,System.Boolean)">
+        <member name="M:Spear.Protocol.Tcp.Sender.DotNettyClientSender.Send(Spear.Core.Message.Models.DMessage,System.Boolean)">
             <summary> 发送消息 </summary>
             <param name="message">消息内容</param>
             <param name="flush"></param>
@@ -46,7 +46,7 @@
             基于DotNetty服务端的消息发送者。
             </summary>
         </member>
-        <member name="M:Spear.Protocol.Tcp.Sender.DotNettyServerSender.Send(Spear.Core.Message.MicroMessage,System.Boolean)">
+        <member name="M:Spear.Protocol.Tcp.Sender.DotNettyServerSender.Send(Spear.Core.Message.Models.DMessage,System.Boolean)">
             <summary> 发送消息 </summary>
             <param name="message">消息内容</param>
             <param name="flush">清空缓冲池</param>

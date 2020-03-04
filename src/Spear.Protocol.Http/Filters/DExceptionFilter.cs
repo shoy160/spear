@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Spear.Core;
 using Spear.Core.Message;
+using Spear.Core.Message.Models;
 
 namespace Spear.Protocol.Http.Filters
 {

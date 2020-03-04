@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Spear.Core.Message.Models;
 
 namespace Spear.Core.Message.Implementation
 {
@@ -15,7 +16,7 @@ namespace Spear.Core.Message.Implementation
         /// <param name="sender"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task OnReceived(IMessageSender sender, MicroMessage message)
+        public async Task OnReceived(IMessageSender sender, DMessage message)
         {
             if (Received == null)
                 return;

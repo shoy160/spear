@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
-using Spear.Core;
-using Spear.Core.Message;
-using Spear.Core.Micro.Services;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Spear.Core;
+using Spear.Core.Message;
+using Spear.Core.Message.Models;
+using Spear.Core.Micro.Services;
 
 namespace Spear.Protocol.Http.Sender
 {
@@ -27,17 +28,16 @@ namespace Spear.Protocol.Http.Sender
             _clientFactory = clientFactory;
         }
 
-        public async Task Send(MicroMessage message, bool flush = true)
+        public async Task Send(DMessage message, bool flush = true)
         {
-            if (!message.IsInvoke)
+            if (!(message is InvokeMessage invokeMessage))
                 return;
-            var invoke = message.GetContent<InvokeMessage>();
             var uri = new Uri(new Uri(_url), "micro/executor");
             var client = _clientFactory.CreateClient();
             var req = new HttpRequestMessage(HttpMethod.Post, uri.AbsoluteUri);
-            if (invoke.Headers != null)
+            if (invokeMessage.Headers != null)
             {
-                foreach (var header in invoke.Headers)
+                foreach (var header in invokeMessage.Headers)
                 {
                     req.Headers.Add(header.Key, header.Value);
                 }
@@ -51,7 +51,7 @@ namespace Spear.Protocol.Http.Sender
                 throw new SpearException($"服务请求异常，状态码{(int)resp.StatusCode}");
             }
             var content = await resp.Content.ReadAsByteArrayAsync();
-            var result = await _codecFactory.GetDecoder().DecodeAsync<MicroMessage>(content);
+            var result = await _codecFactory.GetDecoder().DecodeAsync<ResultMessage>(content);
             await _messageListener.OnReceived(this, result);
 
         }

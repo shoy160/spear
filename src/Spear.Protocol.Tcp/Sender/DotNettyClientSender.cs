@@ -3,6 +3,7 @@ using Spear.Core.Message;
 using System;
 using System.Threading.Tasks;
 using Spear.Core;
+using Spear.Core.Message.Models;
 using Spear.Core.Micro.Services;
 
 namespace Spear.Protocol.Tcp.Sender
@@ -32,11 +33,15 @@ namespace Spear.Protocol.Tcp.Sender
         /// <param name="message">消息内容</param>
         /// <param name="flush"></param>
         /// <returns>一个任务。</returns>
-        public async Task Send(MicroMessage message, bool flush = true)
+        public async Task Send(DMessage message, bool flush = true)
         {
             var buffer = await GetByteBuffer(message);
+            //Counter.Send(buffer.ReadableBytes);
             if (flush)
+            {
+                //Counter.Call();
                 await _channel.WriteAndFlushAsync(buffer);
+            }
             else
                 await _channel.WriteAsync(buffer);
         }

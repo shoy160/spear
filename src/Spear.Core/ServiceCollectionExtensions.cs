@@ -143,6 +143,7 @@ namespace Spear.Core
         public static IServiceCollection AddMicroClient(this IMicroClientBuilder services, Action<IMicroClientBuilder> builderAction)
         {
             builderAction.Invoke(services);
+            //services.TryAddSingleton<Counter>();
             services.AddProxy<ClientProxy>();
             return services;
         }
@@ -159,6 +160,7 @@ namespace Spear.Core
             services.AddSingleton<IMicroEntryFactory, MicroEntryFactory>();
             services.AddSingleton<IMicroExecutor, MicroExecutor>();
             services.AddSingleton<IMicroHost, MicroHost>();
+            //services.TryAddSingleton<Counter>();
             return services;
         }
 

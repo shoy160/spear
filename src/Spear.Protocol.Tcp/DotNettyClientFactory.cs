@@ -17,6 +17,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
+using Spear.Core.Message.Models;
 
 namespace Spear.Protocol.Tcp
 {
@@ -52,7 +53,7 @@ namespace Spear.Protocol.Tcp
                 var pipeline = c.Pipeline;
                 pipeline.AddLast(new LengthFieldPrepender(4));
                 pipeline.AddLast(new LengthFieldBasedFrameDecoder(int.MaxValue, 0, 4, 0, 4));
-                pipeline.AddLast(new MicroMessageHandler(_codecFactory.GetDecoder()));
+                pipeline.AddLast(new MicroMessageHandler<ResultMessage>(_codecFactory.GetDecoder()));
                 pipeline.AddLast(new ClientHandler((context, message) =>
                 {
                     var messageListener = context.Channel.GetAttribute(ListenerKey).Get();

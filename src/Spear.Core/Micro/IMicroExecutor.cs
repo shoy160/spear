@@ -1,5 +1,6 @@
 ﻿using Spear.Core.Message;
 using System.Threading.Tasks;
+using Spear.Core.Message.Models;
 
 namespace Spear.Core.Micro
 {
@@ -10,6 +11,6 @@ namespace Spear.Core.Micro
         /// <param name="sender"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        Task Execute(IMessageSender sender, MicroMessage message);
+        Task Execute(IMessageSender sender, InvokeMessage message);
     }
 }

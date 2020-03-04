@@ -24,7 +24,8 @@ namespace Spear.ProxyGenerator.Impl
                 return dict;
             for (var i = 0; i < parameters.Length; i++)
             {
-                dict.Add(parameters[i].Name, args[i]);
+                var parameter = parameters[i];
+                dict.Add(parameter.Name, args[i]);
             }
 
             return dict;

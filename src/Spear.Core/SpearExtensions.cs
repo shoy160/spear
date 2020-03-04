@@ -274,6 +274,46 @@ namespace Spear.Core
             }
         }
 
+        /// <summary> 获取值 </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dict"></param>
+        /// <param name="key"></param>
+        /// <param name="def"></param>
+        /// <returns></returns>
+        public static T GetValue<T>(this IDictionary<object, object> dict, object key, T def = default)
+        {
+            if (dict.TryGetValue(key, out var value) && value != null)
+            {
+                return value.CastTo(def);
+            }
+            return def;
+        }
+
+        /// <summary> 将网关参数转为类型 </summary>
+        /// <typeparam name="T">类型</typeparam>
+        /// <param name="dict"></param>
+        /// <returns></returns>
+        public static T ToObject<T>(this IDictionary<object, object> dict)
+        {
+            var type = typeof(T);
+            var obj = Activator.CreateInstance(type);
+            var properties = type.GetProperties();
+
+            foreach (var item in properties)
+            {
+                var key = item.Name;
+                if (string.IsNullOrWhiteSpace(key))
+                    continue;
+                var value = dict.GetValue<object>(key);
+                if (value != null)
+                {
+                    item.SetValue(obj, value.CastTo(item.PropertyType));
+                }
+            }
+
+            return obj.CastTo<T>();
+        }
+
         /// <summary> zip压缩 </summary>
         /// <param name="buffer"></param>
         /// <returns></returns>

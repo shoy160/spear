@@ -4,6 +4,7 @@ using Spear.Core.Message;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Spear.Core.Message.Models;
 
 namespace Spear.Protocol.Tcp.Adapter
 {
@@ -11,9 +12,9 @@ namespace Spear.Protocol.Tcp.Adapter
     internal class ServerHandler : ChannelHandlerAdapter
     {
         private readonly ILogger<ServerHandler> _logger;
-        private readonly Action<IChannelHandlerContext, MicroMessage> _readAction;
+        private readonly Action<IChannelHandlerContext, InvokeMessage> _readAction;
 
-        public ServerHandler(Action<IChannelHandlerContext, MicroMessage> readAction, ILoggerFactory loggerFactory)
+        public ServerHandler(Action<IChannelHandlerContext, InvokeMessage> readAction, ILoggerFactory loggerFactory)
         {
             _readAction = readAction;
             _logger = loggerFactory.CreateLogger<ServerHandler>();
@@ -49,7 +50,7 @@ namespace Spear.Protocol.Tcp.Adapter
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
             //_logger.Debug(message);
-            if (!(message is MicroMessage msg))
+            if (!(message is InvokeMessage msg))
                 return;
             Task.Run(() => _readAction(context, msg));
         }

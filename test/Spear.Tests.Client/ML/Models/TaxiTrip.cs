@@ -1,4 +1,5 @@
-﻿using Microsoft.ML.Runtime.Api;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.ML.Data;
 
 namespace Spear.Tests.Client.ML.Models
 {

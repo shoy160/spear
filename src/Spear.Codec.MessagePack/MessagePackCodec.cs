@@ -1,11 +1,13 @@
 ﻿using System;
+using MessagePack;
+using MessagePack.Resolvers;
 using Spear.Core.Message.Implementation;
 
 namespace Spear.Codec
 {
     public class MessagePackCodec : DMessageCodec
     {
-        protected override byte[] EncodeInternal(object message)
+        protected override byte[] OnEncode(object message)
         {
             if (message == null) return new byte[0];
             byte[] buffer;
@@ -13,18 +15,18 @@ namespace Spear.Codec
                 buffer = (byte[])message;
             else
             {
-                buffer = MessagePack.MessagePackSerializer.Serialize(message);
+                //buffer = MessagePackSerializer.Typeless.Serialize(message);
+                buffer = MessagePackSerializer.Serialize(message, ContractlessStandardResolver.Options);
             }
-
-            //buffer = buffer.Zip().Result;
             return buffer;
         }
 
-        protected override object DecodeInternal(byte[] data, Type type)
+        protected override object OnDecode(byte[] data, Type type)
         {
             if (data == null || data.Length == 0)
                 return null;
-            return MessagePack.MessagePackSerializer.Deserialize(type, data);
+            //return MessagePackSerializer.Typeless.Deserialize(data);
+            return MessagePackSerializer.Deserialize(type, data, ContractlessStandardResolver.Options);
         }
     }
 }

@@ -1,13 +1,12 @@
-﻿using Spear.Core.Message.Implementation;
-using Spear.Core.Micro;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Spear.Core.Message.Models;
 
 namespace Spear.Core.Message
 {
     /// <summary> 接受到消息的委托 </summary>
     /// <param name="sender">消息发送者。</param>
     /// <param name="message">接收到的消息。</param>
-    public delegate Task ReceivedDelegate(IMessageSender sender, MicroMessage message);
+    public delegate Task ReceivedDelegate(IMessageSender sender, DMessage message);
 
     public interface IMessageListener
     {
@@ -18,6 +17,6 @@ namespace Spear.Core.Message
         /// <param name="sender">消息发送者。</param>
         /// <param name="message">接收到的消息。</param>
         /// <returns>一个任务。</returns>
-        Task OnReceived(IMessageSender sender, MicroMessage message);
+        Task OnReceived(IMessageSender sender, DMessage message);
     }
 }

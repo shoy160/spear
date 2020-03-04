@@ -1,5 +1,5 @@
-﻿using Spear.Core.Message.Implementation;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Spear.Core.Message.Models;
 
 namespace Spear.Core.Message
 {
@@ -10,6 +10,6 @@ namespace Spear.Core.Message
         /// <param name="message"></param>
         /// <param name="flush"></param>
         /// <returns></returns>
-        Task Send(MicroMessage message, bool flush = true);
+        Task Send(DMessage message, bool flush = true);
     }
 }

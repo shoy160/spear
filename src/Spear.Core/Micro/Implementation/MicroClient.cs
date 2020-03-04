@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Spear.Core.Message;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Spear.Core.Message;
+using Spear.Core.Message.Models;
 
 namespace Spear.Core.Micro.Implementation
 {
@@ -16,7 +17,7 @@ namespace Spear.Core.Micro.Implementation
         private readonly IMicroExecutor _executor;
         private readonly ILogger<MicroClient> _logger;
 
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>> _resultDictionary;
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<ResultMessage>> _resultDictionary;
 
         public MicroClient(IMessageSender sender, IMessageListener listener, IMicroExecutor executor, ILoggerFactory loggerFactory)
         {
@@ -24,40 +25,39 @@ namespace Spear.Core.Micro.Implementation
             _listener = listener;
             _executor = executor;
             _logger = loggerFactory.CreateLogger<MicroClient>();
-            _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<MicroMessage>>();
+            _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<ResultMessage>>();
             listener.Received += ListenerOnReceived;
         }
 
-        private async Task ListenerOnReceived(IMessageSender sender, MicroMessage message)
+        private async Task ListenerOnReceived(IMessageSender sender, DMessage message)
         {
             if (!_resultDictionary.TryGetValue(message.Id, out var task))
                 return;
 
-            if (message.IsResult)
+            if (message is ResultMessage result)
             {
-                var content = message.GetContent<ResultMessage>();
-                if (content.Code != 200)
+                if (result.Code != 200)
                 {
-                    task.TrySetException(new SpearException(content.Message, content.Code));
+                    task.TrySetException(new SpearException(result.Message, result.Code));
                 }
                 else
                 {
-                    task.SetResult(message);
+                    task.SetResult(result);
                 }
             }
-            if (_executor != null && message.IsInvoke)
-                await _executor.Execute(sender, message);
+            if (_executor != null && message is InvokeMessage invokeMessage)
+                await _executor.Execute(sender, invokeMessage);
         }
 
-        private async Task<T> RegistCallbackAsync<T>(string messageId)
+        private async Task<ResultMessage> RegistCallbackAsync(string messageId)
         {
             _logger.LogDebug($"准备获取Id为：{messageId}的响应内容。");
-            var task = new TaskCompletionSource<MicroMessage>();
+            var task = new TaskCompletionSource<ResultMessage>();
             _resultDictionary.TryAdd(messageId, task);
             try
             {
                 var result = await task.Task;
-                return result.GetContent<T>();
+                return result;
             }
             finally
             {
@@ -66,20 +66,19 @@ namespace Spear.Core.Micro.Implementation
             }
         }
 
-        public async Task<T> Send<T>(object message)
+        public async Task<ResultMessage> Send(InvokeMessage message)
         {
             var watch = Stopwatch.StartNew();
             try
             {
                 _logger.LogDebug("准备发送消息");
-                var microMessage = new MicroMessage(message);
-                var callback = RegistCallbackAsync<T>(microMessage.Id);
+                var callback = RegistCallbackAsync(message.Id);
                 try
                 {
                     if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug($"{_sender.GetType()}:send :{JsonConvert.SerializeObject(microMessage)}");
+                        _logger.LogDebug($"{_sender.GetType()}:send :{JsonConvert.SerializeObject(message)}");
                     //发送
-                    await _sender.Send(microMessage);
+                    await _sender.Send(message);
                 }
                 catch (Exception exception)
                 {
@@ -104,10 +103,10 @@ namespace Spear.Core.Micro.Implementation
             }
         }
 
-        public async Task<ResultMessage> Send(InvokeMessage message)
-        {
-            return await Send<ResultMessage>(message);
-        }
+        //public async Task<ResultMessage> Send(InvokeMessage message)
+        //{
+        //    return await Send<ResultMessage>(message);
+        //}
 
         public void Dispose()
         {

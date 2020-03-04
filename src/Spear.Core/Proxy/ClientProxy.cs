@@ -1,12 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Polly;
-using Spear.Core.Message;
-using Spear.Core.Micro;
-using Spear.Core.Micro.Services;
-using Spear.Core.Session;
-using Spear.ProxyGenerator;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -15,6 +7,14 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Polly;
+using Spear.Core.Message.Models;
+using Spear.Core.Micro;
+using Spear.Core.Micro.Services;
+using Spear.Core.Session;
+using Spear.ProxyGenerator;
 
 namespace Spear.Core.Proxy
 {
@@ -58,7 +58,9 @@ namespace Spear.Core.Proxy
 
         private async Task<ResultMessage> InternalInvoke(MethodInfo targetMethod, IDictionary<string, object> args)
         {
-            var services = (await _serviceFinder.Find(targetMethod.DeclaringType) ?? new List<ServiceAddress>())
+            var serviceType = targetMethod.DeclaringType;
+
+            var services = (await _serviceFinder.Find(serviceType) ?? new List<ServiceAddress>())
                 .ToList();
             if (!services.Any())
             {
@@ -71,7 +73,8 @@ namespace Spear.Core.Proxy
                     ex.GetBaseException() is SocketException ||
                     ex.GetBaseException() is HttpRequestException) //服务器异常
                 .OrResult<ResultMessage>(r => r.Code != 200); //服务未找到
-                                                              //熔断,3次异常,熔断5分钟
+
+            //熔断,3次异常,熔断5分钟
             var breaker = builder.CircuitBreakerAsync(3, TimeSpan.FromMinutes(5));
             //重试3次
             var retry = builder.RetryAsync(3, (result, count) =>
@@ -80,6 +83,7 @@ namespace Spear.Core.Proxy
                     ? $"{service}{targetMethod.Name}:retry,{count},{result.Exception.Format()}"
                     : $"{service}{targetMethod.Name}:retry,{count},{result.Result.Code}");
                 services.Remove(service);
+                _serviceFinder.CleanCache(serviceType);
             });
 
             var policy = Policy.WrapAsync(retry, breaker);
@@ -88,6 +92,7 @@ namespace Spear.Core.Proxy
             {
                 if (!services.Any())
                 {
+                    await _serviceFinder.CleanCache(serviceType);
                     throw new SpearException("没有可用的服务", 20001);
                 }
 
@@ -125,9 +130,9 @@ namespace Spear.Core.Proxy
             var invokeMessage = new InvokeMessage
             {
                 ServiceId = serviceId,
-                Parameters = args,
                 Headers = headers
             };
+            invokeMessage.SetParameters(args);
             var type = targetMethod.ReturnType;
             if (type == typeof(void) || type == typeof(Task))
                 invokeMessage.IsNotice = true;
@@ -137,7 +142,7 @@ namespace Spear.Core.Proxy
         public object Invoke(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
             var result = InternalInvoke(method, parameters).GetAwaiter().GetResult();
-            return result.Data;
+            return result.Content.Data;
         }
 
         public Task InvokeAsync(MethodInfo method, IDictionary<string, object> parameters, object key = null)
@@ -148,7 +153,7 @@ namespace Spear.Core.Proxy
         public async Task<T> InvokeAsync<T>(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
             var result = await InternalInvoke(method, parameters);
-            return (T)result.Data;
+            return (T)result.Content.Data;
         }
     }
 }

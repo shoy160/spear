@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Spear.Core.Micro.Services
 {
@@ -35,6 +35,13 @@ namespace Spear.Core.Micro.Services
             if (services != null && services.Any())
                 _cache.Set(key, services, TimeSpan.FromMinutes(2));
             return services;
+        }
+
+        public Task CleanCache(Type serviceType)
+        {
+            var key = serviceType.Assembly.ServiceName();
+            _cache.Remove(key);
+            return Task.CompletedTask;
         }
     }
 }

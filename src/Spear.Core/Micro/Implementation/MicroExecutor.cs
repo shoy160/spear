@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Spear.Core.Message;
-using Spear.Core.Session;
-using Spear.ProxyGenerator;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Spear.Core.Message;
+using Spear.Core.Message.Models;
+using Spear.Core.Session;
 
 namespace Spear.Core.Micro.Implementation
 {
@@ -37,14 +37,14 @@ namespace Spear.Core.Micro.Implementation
 
                 if (entry.IsNotify)
                 {
-                    await entry.Invoke(invokeMessage.Parameters);
+                    await entry.Invoke(invokeMessage.GetParameters());
                 }
                 else
                 {
-                    var data = await entry.Invoke(invokeMessage.Parameters);
+                    var data = await entry.Invoke(invokeMessage.GetParameters());
                     if (!(data is Task task))
                     {
-                        result.Data = data;
+                        result.Content = new DynamicObject(data);
                     }
                     else
                     {
@@ -54,7 +54,7 @@ namespace Spear.Core.Micro.Implementation
                         {
                             var prop = taskType.GetProperty("Result");
                             if (prop != null)
-                                result.Data = prop.GetValue(task);
+                                result.Content = new DynamicObject(prop.GetValue(task));
                         }
                     }
                 }
@@ -67,11 +67,12 @@ namespace Spear.Core.Micro.Implementation
             }
         }
 
-        private async Task SendResult(IMessageSender sender, string messageId, ResultMessage result)
+        private async Task SendResult(IMessageSender sender, string messageId, DMessage result)
         {
             try
             {
-                await sender.Send(result.Create(messageId));
+                result.Id = messageId;
+                await sender.Send(result);
             }
             catch (Exception ex)
             {
@@ -83,30 +84,27 @@ namespace Spear.Core.Micro.Implementation
         /// <param name="sender"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public async Task Execute(IMessageSender sender, MicroMessage message)
+        public async Task Execute(IMessageSender sender, InvokeMessage message)
         {
-            if (!message.IsInvoke)
-                return;
-            var invokeMessage = message.GetContent<InvokeMessage>();
             var accessor = _provider.GetService<IPrincipalAccessor>();
-            if (accessor != null && invokeMessage.Headers != null && invokeMessage.Headers.Any())
+            if (accessor != null && message.Headers != null && message.Headers.Any())
             {
                 var session = new MicroSessionDto();
                 //解析Claims
-                if (invokeMessage.Headers.TryGetValue(MicroClaimTypes.HeaderUserId, out var userId))
+                if (message.Headers.TryGetValue(MicroClaimTypes.HeaderUserId, out var userId))
                     session.UserId = userId;
-                if (invokeMessage.Headers.TryGetValue(MicroClaimTypes.HeaderTenantId, out var tenantId))
+                if (message.Headers.TryGetValue(MicroClaimTypes.HeaderTenantId, out var tenantId))
                     session.TenantId = tenantId;
                 //username
-                if (invokeMessage.Headers.TryGetValue(MicroClaimTypes.HeaderUserName, out var userName))
+                if (message.Headers.TryGetValue(MicroClaimTypes.HeaderUserName, out var userName))
                     session.UserName = HttpUtility.UrlDecode(userName);
                 //role
-                if (invokeMessage.Headers.TryGetValue(MicroClaimTypes.HeaderRole, out var role))
+                if (message.Headers.TryGetValue(MicroClaimTypes.HeaderRole, out var role))
                     session.Role = HttpUtility.UrlDecode(role);
                 accessor.SetSession(session);
             }
             var result = new ResultMessage();
-            if (invokeMessage.IsNotice)
+            if (message.IsNotice)
             {
                 //向客户端发送结果
                 await SendResult(sender, message.Id, result);
@@ -115,13 +113,13 @@ namespace Spear.Core.Micro.Implementation
                 await Task.Factory.StartNew(async () =>
                 {
                     //执行本地代码
-                    await LocalExecute(invokeMessage, result);
+                    await LocalExecute(message, result);
                 }, TaskCreationOptions.LongRunning);
                 return;
             }
 
             //执行本地代码
-            await LocalExecute(invokeMessage, result);
+            await LocalExecute(message, result);
             //向客户端发送结果
             await SendResult(sender, message.Id, result);
         }

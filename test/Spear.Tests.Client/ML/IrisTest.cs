@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML;
-using Microsoft.ML.Runtime.Data;
 using System;
+using Microsoft.ML.Data;
 
 namespace Spear.Tests.Client.ML
 {

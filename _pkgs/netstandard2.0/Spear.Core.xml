@@ -91,7 +91,7 @@
         <member name="T:Spear.Core.Message.IMessageEncoder">
             <summary> 消息编码器 </summary>
         </member>
-        <member name="M:Spear.Core.Message.IMessageEncoder.Encode(Spear.Core.Message.MicroMessage)">
+        <member name="M:Spear.Core.Message.IMessageEncoder.EncodeAsync(System.Object)">
             <summary> 消息编码 </summary>
             <param name="message"></param>
             <returns></returns>
@@ -99,9 +99,10 @@
         <member name="T:Spear.Core.Message.IMessageDecoder">
             <summary> 消息解码器 </summary>
         </member>
-        <member name="M:Spear.Core.Message.IMessageDecoder.Decode(System.Byte[])">
+        <member name="M:Spear.Core.Message.IMessageDecoder.DecodeAsync(System.Byte[],System.Type)">
             <summary> 消息解码 </summary>
             <param name="data"></param>
+            <param name="type"></param>
             <returns></returns>
         </member>
         <member name="M:Spear.Core.Message.IMessageCodecFactory.GetEncoder">
@@ -112,6 +113,33 @@
             <summary> 获取解码器 </summary>
             <returns></returns>
         </member>
+        <member name="M:Spear.Core.Message.MessageCodecExtensions.DecodeAsync``1(Spear.Core.Message.IMessageDecoder,System.Byte[])">
+            <summary> 解码 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="decoder"></param>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Message.MessageCodecExtensions.Encode(Spear.Core.Message.IMessageEncoder,System.Object)">
+            <summary> 编码 </summary>
+            <param name="encoder"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Message.MessageCodecExtensions.Decode(Spear.Core.Message.IMessageDecoder,System.Byte[],System.Type)">
+            <summary> 解码 </summary>
+            <param name="decoder"></param>
+            <param name="data"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Message.MessageCodecExtensions.Decode``1(Spear.Core.Message.IMessageDecoder,System.Byte[])">
+            <summary> 解码 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="decoder"></param>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
         <member name="T:Spear.Core.Message.ReceivedDelegate">
             <summary> 接受到消息的委托 </summary>
             <param name="sender">消息发送者。</param>
@@ -120,7 +148,7 @@
         <member name="E:Spear.Core.Message.IMessageListener.Received">
             <summary> 接收到消息的事件 </summary>
         </member>
-        <member name="M:Spear.Core.Message.IMessageListener.OnReceived(Spear.Core.Message.IMessageSender,Spear.Core.Message.MicroMessage)">
+        <member name="M:Spear.Core.Message.IMessageListener.OnReceived(Spear.Core.Message.IMessageSender,Spear.Core.Message.Models.DMessage)">
             <summary> 触发接收到消息事件 </summary>
             <param name="sender">消息发送者。</param>
             <param name="message">接收到的消息。</param>
@@ -129,7 +157,7 @@
         <member name="T:Spear.Core.Message.IMessageSender">
             <summary>  消息发送者 </summary>
         </member>
-        <member name="M:Spear.Core.Message.IMessageSender.Send(Spear.Core.Message.MicroMessage,System.Boolean)">
+        <member name="M:Spear.Core.Message.IMessageSender.Send(Spear.Core.Message.Models.DMessage,System.Boolean)">
             <summary> 发送消息 </summary>
             <param name="message"></param>
             <param name="flush"></param>
@@ -144,76 +172,37 @@
             接收到消息的事件。
             </summary>
         </member>
-        <member name="M:Spear.Core.Message.Implementation.MessageListener.OnReceived(Spear.Core.Message.IMessageSender,Spear.Core.Message.MicroMessage)">
+        <member name="M:Spear.Core.Message.Implementation.MessageListener.OnReceived(Spear.Core.Message.IMessageSender,Spear.Core.Message.Models.DMessage)">
             <summary> 接收到消息 </summary>
             <param name="sender"></param>
             <param name="message"></param>
             <returns></returns>
         </member>
-        <member name="T:Spear.Core.Message.InvokeMessage">
+        <member name="T:Spear.Core.Message.Models.DynamicObject">
+            <summary> 动态实体 </summary>
+        </member>
+        <member name="T:Spear.Core.Message.Models.InvokeMessage">
             <summary> 调用消息 </summary>
         </member>
-        <member name="P:Spear.Core.Message.InvokeMessage.ServiceId">
+        <member name="P:Spear.Core.Message.Models.InvokeMessage.ServiceId">
             <summary> 服务Id </summary>
         </member>
-        <member name="P:Spear.Core.Message.InvokeMessage.IsNotice">
+        <member name="P:Spear.Core.Message.Models.InvokeMessage.IsNotice">
             <summary> 是否是通知 </summary>
         </member>
-        <member name="P:Spear.Core.Message.InvokeMessage.Parameters">
+        <member name="P:Spear.Core.Message.Models.InvokeMessage.Parameters">
             <summary> 服务参数 </summary>
         </member>
-        <member name="P:Spear.Core.Message.MicroMessage.Id">
-            <summary> 消息ID </summary>
-        </member>
-        <member name="P:Spear.Core.Message.MicroMessage.ContentType">
-            <summary> 内容类型 </summary>
-        </member>
-        <member name="P:Spear.Core.Message.MicroMessage.Content">
-            <summary> 消息内容 </summary>
-        </member>
-        <member name="M:Spear.Core.Message.MicroMessage.GetContent``1">
-            <summary> 获取内容 </summary>
-            <typeparam name="T">内容类型</typeparam>
-            <returns>内容实例</returns>
-        </member>
-        <member name="M:Spear.Core.Message.MicroMessage.CreateInvokeMessage(Spear.Core.Message.InvokeMessage)">
-            <summary> 创建调用消息 </summary>
-            <param name="invokeMessage"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spear.Core.Message.MicroMessage.CreateResultMessage(System.String,Spear.Core.Message.ResultMessage)">
-            <summary> 创建调用结果消息 </summary>
-            <param name="id"></param>
-            <param name="result"></param>
-            <returns></returns>
-        </member>
-        <member name="P:Spear.Core.Message.MicroMessage.IsInvoke">
-            <summary> 是否是调用消息 </summary>
-        </member>
-        <member name="P:Spear.Core.Message.MicroMessage.IsResult">
-            <summary> 是否是调用结果消息 </summary>
-        </member>
-        <member name="M:Spear.Core.Message.MicroMessageExtension.Create(Spear.Core.Message.InvokeMessage)">
-            <summary> 创建调用消息 </summary>
-            <param name="invokeMessage"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spear.Core.Message.MicroMessageExtension.Create(Spear.Core.Message.ResultMessage,System.String)">
-            <summary> 创建调用结果消息 </summary>
-            <param name="invokeResultMessage"></param>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Spear.Core.Message.ResultMessage">
+        <member name="T:Spear.Core.Message.Models.ResultMessage">
             <summary> 调用结果消息 </summary>
         </member>
-        <member name="P:Spear.Core.Message.ResultMessage.Code">
+        <member name="P:Spear.Core.Message.Models.ResultMessage.Code">
             <summary> 状态码 </summary>
         </member>
-        <member name="P:Spear.Core.Message.ResultMessage.Message">
+        <member name="P:Spear.Core.Message.Models.ResultMessage.Message">
             <summary> 错误消息 </summary>
         </member>
-        <member name="P:Spear.Core.Message.ResultMessage.Data">
+        <member name="P:Spear.Core.Message.Models.ResultMessage.Content">
             <summary> 数据实体 </summary>
         </member>
         <member name="T:Spear.Core.Micro.IMicroBuilder">
@@ -231,12 +220,7 @@
         <member name="T:Spear.Core.Micro.IMicroClient">
             <summary> 微服务客户端 </summary>
         </member>
-        <member name="M:Spear.Core.Micro.IMicroClient.Send``1(System.Object)">
-            <summary> 发送消息 </summary>
-            <param name="message">远程调用消息模型。</param>
-            <returns>远程调用消息的传输消息。</returns>
-        </member>
-        <member name="M:Spear.Core.Micro.IMicroClient.Send(Spear.Core.Message.InvokeMessage)">
+        <member name="M:Spear.Core.Micro.IMicroClient.Send(Spear.Core.Message.Models.InvokeMessage)">
             <summary> 发送消息 </summary>
             <param name="message"></param>
             <returns></returns>
@@ -272,7 +256,7 @@
         <member name="T:Spear.Core.Micro.IMicroExecutor">
             <summary> 服务执行者 </summary>
         </member>
-        <member name="M:Spear.Core.Micro.IMicroExecutor.Execute(Spear.Core.Message.IMessageSender,Spear.Core.Message.MicroMessage)">
+        <member name="M:Spear.Core.Micro.IMicroExecutor.Execute(Spear.Core.Message.IMessageSender,Spear.Core.Message.Models.InvokeMessage)">
             <summary> 执行 </summary>
             <param name="sender"></param>
             <param name="message"></param>
@@ -383,7 +367,7 @@
             <inheritdoc />
             <summary> 默认服务执行者 </summary>
         </member>
-        <member name="M:Spear.Core.Micro.Implementation.MicroExecutor.Execute(Spear.Core.Message.IMessageSender,Spear.Core.Message.MicroMessage)">
+        <member name="M:Spear.Core.Micro.Implementation.MicroExecutor.Execute(Spear.Core.Message.IMessageSender,Spear.Core.Message.Models.InvokeMessage)">
             <summary> 执行 </summary>
             <param name="sender"></param>
             <param name="message"></param>
@@ -434,6 +418,16 @@
         </member>
         <member name="T:Spear.Core.Micro.Services.IServiceFinder">
             <summary> 服务探测器 </summary>
+        </member>
+        <member name="M:Spear.Core.Micro.Services.IServiceFinder.Find(System.Type)">
+            <summary> 服务发现 </summary>
+            <param name="serviceType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.Micro.Services.IServiceFinder.CleanCache(System.Type)">
+            <summary> 清除服务缓存 </summary>
+            <param name="serviceType"></param>
+            <returns></returns>
         </member>
         <member name="T:Spear.Core.Micro.Services.IServiceRegister">
             <summary> 服务注册器 </summary>
@@ -489,7 +483,7 @@
             <inheritdoc />
             <summary> 构造函数 </summary>
         </member>
-        <member name="M:Spear.Core.Proxy.ClientProxy.ClientInvokeAsync(Spear.Core.Micro.Services.ServiceAddress,Spear.Core.Message.InvokeMessage)">
+        <member name="M:Spear.Core.Proxy.ClientProxy.ClientInvokeAsync(Spear.Core.Micro.Services.ServiceAddress,Spear.Core.Message.Models.InvokeMessage)">
             <summary> 执行请求 </summary>
             <param name="serviceAddress"></param>
             <param name="message"></param>
@@ -536,7 +530,7 @@
             <param name="builder">服务构建者。</param>
             <returns>服务构建者。</returns>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCoder``1(``0)">
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCodec``1(``0)">
             <summary> 使用Json编解码器。 </summary>
             <param name="builder">服务构建者。</param>
             <returns>服务构建者。</returns>
@@ -774,6 +768,30 @@
         </member>
         <member name="M:Spear.Core.SpearExtensions.UseLocal(Spear.Core.Config.ConfigManager,System.String)">
             <summary> 使用本地文件配置 </summary>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.GetValue``1(System.Collections.Generic.IDictionary{System.Object,System.Object},System.Object,``0)">
+            <summary> 获取值 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dict"></param>
+            <param name="key"></param>
+            <param name="def"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.ToObject``1(System.Collections.Generic.IDictionary{System.Object,System.Object})">
+            <summary> 将网关参数转为类型 </summary>
+            <typeparam name="T">类型</typeparam>
+            <param name="dict"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.Zip(System.Byte[])">
+            <summary> zip压缩 </summary>
+            <param name="buffer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.UnZip(System.Byte[])">
+            <summary> zip解压 </summary>
+            <param name="zipBuffer"></param>
+            <returns></returns>
         </member>
         <member name="T:Spear.Core.Tenant.ITenantResolver">
             <summary> 租户解析器 </summary>

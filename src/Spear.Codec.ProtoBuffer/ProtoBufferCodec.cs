@@ -7,7 +7,7 @@ namespace Spear.Codec.ProtoBuffer
 {
     public class ProtoBufferCodec : DMessageCodec
     {
-        protected override byte[] EncodeInternal(object message)
+        protected override byte[] OnEncode(object message)
         {
             if (message == null) return new byte[0];
             byte[] buffer;
@@ -26,7 +26,7 @@ namespace Spear.Codec.ProtoBuffer
             return buffer;
         }
 
-        protected override object DecodeInternal(byte[] data, Type type)
+        protected override object OnDecode(byte[] data, Type type)
         {
             if (data == null || data.Length == 0)
                 return null;

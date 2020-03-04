@@ -1,12 +1,16 @@
-﻿using Acb.Core.Helper;
+﻿using System;
+using System.Threading.Tasks;
+using Acb.Core.Helper;
 using Acb.Core.Logging;
+using Acb.Core.Serialize;
 using Acb.Core.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Spear.Codec;
+using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Micro;
 using Spear.Core.Session;
-using Spear.Nacos;
 using Spear.Protocol.Http;
 using Spear.Protocol.Tcp;
 using Spear.ProxyGenerator;
@@ -14,10 +18,7 @@ using Spear.Tests.Client.Logging;
 using Spear.Tests.Client.Services;
 using Spear.Tests.Client.Services.Impl;
 using Spear.Tests.Contracts;
-using System;
-using System.Threading.Tasks;
-using Spear.Codec;
-using Spear.Consul;
+using Spear.Tests.Contracts.Dtos;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Spear.Tests.Client
@@ -125,8 +126,9 @@ namespace Spear.Tests.Client
                             }
                             else
                             {
-                                var msg = await service.Get(m);
-                                logger.LogInformation(msg);
+                                //var msg = await service.Get(m);
+                                var user = await service.User(new UserInputDto { Id = RandomHelper.Random().Next(1000, 10000), Name = message });
+                                logger.LogInformation(JsonHelper.ToJson(user));
                             }
                         }
                         catch (Exception ex)
@@ -136,6 +138,8 @@ namespace Spear.Tests.Client
                         }
                     }, thread);
                     Console.WriteLine(result.ToString());
+                    //Counter.Show();
+                    //Counter.Clear();
                 });
             }
         }

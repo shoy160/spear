@@ -41,7 +41,7 @@ namespace Spear.Tests.Server
                     //.AddJsonCodec()
                     .AddMessagePackCodec()
                     .AddSession()
-                    //.AddNacos()
+                    .AddNacos()
                     .AddConsul()
                     ;
                 switch (protocol)

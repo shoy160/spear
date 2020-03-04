@@ -1,4 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -7,19 +15,12 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Spear.Core;
 using Spear.Core.Message;
+using Spear.Core.Message.Models;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Protocol.Http.Filters;
 using Spear.Protocol.Http.Sender;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Spear.Protocol.Http
 {
@@ -96,7 +97,7 @@ namespace Spear.Protocol.Http
                             result.Message = ex.Message;
                         }
 
-                        await sender.Send(MicroMessage.CreateResultMessage(Guid.NewGuid().ToString("N"), result));
+                        await sender.Send(result);
                     }
                 });
 
@@ -115,14 +116,13 @@ namespace Spear.Protocol.Http
                 await input.CopyToAsync(memstream);
                 buffers = memstream.ToArray();
             }
-            var message = await _codecFactory.GetDecoder().DecodeAsync<MicroMessage>(buffers);
-            var invoke = message.GetContent<InvokeMessage>();
+            var invoke = await _codecFactory.GetDecoder().DecodeAsync<InvokeMessage>(buffers);
             invoke.Headers = invoke.Headers ?? new Dictionary<string, string>();
             foreach (var header in request.Headers)
             {
                 invoke.Headers[header.Key] = header.Value;
             }
-            await OnReceived(sender, message);
+            await OnReceived(sender, invoke);
         }
 
         public override Task Stop()

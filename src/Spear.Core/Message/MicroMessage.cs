@@ -1,4 +1,5 @@
 ﻿using System;
+using Spear.Core.Message.Models;
 
 namespace Spear.Core.Message
 {
@@ -70,10 +71,10 @@ namespace Spear.Core.Message
             MicroMessage.CreateInvokeMessage(invokeMessage);
 
         /// <summary> 创建调用结果消息 </summary>
-        /// <param name="invokeResultMessage"></param>
+        /// <param name="resultMessage"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static MicroMessage Create(this ResultMessage invokeResultMessage, string id) =>
-            MicroMessage.CreateResultMessage(id, invokeResultMessage);
+        public static MicroMessage Create(this ResultMessage resultMessage, string id) =>
+            MicroMessage.CreateResultMessage(id, resultMessage);
     }
 }

@@ -1,8 +1,9 @@
-﻿using DotNetty.Transport.Channels;
+﻿using System;
+using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Spear.Core.Message;
-using System;
+using Spear.Core.Message.Models;
 
 namespace Spear.Protocol.Tcp.Adapter
 {
@@ -10,10 +11,10 @@ namespace Spear.Protocol.Tcp.Adapter
     public class ClientHandler : ChannelHandlerAdapter
     {
         private readonly Action<IChannel> _removeAction;
-        private readonly Action<IChannelHandlerContext, MicroMessage> _readAction;
+        private readonly Action<IChannelHandlerContext, DMessage> _readAction;
         private readonly ILogger<ClientHandler> _logger;
 
-        public ClientHandler(Action<IChannelHandlerContext, MicroMessage> readAction, Action<IChannel> removeAction, ILoggerFactory loggerFactory)
+        public ClientHandler(Action<IChannelHandlerContext, DMessage> readAction, Action<IChannel> removeAction, ILoggerFactory loggerFactory)
         {
             _removeAction = removeAction;
             _readAction = readAction;
@@ -33,7 +34,7 @@ namespace Spear.Protocol.Tcp.Adapter
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
             _logger.LogDebug(JsonConvert.SerializeObject(message));
-            if (!(message is MicroMessage msg))
+            if (!(message is ResultMessage msg))
                 return;
             _readAction?.Invoke(context, msg);
         }

@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Spear.Core.Message;
+using Spear.Core.Message.Models;
 using Spear.Core.Micro.Services;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace Spear.Core.Micro.Implementation
 {
@@ -42,11 +42,13 @@ namespace Spear.Core.Micro.Implementation
 
         public abstract Task Stop();
 
-        private async Task MessageListenerReceived(IMessageSender sender, MicroMessage message)
+        private async Task MessageListenerReceived(IMessageSender sender, DMessage message)
         {
+            if (!(message is InvokeMessage invokeMessage))
+                return;
             if (_logger.IsEnabled(LogLevel.Debug))
                 _logger.LogDebug($"receive:{JsonConvert.SerializeObject(message)}");
-            await _microExecutor.Execute(sender, message);
+            await _microExecutor.Execute(sender, invokeMessage);
         }
     }
 }
