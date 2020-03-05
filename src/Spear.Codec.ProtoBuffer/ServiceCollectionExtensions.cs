@@ -9,7 +9,7 @@ namespace Spear.Codec.ProtoBuffer
         /// <summary> 使用Json编解码器。 </summary>
         /// <param name="builder">服务构建者。</param>
         /// <returns>服务构建者。</returns>
-        public static T AddProtoBufferCodec<T>(this T builder) where T : IMicroBuilder
+        public static T AddProtoBufCodec<T>(this T builder) where T : IMicroBuilder
         {
             builder.AddCoder<T, DMessageCodecFactory<ProtoBufferCodec>>();
             return builder;

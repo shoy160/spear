@@ -1,7 +1,7 @@
 ﻿using System;
-using System.IO;
-using ProtoBuf;
+using Spear.Codec.ProtoBuffer.Models;
 using Spear.Core.Message.Implementation;
+using Spear.Core.Message.Models;
 
 namespace Spear.Codec.ProtoBuffer
 {
@@ -10,31 +10,37 @@ namespace Spear.Codec.ProtoBuffer
         protected override byte[] OnEncode(object message)
         {
             if (message == null) return new byte[0];
-            byte[] buffer;
             if (message.GetType() == typeof(byte[]))
-                buffer = (byte[])message;
-            else
+                return (byte[])message;
+            if (message is InvokeMessage invoke)
             {
-                using (var stream = new MemoryStream())
-                {
-                    Serializer.Serialize(stream, message);
-                    buffer = stream.ToArray();
-                }
+                return new ProtoBufferInvoke(invoke).Serialize();
             }
 
-            //if (compress) buffer = buffer.Zip().Result;
-            return buffer;
+            if (message is ResultMessage result)
+            {
+                return new ProtoBufferResult(result).Serialize();
+            }
+
+            return message.Serialize();
         }
 
         protected override object OnDecode(byte[] data, Type type)
         {
             if (data == null || data.Length == 0)
                 return null;
-            //if (compress) data = data.UnZip().Result;
-            using (var stream = new MemoryStream(data))
+            if (type == typeof(InvokeMessage))
             {
-                return Serializer.Deserialize(type, stream);
+                var item = data.Deserialize<ProtoBufferInvoke>();
+                return item.GetValue();
             }
+
+            if (type == typeof(ResultMessage))
+            {
+                var item = data.Deserialize<ProtoBufferResult>();
+                return item.GetValue();
+            }
+            return data.Deserialize(type);
         }
     }
 }

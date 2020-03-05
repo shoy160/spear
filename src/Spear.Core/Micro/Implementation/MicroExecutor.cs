@@ -44,7 +44,7 @@ namespace Spear.Core.Micro.Implementation
                     var data = await entry.Invoke(invokeMessage.GetParameters());
                     if (!(data is Task task))
                     {
-                        result.Content = new DynamicObject(data);
+                        result.Content = new DynamicMessage(data);
                     }
                     else
                     {
@@ -54,7 +54,7 @@ namespace Spear.Core.Micro.Implementation
                         {
                             var prop = taskType.GetProperty("Result");
                             if (prop != null)
-                                result.Content = new DynamicObject(prop.GetValue(task));
+                                result.Content = new DynamicMessage(prop.GetValue(task));
                         }
                     }
                 }

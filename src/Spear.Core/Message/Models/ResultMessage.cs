@@ -12,7 +12,7 @@ namespace Spear.Core.Message.Models
         public string Message { get; set; }
 
         /// <summary> 数据实体 </summary>
-        public DynamicObject Content { get; set; }
+        public DynamicMessage Content { get; set; }
 
         public ResultMessage() { }
 

@@ -14,6 +14,7 @@ using Spear.Tests.Server.Services;
 using System;
 using System.Threading.Tasks;
 using Spear.Codec;
+using Spear.Codec.ProtoBuffer;
 
 namespace Spear.Tests.Server
 {
@@ -40,6 +41,7 @@ namespace Spear.Tests.Server
                 builder
                     //.AddJsonCodec()
                     .AddMessagePackCodec()
+                    //.AddProtoBufCodec()
                     .AddSession()
                     .AddNacos()
                     .AddConsul()

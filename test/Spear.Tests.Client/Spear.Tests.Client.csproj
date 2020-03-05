@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Spear.Codec.MessagePack\Spear.Codec.MessagePack.csproj" />
+    <ProjectReference Include="..\..\src\Spear.Codec.ProtoBuffer\Spear.Codec.ProtoBuffer.csproj" />
     <ProjectReference Include="..\..\src\Spear.Consul\Spear.Consul.csproj" />
     <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
     <ProjectReference Include="..\..\src\Spear.Nacos\Spear.Nacos.csproj" />

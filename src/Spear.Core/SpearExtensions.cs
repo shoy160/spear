@@ -357,5 +357,13 @@ namespace Spear.Core
                 }
             }
         }
+
+        public static string TypeName(this Type type)
+        {
+            var code = Type.GetTypeCode(type);
+            if (code != TypeCode.Object && type.BaseType != typeof(Enum))
+                return type.FullName;
+            return type.AssemblyQualifiedName;
+        }
     }
 }

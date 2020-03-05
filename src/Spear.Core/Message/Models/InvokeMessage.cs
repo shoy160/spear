@@ -13,18 +13,18 @@ namespace Spear.Core.Message.Models
         public bool IsNotice { get; set; }
 
         /// <summary> 服务参数 </summary>
-        public IDictionary<string, DynamicObject> Parameters { get; set; }
+        public IDictionary<string, DynamicMessage> Parameters { get; set; }
 
         public IDictionary<string, string> Headers { get; set; }
 
         public InvokeMessage()
         {
-            Parameters = new Dictionary<string, DynamicObject>();
+            Parameters = new Dictionary<string, DynamicMessage>();
         }
 
         public IDictionary<string, object> GetParameters()
         {
-            return Parameters.ToDictionary(item => item.Key, item => item.Value.Data);
+            return Parameters.ToDictionary(item => item.Key, item => item.Value.GetValue());
         }
 
         public void SetParameters(IDictionary<string, object> parameters)
@@ -33,7 +33,7 @@ namespace Spear.Core.Message.Models
             {
                 if (Parameters.ContainsKey(item.Key))
                     Parameters.Remove(item.Key);
-                Parameters.Add(item.Key, new DynamicObject(item.Value));
+                Parameters.Add(item.Key, new DynamicMessage(item.Value));
             }
         }
     }

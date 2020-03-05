@@ -7,6 +7,7 @@ using Acb.Core.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Codec;
+using Spear.Codec.ProtoBuffer;
 using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Micro;
@@ -33,6 +34,7 @@ namespace Spear.Tests.Client
                     builder
                         //.AddJsonCodec()
                         .AddMessagePackCodec()
+                        //.AddProtoBufCodec()
                         .AddSession()
                         .AddHttpProtocol()
                         .AddTcpProtocol()

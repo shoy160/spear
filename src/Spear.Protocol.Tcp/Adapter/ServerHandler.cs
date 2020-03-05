@@ -65,7 +65,7 @@ namespace Spear.Protocol.Tcp.Adapter
         {
             //客户端主动断开需要应答，否则socket变成CLOSE_WAIT状态导致socket资源耗尽
             context.CloseAsync();
-            _logger.LogError(exception, $"与服务器：{context.Channel.RemoteAddress}通信时发送了错误。");
+            _logger.LogWarning(exception, $"与服务器：{context.Channel.RemoteAddress}通信时发送了错误。");
         }
 
 

@@ -141,8 +141,8 @@ namespace Spear.Core.Proxy
 
         public object Invoke(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
-            var result = InternalInvoke(method, parameters).GetAwaiter().GetResult();
-            return result.Content.Data;
+            var result = InternalInvoke(method, parameters).ConfigureAwait(false).GetAwaiter().GetResult();
+            return result.Content.GetValue();
         }
 
         public Task InvokeAsync(MethodInfo method, IDictionary<string, object> parameters, object key = null)
@@ -153,7 +153,7 @@ namespace Spear.Core.Proxy
         public async Task<T> InvokeAsync<T>(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
             var result = await InternalInvoke(method, parameters);
-            return (T)result.Content.Data;
+            return (T)result.Content.GetValue();
         }
     }
 }
