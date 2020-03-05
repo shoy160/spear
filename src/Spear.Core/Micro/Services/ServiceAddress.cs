@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
 
 namespace Spear.Core.Micro.Services
 {
@@ -11,7 +11,9 @@ namespace Spear.Core.Micro.Services
     {
         Tcp,
         Http,
-        Ws
+        Ws,
+        Udp,
+        Grpc
     }
 
     public class ServiceAddress

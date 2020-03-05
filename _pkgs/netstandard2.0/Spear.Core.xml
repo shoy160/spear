@@ -163,6 +163,9 @@
             <param name="flush"></param>
             <returns></returns>
         </member>
+        <member name="T:Spear.Core.Message.IMessageSerializer">
+            <summary> 消息序列化 </summary>
+        </member>
         <member name="T:Spear.Core.Message.Implementation.MessageListener">
             <summary> 消息监听者 </summary>
         </member>
@@ -178,8 +181,67 @@
             <param name="message"></param>
             <returns></returns>
         </member>
-        <member name="T:Spear.Core.Message.Models.DynamicObject">
-            <summary> 动态实体 </summary>
+        <member name="P:Spear.Core.Message.Json.Models.JsonInvokeMessage.ServiceId">
+            <summary> 服务Id </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Json.Models.JsonInvokeMessage.IsNotice">
+            <summary> 是否是通知 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Json.Models.JsonInvokeMessage.Parameters">
+            <summary> 服务参数 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Json.Models.JsonResultMessage.Code">
+            <summary> 状态码 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Json.Models.JsonResultMessage.Message">
+            <summary> 错误消息 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Json.Models.JsonResultMessage.Content">
+            <summary> 数据实体 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.DMessageResult`1.Code">
+            <summary> 状态码 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.DMessageResult`1.Message">
+            <summary> 错误消息 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.DMessageResult`1.Content">
+            <summary> 数据实体 </summary>
+        </member>
+        <member name="T:Spear.Core.Message.Models.IMessageDynamic">
+            <summary> 动态类型 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.IMessageDynamic.ContentType">
+            <summary> 类型 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.IMessageDynamic.Content">
+            <summary> 数据 </summary>
+        </member>
+        <member name="M:Spear.Core.Message.Models.IMessageDynamic.SetValue(System.Object)">
+            <summary> 设置对象 </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Spear.Core.Message.Models.IMessageDynamic.GetValue">
+            <summary> 获取对象 </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Core.Message.Models.IMessageInvoke`1.ServiceId">
+            <summary> 服务Id </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.IMessageInvoke`1.IsNotice">
+            <summary> 是否是通知 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.IMessageInvoke`1.Parameters">
+            <summary> 服务参数 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.IMessageResult`1.Code">
+            <summary> 状态码 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.IMessageResult`1.Message">
+            <summary> 错误消息 </summary>
+        </member>
+        <member name="P:Spear.Core.Message.Models.IMessageResult`1.Content">
+            <summary> 数据实体 </summary>
         </member>
         <member name="T:Spear.Core.Message.Models.InvokeMessage">
             <summary> 调用消息 </summary>
@@ -193,16 +255,16 @@
         <member name="P:Spear.Core.Message.Models.InvokeMessage.Parameters">
             <summary> 服务参数 </summary>
         </member>
-        <member name="T:Spear.Core.Message.Models.ResultMessage">
+        <member name="T:Spear.Core.Message.Models.MessageResult">
             <summary> 调用结果消息 </summary>
         </member>
-        <member name="P:Spear.Core.Message.Models.ResultMessage.Code">
+        <member name="P:Spear.Core.Message.Models.MessageResult.Code">
             <summary> 状态码 </summary>
         </member>
-        <member name="P:Spear.Core.Message.Models.ResultMessage.Message">
+        <member name="P:Spear.Core.Message.Models.MessageResult.Message">
             <summary> 错误消息 </summary>
         </member>
-        <member name="P:Spear.Core.Message.Models.ResultMessage.Content">
+        <member name="P:Spear.Core.Message.Models.MessageResult.Content">
             <summary> 数据实体 </summary>
         </member>
         <member name="T:Spear.Core.Micro.IMicroBuilder">
@@ -522,13 +584,6 @@
             <summary> 获取服务主键 </summary>
             <param name="method"></param>
             <returns></returns>
-        </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.AddCoder``2(``0)">
-            <summary> 使用编解码器。 </summary>
-            <typeparam name="T">编解码器工厂实现类型。</typeparam>
-            <typeparam name="TCodec"></typeparam>
-            <param name="builder">服务构建者。</param>
-            <returns>服务构建者。</returns>
         </member>
         <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCodec``1(``0)">
             <summary> 使用Json编解码器。 </summary>
