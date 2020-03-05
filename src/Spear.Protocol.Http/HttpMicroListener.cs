@@ -84,7 +84,7 @@ namespace Spear.Protocol.Http
                     }
                     catch (Exception ex)
                     {
-                        var result = new ResultMessage();
+                        var result = new MessageResult();
                         if (ex is SpearException busi)
                         {
                             result.Code = busi.Code;

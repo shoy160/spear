@@ -1,13 +1,13 @@
 ﻿namespace Spear.Core.Message.Implementation
 {
     public class DMessageCodecFactory<TCodec> : IMessageCodecFactory
-        where TCodec : IMessageCodec, new()
+        where TCodec : IMessageCodec
     {
         private readonly TCodec _codec;
 
-        public DMessageCodecFactory()
+        public DMessageCodecFactory(TCodec codec)
         {
-            _codec = new TCodec();
+            _codec = codec;
         }
 
         public IMessageEncoder GetEncoder()

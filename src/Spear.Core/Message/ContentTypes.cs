@@ -7,6 +7,6 @@ namespace Spear.Core.Message
         /// <summary> 调用消息类型 </summary>
         public static readonly string InvokeType = typeof(InvokeMessage).FullName;
         /// <summary> 调用结果消息类型 </summary>
-        public static readonly string InvokeResultType = typeof(ResultMessage).FullName;
+        public static readonly string InvokeResultType = typeof(MessageResult).FullName;
     }
 }

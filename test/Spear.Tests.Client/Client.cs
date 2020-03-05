@@ -7,6 +7,7 @@ using Acb.Core.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Codec;
+using Spear.Codec.MessagePack;
 using Spear.Codec.ProtoBuffer;
 using Spear.Consul;
 using Spear.Core;

@@ -27,7 +27,7 @@ namespace Spear.Core.Micro.Implementation
             _provider = provider;
         }
 
-        private async Task LocalExecute(InvokeMessage invokeMessage, ResultMessage result)
+        private async Task LocalExecute(InvokeMessage invokeMessage, MessageResult messageResult)
         {
             try
             {
@@ -37,14 +37,14 @@ namespace Spear.Core.Micro.Implementation
 
                 if (entry.IsNotify)
                 {
-                    await entry.Invoke(invokeMessage.GetParameters());
+                    await entry.Invoke(invokeMessage.Parameters);
                 }
                 else
                 {
-                    var data = await entry.Invoke(invokeMessage.GetParameters());
+                    var data = await entry.Invoke(invokeMessage.Parameters);
                     if (!(data is Task task))
                     {
-                        result.Content = new DynamicMessage(data);
+                        messageResult.Content = data;// new DynamicMessage(data);
                     }
                     else
                     {
@@ -54,7 +54,7 @@ namespace Spear.Core.Micro.Implementation
                         {
                             var prop = taskType.GetProperty("Result");
                             if (prop != null)
-                                result.Content = new DynamicMessage(prop.GetValue(task));
+                                messageResult.Content = prop.GetValue(task); // new DynamicMessage(prop.GetValue(task));
                         }
                     }
                 }
@@ -62,8 +62,8 @@ namespace Spear.Core.Micro.Implementation
             catch (Exception ex)
             {
                 _logger.LogError(ex, "执行本地逻辑时候发生了错误。");
-                result.Message = ex.Message;
-                result.Code = 500;
+                messageResult.Message = ex.Message;
+                messageResult.Code = 500;
             }
         }
 
@@ -103,7 +103,7 @@ namespace Spear.Core.Micro.Implementation
                     session.Role = HttpUtility.UrlDecode(role);
                 accessor.SetSession(session);
             }
-            var result = new ResultMessage();
+            var result = new MessageResult();
             if (message.IsNotice)
             {
                 //向客户端发送结果

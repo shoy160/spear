@@ -4,50 +4,27 @@ using Spear.Core.Message.Models;
 namespace Spear.Codec.ProtoBuffer.Models
 {
     [ProtoContract]
-    public class ProtoBufferResult
+    public class ProtoBufferResult : DMessageResult<ProtoBufferDynamic>
     {
         [ProtoMember(1)]
-        public string Id { get; set; }
+        public override string Id { get; set; }
 
         /// <summary> 状态码 </summary>
         [ProtoMember(2)]
-        public int Code { get; set; }
+        public override int Code { get; set; }
 
         /// <summary> 错误消息 </summary>
         [ProtoMember(3)]
-        public string Message { get; set; }
+        public override string Message { get; set; }
 
         /// <summary> 数据实体 </summary>
         [ProtoMember(4)]
-        public ProtoBufferDynamic Content { get; set; }
+        public override ProtoBufferDynamic Content { get; set; }
 
         public ProtoBufferResult() { }
 
-        public ProtoBufferResult(ResultMessage message)
+        public ProtoBufferResult(MessageResult message) : base(message)
         {
-            Id = message.Id;
-            Code = message.Code;
-            Message = message.Message;
-            if (message.Content != null)
-            {
-                Content = new ProtoBufferDynamic(message.Content.GetValue());
-            }
-        }
-
-        public ResultMessage GetValue()
-        {
-            var result = new ResultMessage
-            {
-                Id = Id,
-                Code = Code,
-                Message = Message,
-            };
-            if (Content != null)
-            {
-                result.Content = new DynamicMessage(Content.GetValue());
-            }
-
-            return result;
         }
     }
 }

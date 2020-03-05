@@ -1,12 +1,13 @@
 ﻿using System;
 using System.IO;
 using ProtoBuf;
+using Spear.Core.Message;
 
 namespace Spear.Codec.ProtoBuffer
 {
-    public static class ProtoBufferExtensions
+    public class ProtoBufferSerializer : IMessageSerializer
     {
-        public static byte[] Serialize(this object value)
+        public byte[] Serialize(object value)
         {
             if (value == null) return new byte[0];
 
@@ -17,7 +18,12 @@ namespace Spear.Codec.ProtoBuffer
             }
         }
 
-        public static object Deserialize(this byte[] data, Type type)
+        public byte[] SerializeNoType(object value)
+        {
+            return Serialize(value);
+        }
+
+        public object Deserialize(byte[] data, Type type)
         {
             if (data == null)
                 return null;
@@ -27,7 +33,12 @@ namespace Spear.Codec.ProtoBuffer
             }
         }
 
-        public static T Deserialize<T>(this byte[] data)
+        public object DeserializeNoType(byte[] data, Type type)
+        {
+            return Deserialize(data, type);
+        }
+
+        public T Deserialize<T>(byte[] data)
         {
             if (data == null)
                 return default;

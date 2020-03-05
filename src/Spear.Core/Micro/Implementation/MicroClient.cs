@@ -17,7 +17,7 @@ namespace Spear.Core.Micro.Implementation
         private readonly IMicroExecutor _executor;
         private readonly ILogger<MicroClient> _logger;
 
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<ResultMessage>> _resultDictionary;
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<MessageResult>> _resultDictionary;
 
         public MicroClient(IMessageSender sender, IMessageListener listener, IMicroExecutor executor, ILoggerFactory loggerFactory)
         {
@@ -25,7 +25,7 @@ namespace Spear.Core.Micro.Implementation
             _listener = listener;
             _executor = executor;
             _logger = loggerFactory.CreateLogger<MicroClient>();
-            _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<ResultMessage>>();
+            _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<MessageResult>>();
             listener.Received += ListenerOnReceived;
         }
 
@@ -34,7 +34,7 @@ namespace Spear.Core.Micro.Implementation
             if (!_resultDictionary.TryGetValue(message.Id, out var task))
                 return;
 
-            if (message is ResultMessage result)
+            if (message is MessageResult result)
             {
                 if (result.Code != 200)
                 {
@@ -49,10 +49,10 @@ namespace Spear.Core.Micro.Implementation
                 await _executor.Execute(sender, invokeMessage);
         }
 
-        private async Task<ResultMessage> RegistCallbackAsync(string messageId)
+        private async Task<MessageResult> RegistCallbackAsync(string messageId)
         {
             _logger.LogDebug($"准备获取Id为：{messageId}的响应内容。");
-            var task = new TaskCompletionSource<ResultMessage>();
+            var task = new TaskCompletionSource<MessageResult>();
             _resultDictionary.TryAdd(messageId, task);
             try
             {
@@ -66,7 +66,7 @@ namespace Spear.Core.Micro.Implementation
             }
         }
 
-        public async Task<ResultMessage> Send(InvokeMessage message)
+        public async Task<MessageResult> Send(InvokeMessage message)
         {
             var watch = Stopwatch.StartNew();
             try

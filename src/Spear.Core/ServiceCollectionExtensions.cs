@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Spear.Core.Message;
+using Spear.Core.Message.Codec;
 using Spear.Core.Message.Implementation;
+using Spear.Core.Message.Json;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
@@ -70,25 +72,18 @@ namespace Spear.Core
             return route;
         }
 
-        /// <summary> 使用编解码器。 </summary>
-        /// <typeparam name="T">编解码器工厂实现类型。</typeparam>
-        /// <typeparam name="TCodec"></typeparam>
-        /// <param name="builder">服务构建者。</param>
-        /// <returns>服务构建者。</returns>
-        public static T AddCoder<T, TCodec>(this T builder)
-            where T : IMicroBuilder
-            where TCodec : class, IMessageCodecFactory
-        {
-            builder.TryAddSingleton<IMessageCodecFactory, TCodec>();
-            return builder;
-        }
-
         /// <summary> 使用Json编解码器。 </summary>
         /// <param name="builder">服务构建者。</param>
         /// <returns>服务构建者。</returns>
         public static T AddJsonCodec<T>(this T builder) where T : IMicroBuilder
         {
-            builder.AddCoder<T, DMessageCodecFactory<JsonCodec>>();
+            builder.AddSingleton<IMessageSerializer, JsonMessageSerializer>();
+            builder.TryAddSingleton<IMessageCodecFactory>(provider =>
+            {
+                var serializer = provider.GetService<IMessageSerializer>();
+                var codec = new JsonCodec(serializer);
+                return new DMessageCodecFactory<JsonCodec>(codec);
+            });
             return builder;
         }
 

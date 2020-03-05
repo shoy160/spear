@@ -1,4 +1,7 @@
-﻿using Spear.Core;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Spear.Core;
+using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 using Spear.Core.Micro;
 
@@ -11,7 +14,13 @@ namespace Spear.Codec.ProtoBuffer
         /// <returns>服务构建者。</returns>
         public static T AddProtoBufCodec<T>(this T builder) where T : IMicroBuilder
         {
-            builder.AddCoder<T, DMessageCodecFactory<ProtoBufferCodec>>();
+            builder.AddSingleton<IMessageSerializer, ProtoBufferSerializer>();
+            builder.TryAddSingleton<IMessageCodecFactory>(provider =>
+            {
+                var serializer = provider.GetService<IMessageSerializer>();
+                var codec = new ProtoBufferCodec(serializer);
+                return new DMessageCodecFactory<ProtoBufferCodec>(codec);
+            });
             return builder;
         }
     }

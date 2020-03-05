@@ -21,7 +21,7 @@ namespace Spear.Protocol.Http.Sender
 
         public async Task Send(DMessage message, bool flush = true)
         {
-            if (!(message is ResultMessage result))
+            if (!(message is MessageResult result))
                 return;
             var data = await _encoder.EncodeAsync(result);
             var contentLength = data.Length;

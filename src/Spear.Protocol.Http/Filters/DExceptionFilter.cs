@@ -16,20 +16,20 @@ namespace Spear.Protocol.Http.Filters
         public void OnException(ExceptionContext context)
         {
             var ex = context.Exception;
-            ResultMessage result;
+            MessageResult messageResult;
             if (ex is SpearException busi)
             {
-                result = new ResultMessage(busi.Message, busi.Code);
+                messageResult = new MessageResult(busi.Message, busi.Code);
             }
             else
             {
-                result = new ResultMessage(ex.Message);
+                messageResult = new MessageResult(ex.Message);
             }
-            context.Result = new JsonResult(result)
+            context.Result = new JsonResult(messageResult)
             {
-                StatusCode = result.Code
+                StatusCode = messageResult.Code
             };
-            context.HttpContext.Response.StatusCode = result.Code;
+            context.HttpContext.Response.StatusCode = messageResult.Code;
             context.ExceptionHandled = true;
         }
     }

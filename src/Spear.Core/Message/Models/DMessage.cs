@@ -1,10 +1,11 @@
 ﻿using System;
+using Spear.Core.Message.Codec;
 
 namespace Spear.Core.Message.Models
 {
-    public class DMessage
+    public class DMessage : IMessage
     {
-        public string Id { get; set; }
+        public virtual string Id { get; set; }
 
         public DMessage(string id = null)
         {

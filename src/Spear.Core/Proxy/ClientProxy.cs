@@ -39,7 +39,7 @@ namespace Spear.Core.Proxy
         /// <param name="serviceAddress"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        private async Task<ResultMessage> ClientInvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
+        private async Task<MessageResult> ClientInvokeAsync(ServiceAddress serviceAddress, InvokeMessage message)
         {
             var watch = Stopwatch.StartNew();
             try
@@ -56,7 +56,7 @@ namespace Spear.Core.Proxy
             }
         }
 
-        private async Task<ResultMessage> InternalInvoke(MethodInfo targetMethod, IDictionary<string, object> args)
+        private async Task<MessageResult> InternalInvoke(MethodInfo targetMethod, IDictionary<string, object> args)
         {
             var serviceType = targetMethod.DeclaringType;
 
@@ -72,7 +72,7 @@ namespace Spear.Core.Proxy
                 .Handle<Exception>(ex =>
                     ex.GetBaseException() is SocketException ||
                     ex.GetBaseException() is HttpRequestException) //服务器异常
-                .OrResult<ResultMessage>(r => r.Code != 200); //服务未找到
+                .OrResult<MessageResult>(r => r.Code != 200); //服务未找到
 
             //熔断,3次异常,熔断5分钟
             var breaker = builder.CircuitBreakerAsync(3, TimeSpan.FromMinutes(5));
@@ -130,9 +130,9 @@ namespace Spear.Core.Proxy
             var invokeMessage = new InvokeMessage
             {
                 ServiceId = serviceId,
-                Headers = headers
+                Headers = headers,
+                Parameters = args
             };
-            invokeMessage.SetParameters(args);
             var type = targetMethod.ReturnType;
             if (type == typeof(void) || type == typeof(Task))
                 invokeMessage.IsNotice = true;
@@ -142,7 +142,7 @@ namespace Spear.Core.Proxy
         public object Invoke(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
             var result = InternalInvoke(method, parameters).ConfigureAwait(false).GetAwaiter().GetResult();
-            return result.Content.GetValue();
+            return result.Content;
         }
 
         public Task InvokeAsync(MethodInfo method, IDictionary<string, object> parameters, object key = null)
@@ -153,7 +153,7 @@ namespace Spear.Core.Proxy
         public async Task<T> InvokeAsync<T>(MethodInfo method, IDictionary<string, object> parameters, object key = null)
         {
             var result = await InternalInvoke(method, parameters);
-            return (T)result.Content.GetValue();
+            return (T)result.Content;
         }
     }
 }

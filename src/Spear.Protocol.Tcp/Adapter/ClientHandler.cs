@@ -34,7 +34,7 @@ namespace Spear.Protocol.Tcp.Adapter
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
             _logger.LogDebug(JsonConvert.SerializeObject(message));
-            if (!(message is ResultMessage msg))
+            if (!(message is MessageResult msg))
                 return;
             _readAction?.Invoke(context, msg);
         }

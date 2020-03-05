@@ -15,6 +15,6 @@ namespace Spear.Core.Micro
         /// <summary> 发送消息 </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        Task<ResultMessage> Send(InvokeMessage message);
+        Task<MessageResult> Send(InvokeMessage message);
     }
 }

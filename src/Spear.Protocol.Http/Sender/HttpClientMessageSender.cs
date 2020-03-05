@@ -51,7 +51,7 @@ namespace Spear.Protocol.Http.Sender
                 throw new SpearException($"服务请求异常，状态码{(int)resp.StatusCode}");
             }
             var content = await resp.Content.ReadAsByteArrayAsync();
-            var result = await _codecFactory.GetDecoder().DecodeAsync<ResultMessage>(content);
+            var result = await _codecFactory.GetDecoder().DecodeAsync<MessageResult>(content);
             await _messageListener.OnReceived(this, result);
 
         }

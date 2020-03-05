@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <Compile Remove="Message\MicroMessage.cs" />
+    <Compile Remove="Message\Models\DynamicMessage.cs" />
     <Compile Remove="Proxy\IClientProxy.cs" />
   </ItemGroup>
 

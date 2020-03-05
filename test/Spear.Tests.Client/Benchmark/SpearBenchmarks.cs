@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using Microsoft.Extensions.DependencyInjection;
 using Spear.Codec;
+using Spear.Codec.MessagePack;
 using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Micro;

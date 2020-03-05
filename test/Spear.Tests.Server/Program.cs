@@ -14,6 +14,7 @@ using Spear.Tests.Server.Services;
 using System;
 using System.Threading.Tasks;
 using Spear.Codec;
+using Spear.Codec.MessagePack;
 using Spear.Codec.ProtoBuffer;
 
 namespace Spear.Tests.Server
@@ -43,7 +44,7 @@ namespace Spear.Tests.Server
                     .AddMessagePackCodec()
                     //.AddProtoBufCodec()
                     .AddSession()
-                    .AddNacos()
+                    //.AddNacos()
                     .AddConsul()
                     ;
                 switch (protocol)
