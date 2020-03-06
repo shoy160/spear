@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\src\Spear.Nacos\Spear.Nacos.csproj" />
     <ProjectReference Include="..\..\src\Spear.Protocol.Http\Spear.Protocol.Http.csproj" />
     <ProjectReference Include="..\..\src\Spear.Protocol.Tcp\Spear.Protocol.Tcp.csproj" />
+    <ProjectReference Include="..\..\src\Spear.Protocol.WebSocket\Spear.Protocol.WebSocket.csproj" />
     <ProjectReference Include="..\Spear.Tests.Contracts\Spear.Tests.Contracts.csproj" />
   </ItemGroup>
 

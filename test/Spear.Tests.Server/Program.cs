@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Spear.Codec;
 using Spear.Codec.MessagePack;
 using Spear.Codec.ProtoBuffer;
+using Spear.Protocol.WebSocket;
 
 namespace Spear.Tests.Server
 {
@@ -28,7 +29,7 @@ namespace Spear.Tests.Server
             var port = -1;
             if (args.Length > 0)
                 int.TryParse(args[0], out port);
-            var protocol = ServiceProtocol.Tcp;
+            var protocol = ServiceProtocol.Http;
             if (args.Length > 1)
                 Enum.TryParse(args[1], out protocol);
 
@@ -47,15 +48,16 @@ namespace Spear.Tests.Server
                     //.AddNacos()
                     .AddConsul()
                     ;
-                switch (protocol)
-                {
-                    case ServiceProtocol.Tcp:
-                        builder.AddTcpProtocol();
-                        break;
-                    case ServiceProtocol.Http:
-                        builder.AddHttpProtocol();
-                        break;
-                }
+                builder.AddWebSocketProtocol();
+                //switch (protocol)
+                //{
+                //    case ServiceProtocol.Tcp:
+                //        builder.AddTcpProtocol();
+                //        break;
+                //    case ServiceProtocol.Http:
+                //        builder.AddHttpProtocol();
+                //        break;
+                //}
             });
             services.AddSingleton<ITestContract, TestService>();
             services.AddLogging(builder =>

@@ -10,6 +10,8 @@ namespace Spear.Core.Message.Models
         public virtual string ContentType { get; set; }
         public virtual byte[] Content { get; set; }
 
+        public DMessageDynamic() { }
+
         public DMessageDynamic(IMessageSerializer serialize)
         {
             _serialize = serialize;

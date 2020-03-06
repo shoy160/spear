@@ -62,6 +62,7 @@ namespace Spear.Core.Proxy
 
             var services = (await _serviceFinder.Find(serviceType) ?? new List<ServiceAddress>())
                 .ToList();
+            _logger.LogInformation($"找到{services.Count}个服务,{string.Join(";", services)}");
             if (!services.Any())
             {
                 throw new SpearException("没有可用的服务", 20001);

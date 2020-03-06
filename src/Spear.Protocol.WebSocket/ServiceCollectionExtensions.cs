@@ -10,7 +10,7 @@ namespace Spear.Protocol.WebSocket
         /// <summary> 使用WebSocket传输协议 </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static IMicroServerBuilder AddGrpcProtocol(this IMicroServerBuilder builder)
+        public static IMicroServerBuilder AddWebSocketProtocol(this IMicroServerBuilder builder)
         {
             builder.AddSingleton<IMicroListener>(provider =>
             {
@@ -24,7 +24,7 @@ namespace Spear.Protocol.WebSocket
         /// <summary> 使用DotNetty的TCP传输协议 </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static IMicroClientBuilder AddGrpcProtocol(this IMicroClientBuilder builder)
+        public static IMicroClientBuilder AddWebSocketProtocol(this IMicroClientBuilder builder)
         {
             builder.AddSingleton<IMicroClientFactory, WebSocketClientFactory>();
             return builder;

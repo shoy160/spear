@@ -25,6 +25,7 @@ namespace Spear.Core.Message.Implementation
 
             if (message is InvokeMessage invoke)
             {
+                //var model = Activator.CreateInstance(typeof(TInvoke),invoke);
                 var model = new TInvoke();
                 model.SetValue(invoke);
                 return _serializer.Serialize(model);

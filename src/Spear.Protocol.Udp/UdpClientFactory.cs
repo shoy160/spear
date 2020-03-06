@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Message;
 using Spear.Core.Micro;
+using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 
 namespace Spear.Protocol.Udp
 {
     [Protocol(ServiceProtocol.Udp)]
-    public class UdpClientFactory : IMicroClientFactory
+    public class UdpClientFactory : DMicroClientFactory
     {
-        public Task<IMicroClient> CreateClient(ServiceAddress serviceAddress)
+        public UdpClientFactory(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory, IMicroExecutor microExecutor = null)
+            : base(loggerFactory, codecFactory, microExecutor)
+        {
+        }
+
+        protected override Task<IMicroClient> Create(ServiceAddress address)
         {
             throw new NotImplementedException();
         }

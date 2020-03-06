@@ -15,6 +15,7 @@ using Spear.Core.Micro;
 using Spear.Core.Session;
 using Spear.Protocol.Http;
 using Spear.Protocol.Tcp;
+using Spear.Protocol.WebSocket;
 using Spear.ProxyGenerator;
 using Spear.Tests.Client.Logging;
 using Spear.Tests.Client.Services;
@@ -39,6 +40,7 @@ namespace Spear.Tests.Client
                         .AddSession()
                         .AddHttpProtocol()
                         .AddTcpProtocol()
+                        .AddWebSocketProtocol()
                         //.AddNacos(opt =>
                         //{
                         //    opt.Host = "http://192.168.0.231:8848/";
@@ -49,7 +51,7 @@ namespace Spear.Tests.Client
                 });
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Warning);
+                builder.SetMinimumLevel(LogLevel.Information);
                 builder.AddConsole();
             });
             services.AddSingleton<DefaultAdapter>();

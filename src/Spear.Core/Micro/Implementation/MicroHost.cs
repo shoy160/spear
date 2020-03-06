@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Spear.Core.Micro.Services;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Spear.Core.Micro.Services;
 
 namespace Spear.Core.Micro.Implementation
 {
@@ -37,21 +37,20 @@ namespace Spear.Core.Micro.Implementation
         /// <returns>一个任务。</returns>
         public override Task Start(ServiceAddress serviceAddress)
         {
+            serviceAddress.Protocol = _protocol;
             try
             {
                 Task.Factory.StartNew(async () =>
                 {
                     await MicroListener.Start(serviceAddress);
                 });
-                Console.WriteLine($"Service Start At {serviceAddress}");
+                _logger.LogInformation($"服务已启动：{serviceAddress}");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
             }
-
             var assemblies = _entryFactory.GetContracts();
-            serviceAddress.Protocol = _protocol;
             return _serviceRegister.Regist(assemblies, serviceAddress);
         }
 

@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Spear.Core;
 using Spear.Core.Message;
@@ -30,7 +32,7 @@ namespace Spear.Protocol.Http
         private readonly IMessageCodecFactory _codecFactory;
         private readonly IMicroEntryFactory _entryFactory;
         private readonly ILogger<HttpMicroListener> _logger;
-        private IWebHost _host;
+        private IHost _host;
 
         public HttpMicroListener(IMessageCodecFactory codecFactory, IMicroEntryFactory entryFactory, ILoggerFactory loggerFactory)
         {
@@ -41,68 +43,90 @@ namespace Spear.Protocol.Http
 
         public override async Task Start(ServiceAddress serviceAddress)
         {
-            var endpoint = serviceAddress.ToEndPoint() as IPEndPoint;
-            _host = new WebHostBuilder()
+            //var endpoint = serviceAddress.ToEndPoint() as IPEndPoint;
+            _host = new HostBuilder()
                 .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
-                .UseKestrel(options =>
+                .ConfigureLogging((context, builder) =>
                 {
-                    options.Listen(endpoint);
+                    builder.AddFilter("System", level => level >= LogLevel.Warning);
+                    builder.AddFilter("Microsoft", level => level >= LogLevel.Warning);
+                    builder.AddConsole();
+                })
+                .ConfigureWebHostDefaults(builder =>
+                {
+                    builder
+                        .UseKestrel(options =>
+                        {
+                            options.AllowSynchronousIO = true;
+                            options.Limits.RequestHeadersTimeout = TimeSpan.FromSeconds(65);
+                            options.Listen(IPAddress.Any, serviceAddress.Port);
+                        })
+                        .Configure(BuildApplication);
                 })
                 .ConfigureServices(ConfigureServices)
-                .Configure(AppResolve)
                 .Build();
             await _host.RunAsync();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
-            {
-                //自定义异常捕获
-                options.Filters.Add<DExceptionFilter>();
-            }).AddControllersAsServices();
+            services
+                .AddRouting()
+                .AddControllers(options =>
+                {
+                    //自定义异常捕获
+                    options.Filters.Add<DExceptionFilter>();
+                })
+                .AddControllersAsServices();
         }
 
-        private void AppResolve(IApplicationBuilder app)
+        private void BuildApplication(IApplicationBuilder app)
         {
-            app.UseMvc(routes =>
-            {
-                routes.MapGet("micro", async ctx =>
+            app
+                .UseRouting()
+                .UseEndpoints(routes =>
                 {
-                    var services = _entryFactory.Services.ToDictionary(k => $"micro/{k.Key}",
-                        v => v.Value.Parameters.ToDictionary(pk => pk.Name, pv => pv.ParameterType.GetTypeInfo().Name));
-                    ctx.Response.ContentType = "application/json";
-                    await ctx.Response.WriteAsync(JsonConvert.SerializeObject(services), Encoding.UTF8);
-                });
-                routes.MapPost("micro/executor", async (request, response, route) =>
-                {
-                    //route.Values.TryGetValue("serviceId", out var serviceId);
-                    var sender = new HttpServerMessageSender(_codecFactory.GetEncoder(), response);
-                    try
+                    routes.MapGet("micro", async ctx =>
                     {
-                        await OnReceived(sender, request);
-                    }
-                    catch (Exception ex)
+                        var services = _entryFactory.Services.ToDictionary(k => $"micro/{k.Key}",
+                            v => v.Value.Parameters.ToDictionary(pk => pk.Name,
+                                pv => pv.ParameterType.GetTypeInfo().Name));
+                        ctx.Response.ContentType = "application/json";
+                        await ctx.Response.WriteAsync(JsonConvert.SerializeObject(services), Encoding.UTF8);
+                    });
+                    routes.MapGet("healthy", async ctx =>
                     {
-                        var result = new MessageResult();
-                        if (ex is SpearException busi)
+                        var header = ctx.Response.GetTypedHeaders();
+                        header.CacheControl = new CacheControlHeaderValue { NoCache = true };
+                        await ctx.Response.WriteAsync("ok", Encoding.UTF8);
+                    });
+                    routes.MapPost("micro/executor", async ctx =>
+                    {
+                        //route.Values.TryGetValue("serviceId", out var serviceId);
+                        var sender = new HttpServerMessageSender(_codecFactory.GetEncoder(), ctx.Response);
+                        try
                         {
-                            result.Code = busi.Code;
-                            result.Message = busi.Message;
+                            await OnReceived(sender, ctx.Request);
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            _logger.LogError(ex, ex.Message);
-                            result.Code = (int)HttpStatusCode.InternalServerError;
-                            result.Message = ex.Message;
-                        }
+                            var result = new MessageResult();
+                            if (ex is SpearException busi)
+                            {
+                                result.Code = busi.Code;
+                                result.Message = busi.Message;
+                            }
+                            else
+                            {
+                                _logger.LogError(ex, ex.Message);
+                                result.Code = (int)HttpStatusCode.InternalServerError;
+                                result.Message = ex.Message;
+                            }
 
-                        await sender.Send(result);
-                    }
+                            await sender.Send(result);
+                        }
+                    });
                 });
-
-                //routes.MapRoute("default", "{controller=Home}/{action=Index}/{Id?}");
-            });
         }
 
         private async Task OnReceived(IMessageSender sender, HttpRequest request)
