@@ -33,6 +33,7 @@ namespace Spear.Tests.Client
             //var summary = BenchmarkRunner.Run<DeserializeBenchmarks>();
             //Console.ReadLine();
             Client.Start(args);
+            //GrpcClientTest.Start(args);
             //BenchmarkRunner.Run<GrpcClient>();
             //BenchmarkRunner.Run<SpearBenchmarks>();
             //TaxiFarePrediction.Start(args);

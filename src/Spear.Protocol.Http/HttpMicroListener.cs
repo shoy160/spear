@@ -88,7 +88,7 @@ namespace Spear.Protocol.Http
                 {
                     routes.MapGet("micro", async ctx =>
                     {
-                        var services = _entryFactory.Services.ToDictionary(k => $"micro/{k.Key}",
+                        var services = _entryFactory.Entries.ToDictionary(k => $"micro/{k.Key}",
                             v => v.Value.Parameters.ToDictionary(pk => pk.Name,
                                 pv => pv.ParameterType.GetTypeInfo().Name));
                         ctx.Response.ContentType = "application/json";

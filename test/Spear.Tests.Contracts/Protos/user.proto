@@ -1,0 +1,19 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Spear.Tests.Contracts";
+
+package User;
+
+service Account {
+	rpc Login (LoginRequest) returns (LoginReply);
+}
+
+message LoginRequest {
+	string Account = 1;
+	string Password = 2;
+	string Code = 3;
+}
+message LoginReply {
+	string Id = 1;
+	string Token = 2;
+}

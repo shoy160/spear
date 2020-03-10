@@ -1,6 +1,7 @@
-﻿using Spear.Core.Micro.Implementation;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Spear.Core.Micro.Implementation;
 
 namespace Spear.Core.Micro
 {
@@ -8,7 +9,9 @@ namespace Spear.Core.Micro
     public interface IMicroEntryFactory
     {
         /// <summary> 方法列表 </summary>
-        IDictionary<string, MicroEntry> Services { get; }
+        IDictionary<string, MicroEntry> Entries { get; }
+
+        List<Type> Services { get; }
 
         /// <summary> 获取所有服务程序集 </summary>
         /// <returns></returns>

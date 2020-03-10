@@ -1,5 +1,5 @@
-﻿using Spear.ProxyGenerator.Proxy;
-using System;
+﻿using System;
+using Spear.ProxyGenerator.Proxy;
 
 namespace Spear.ProxyGenerator.Impl
 {
@@ -16,10 +16,18 @@ namespace Spear.ProxyGenerator.Impl
             _proxyGenerator = proxyGenerator;
         }
 
+        protected virtual object Resolve(Type type, object key = null)
+        {
+            return null;
+        }
+
         public object Create(Type type, object key = null)
         {
             var instance = _resolver.Resolve(type, key);
             if (instance != null) return instance;
+            instance = Resolve(type, key);
+            if (instance != null) return instance;
+
             instance = _proxyGenerator.CreateProxy(type, typeof(ProxyExecutor), _proxyProvider, key);
             _resolver.Register(type, instance, key);
             return instance;

@@ -33,6 +33,7 @@
     <ProjectReference Include="..\..\src\Spear.Consul\Spear.Consul.csproj" />
     <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
     <ProjectReference Include="..\..\src\Spear.Nacos\Spear.Nacos.csproj" />
+    <ProjectReference Include="..\..\src\Spear.Protocol.Grpc\Spear.Protocol.Grpc.csproj" />
     <ProjectReference Include="..\..\src\Spear.Protocol.Http\Spear.Protocol.Http.csproj" />
     <ProjectReference Include="..\..\src\Spear.Protocol.Tcp\Spear.Protocol.Tcp.csproj" />
     <ProjectReference Include="..\..\src\Spear.Protocol.WebSocket\Spear.Protocol.WebSocket.csproj" />
@@ -41,7 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\*.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>

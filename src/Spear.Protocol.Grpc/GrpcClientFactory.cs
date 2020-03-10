@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
 using Spear.Core.Message;
@@ -19,7 +18,7 @@ namespace Spear.Protocol.Grpc
 
         protected override Task<IMicroClient> Create(ServiceAddress address)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }

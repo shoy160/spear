@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Spear.Codec;
 using Spear.Codec.MessagePack;
 using Spear.Codec.ProtoBuffer;
+using Spear.Protocol.Grpc;
 using Spear.Protocol.WebSocket;
 
 namespace Spear.Tests.Server
@@ -42,13 +43,14 @@ namespace Spear.Tests.Server
             {
                 builder
                     //.AddJsonCodec()
-                    .AddMessagePackCodec()
+                    //.AddMessagePackCodec()
                     //.AddProtoBufCodec()
                     .AddSession()
                     //.AddNacos()
                     .AddConsul()
                     ;
-                builder.AddWebSocketProtocol();
+                builder.AddGrpcProtocol();
+                //builder.AddWebSocketProtocol();
                 //switch (protocol)
                 //{
                 //    case ServiceProtocol.Tcp:
@@ -60,6 +62,7 @@ namespace Spear.Tests.Server
                 //}
             });
             services.AddSingleton<ITestContract, TestService>();
+            services.AddScoped<AccountService>();
             services.AddLogging(builder =>
             {
                 builder.SetMinimumLevel(LogLevel.Information);

@@ -1,12 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
-using Spear.Core.Reflection;
-using Spear.ProxyGenerator;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Spear.Core.Reflection;
+using Spear.ProxyGenerator;
 
 namespace Spear.Core.Micro.Implementation
 {
@@ -15,39 +15,41 @@ namespace Spear.Core.Micro.Implementation
     public class MicroEntryFactory : IMicroEntryFactory
     {
         private readonly ILogger<MicroEntryFactory> _logger;
-        private readonly ConcurrentDictionary<string, MicroEntry> _services;
-        private readonly ITypeFinder _typeFinder;
+        private readonly ConcurrentDictionary<string, MicroEntry> _entries;
+        protected readonly ITypeFinder TypeFinder;
         private readonly IServiceProvider _provider;
 
         public MicroEntryFactory(ILogger<MicroEntryFactory> logger, ITypeFinder typeFinder, IServiceProvider provider)
         {
-            _services = new ConcurrentDictionary<string, MicroEntry>();
+            _entries = new ConcurrentDictionary<string, MicroEntry>();
+            Services = new List<Type>();
             _logger = logger;
-            _typeFinder = typeFinder;
+            TypeFinder = typeFinder;
             _provider = provider;
             InitServices();
         }
 
         private bool HasImpl(Type interfaceType)
         {
-            return _typeFinder.Find(t => interfaceType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract).Any();
+            return TypeFinder.Find(t => interfaceType.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract).Any();
         }
 
         /// <summary> 初始化服务 </summary>
         private void InitServices()
         {
-            var services = _typeFinder
-                .Find(t => typeof(ISpearService).IsAssignableFrom(t) && t.IsInterface && t != typeof(ISpearService))
-                .ToList();
+            var services = FindServices();
             foreach (var service in services)
             {
                 if (!HasImpl(service))
                     continue;
+                Services.Add(service);
                 var methods = service.GetMethods(BindingFlags.Public | BindingFlags.Instance);
                 foreach (var method in methods)
                 {
+                    if (FilterMethod(method))
+                        continue;
                     var serviceId = GenerateServiceId(method);
-                    _services.TryAdd(serviceId, CreateEntry(method));
+                    _entries.TryAdd(serviceId, CreateEntry(method));
                 }
             }
         }
@@ -58,6 +60,7 @@ namespace Spear.Core.Micro.Implementation
 
             return new MicroEntry(method)
             {
+
                 Invoke = param =>
                 {
                     var instance = _provider.GetService(method.DeclaringType);
@@ -81,6 +84,18 @@ namespace Spear.Core.Micro.Implementation
             };
         }
 
+        protected virtual List<Type> FindServices()
+        {
+            return TypeFinder
+                .Find(t => typeof(ISpearService).IsAssignableFrom(t) && t.IsInterface && t != typeof(ISpearService))
+                .ToList();
+        }
+
+        protected virtual bool FilterMethod(MethodInfo method)
+        {
+            return false;
+        }
+
         /// <summary> 生成服务ID </summary>
         /// <param name="method"></param>
         /// <returns></returns>
@@ -100,15 +115,17 @@ namespace Spear.Core.Micro.Implementation
             return id;
         }
 
+        public List<Type> Services { get; }
+
         /// <summary> 获取服务列表 </summary>
         /// <returns></returns>
-        public IEnumerable<Assembly> GetContracts()
+        public virtual IEnumerable<Assembly> GetContracts()
         {
             var list = new List<Assembly>();
-            foreach (var methodInfo in _services.Values)
+            foreach (var service in Services)
             {
-                var ass = methodInfo.Method.DeclaringType?.Assembly;
-                if (ass == null || list.Contains(ass))
+                var ass = service.Assembly;
+                if (list.Contains(ass))
                     continue;
                 list.Add(ass);
             }
@@ -117,7 +134,7 @@ namespace Spear.Core.Micro.Implementation
         }
 
         /// <summary> 服务方法 </summary>
-        public IDictionary<string, MicroEntry> Services => _services;
+        public IDictionary<string, MicroEntry> Entries => _entries;
 
         /// <summary> 获取服务ID </summary>
         /// <param name="method"></param>
@@ -132,7 +149,7 @@ namespace Spear.Core.Micro.Implementation
         /// <returns></returns>
         public MicroEntry Find(string serviceId)
         {
-            if (_services.TryGetValue(serviceId, out var method))
+            if (_entries.TryGetValue(serviceId, out var method))
                 return method;
             throw new ArgumentNullException(nameof(serviceId), "服务条目未找到");
         }
