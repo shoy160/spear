@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Spear.Core;
+using Spear.Core.Exceptions;
 using Spear.Core.Message;
 using Spear.Core.Message.Models;
 using Spear.Core.Micro;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Spear.Core
+namespace Spear.Core.Exceptions
 {
     public class SpearException : Exception
     {

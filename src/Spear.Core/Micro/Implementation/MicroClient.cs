@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Spear.Core.Exceptions;
 using Spear.Core.Message;
 using Spear.Core.Message.Models;
 
@@ -73,28 +74,13 @@ namespace Spear.Core.Micro.Implementation
             {
                 _logger.LogDebug("准备发送消息");
                 var callback = RegistCallbackAsync(message.Id);
-                try
-                {
-                    if (_logger.IsEnabled(LogLevel.Debug))
-                        _logger.LogDebug($"{_sender.GetType()}:send :{JsonConvert.SerializeObject(message)}");
-                    //发送
-                    await _sender.Send(message);
-                }
-                catch (Exception exception)
-                {
-                    if (exception is SpearException)
-                        throw;
-                    _logger.LogError(exception, "与服务端通讯时发生了异常");
-                    throw new SpearException("与服务端通讯时发生了异常");
-                }
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug($"{_sender.GetType()}:send :{JsonConvert.SerializeObject(message)}");
+                //发送
+                await _sender.Send(message);
 
                 _logger.LogDebug("消息发送成功");
                 return await callback;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "消息发送失败。");
-                throw new SpearException("消息发送失败");
             }
             finally
             {

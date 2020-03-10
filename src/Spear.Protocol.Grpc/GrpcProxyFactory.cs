@@ -3,6 +3,7 @@ using System.Linq;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Spear.Core;
+using Spear.Core.Exceptions;
 using Spear.Core.Micro.Services;
 using Spear.ProxyGenerator;
 using Spear.ProxyGenerator.Impl;
@@ -30,7 +31,7 @@ namespace Spear.Protocol.Grpc
                 //find service
                 var services = _finder.Find(type).ConfigureAwait(false).GetAwaiter().GetResult();
                 if (services == null || !services.Any())
-                    throw new SpearException("没有可用的服务", 20001);
+                    throw ErrorCodes.NoService.CodeException();
                 var service = services.Random();
                 if (service.Protocol != ServiceProtocol.Grpc)
                     return null;

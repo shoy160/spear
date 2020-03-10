@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using Spear.Core.Exceptions;
 
 namespace Spear.Core.Config
 {

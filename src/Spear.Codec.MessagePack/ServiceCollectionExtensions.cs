@@ -21,12 +21,14 @@ namespace Spear.Codec.MessagePack
             //    return new MessagePackInvoke();
             //});
             //builder.AddTransient<IMessageResult<>, MessagePackResult>();
-            builder.TryAddSingleton<IMessageCodecFactory>(provider =>
-            {
-                var serializer = provider.GetService<IMessageSerializer>();
-                var codec = new MessagePackCodec(serializer);
-                return new DMessageCodecFactory<MessagePackCodec>(codec);
-            });
+            builder.AddSingleton<MessagePackCodec>();
+            builder.TryAddScoped<IMessageCodecFactory, DMessageCodecFactory<MessagePackCodec>>();
+            //builder.TryAddSingleton<IMessageCodecFactory>(provider =>
+            //{
+            //    var serializer = provider.GetService<IMessageSerializer>();
+            //    var codec = new MessagePackCodec(serializer);
+            //    return new DMessageCodecFactory<MessagePackCodec>(codec);
+            //});
             return builder;
         }
     }

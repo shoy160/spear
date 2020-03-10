@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
 using Spear.Core.Message;
-using Spear.Core.Message.Models;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 
@@ -19,22 +16,18 @@ namespace Spear.Protocol.WebSocket
     [Protocol(ServiceProtocol.Ws)]
     public class WebSocketListener : MicroListener
     {
-        private readonly ILogger<WebSocketListener> _logger;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly IMessageCodecFactory _codecFactory;
+        private readonly IServiceProvider _hostProvider;
         private IHost _host;
 
-        public WebSocketListener(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory)
+        public WebSocketListener(IServiceProvider hostProvider)
         {
-            _loggerFactory = loggerFactory;
-            _codecFactory = codecFactory;
-            _logger = loggerFactory.CreateLogger<WebSocketListener>();
+            _hostProvider = hostProvider;
         }
 
         public override async Task Start(ServiceAddress serviceAddress)
         {
             //var endpoint = serviceAddress.ToEndPoint() as IPEndPoint;
-            _host = Host.CreateDefaultBuilder()
+            _host = new HostBuilder()
                 .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
                 .ConfigureWebHostDefaults(builder =>
                 {
@@ -60,51 +53,18 @@ namespace Spear.Protocol.WebSocket
                 ReceiveBufferSize = 4 * 1024
             };
             app.UseWebSockets(webSocketOptions);
-            //app.UseMiddleware<WebSocketMiddleware>();
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Path == "/micro/ws")
-                {
-                    if (!context.WebSockets.IsWebSocketRequest)
-                    {
-                        context.Response.StatusCode = 400;
-                        return;
-                    }
-                    var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                    var ms = new MemoryStream();
-                    var buffer = new byte[1024 * 4];
-                    while (true)
-                    {
-                        var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer),
-                            CancellationToken.None);
-                        await ms.WriteAsync(buffer, 0, buffer.Length);
-                        if (result.EndOfMessage)
-                        {
-                            var invokeMessage = await _codecFactory.GetDecoder().DecodeAsync<InvokeMessage>(ms.ToArray());
-                            var sender = new WebSocketMessageSender(webSocket, _codecFactory.GetEncoder());
-                            await OnReceived(sender, invokeMessage);
-                            ms.Dispose();
-                            ms = new MemoryStream();
-                        }
-                        if (result.CloseStatus.HasValue)
-                        {
-                            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription,
-                                CancellationToken.None);
-                            _logger.LogInformation($"服务关闭");
-                            break;
-                        }
-                    }
-
-                    return;
-                }
-
-                await next();
-            });
+            app.UseMiddleware<WebSocketMiddleware>();
         }
 
         private void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
-            //services.AddTransient<WebSocketMiddleware>();
+            services.AddTransient(provider =>
+            {
+                var lifetime = provider.GetService<IHostApplicationLifetime>();
+                var codecFactory = _hostProvider.GetService<IMessageCodecFactory>();
+                var loggerFactory = _hostProvider.GetService<ILoggerFactory>();
+                return new WebSocketMiddleware(this, lifetime, codecFactory, loggerFactory);
+            });
             //services.AddHostedService<BroadcastTimestamp>();
         }
 

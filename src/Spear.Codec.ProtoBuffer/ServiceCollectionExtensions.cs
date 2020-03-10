@@ -15,12 +15,14 @@ namespace Spear.Codec.ProtoBuffer
         public static T AddProtoBufCodec<T>(this T builder) where T : IMicroBuilder
         {
             builder.AddSingleton<IMessageSerializer, ProtoBufferSerializer>();
-            builder.TryAddSingleton<IMessageCodecFactory>(provider =>
-            {
-                var serializer = provider.GetService<IMessageSerializer>();
-                var codec = new ProtoBufferCodec(serializer);
-                return new DMessageCodecFactory<ProtoBufferCodec>(codec);
-            });
+            builder.AddSingleton<ProtoBufferCodec>();
+            builder.TryAddScoped<IMessageCodecFactory, DMessageCodecFactory<ProtoBufferCodec>>();
+            //builder.TryAddSingleton<IMessageCodecFactory>(provider =>
+            //{
+            //    var serializer = provider.GetService<IMessageSerializer>();
+            //    var codec = new ProtoBufferCodec(serializer);
+            //    return new DMessageCodecFactory<ProtoBufferCodec>(codec);
+            //});
             return builder;
         }
     }

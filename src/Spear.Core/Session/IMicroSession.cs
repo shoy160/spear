@@ -1,5 +1,6 @@
 ﻿using Spear.Core.Tenant;
 using System;
+using Spear.Core.Exceptions;
 
 namespace Spear.Core.Session
 {

@@ -10,10 +10,12 @@ namespace Spear.Core.Message.Implementation
         where TResult : DMessageResult<TDynamic>, new()
     {
         private readonly IMessageSerializer _serializer;
+        private readonly SpearConfig _config;
 
-        protected DMessageCodec(IMessageSerializer serializer)
+        protected DMessageCodec(IMessageSerializer serializer, SpearConfig config = null)
         {
             _serializer = serializer;
+            _config = config ?? new SpearConfig();
         }
 
         protected virtual byte[] OnEncode(object message)
@@ -64,12 +66,16 @@ namespace Spear.Core.Message.Implementation
         {
             if (message == null) return new byte[0];
             var buffer = OnEncode(message);
-            return await buffer.Zip();
+            if (_config.Gzip)
+                return await buffer.Zip();
+            return buffer;
         }
 
         public async Task<object> DecodeAsync(byte[] data, Type type)
         {
-            var buffer = await data.UnZip();
+            var buffer = data;
+            if (_config.Gzip)
+                buffer = await data.UnZip();
             var obj = OnDecode(buffer, type);
             var result = obj.CastTo(type);
             return result;

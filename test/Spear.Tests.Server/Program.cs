@@ -1,23 +1,17 @@
 ﻿//using Acb.Core.Extensions;
+using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Spear.Codec.MessagePack;
 using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Config;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
-using Spear.Nacos;
-using Spear.Protocol.Http;
-using Spear.Protocol.Tcp;
+using Spear.Protocol.WebSocket;
 using Spear.Tests.Contracts;
 using Spear.Tests.Server.Services;
-using System;
-using System.Threading.Tasks;
-using Spear.Codec;
-using Spear.Codec.MessagePack;
-using Spear.Codec.ProtoBuffer;
-using Spear.Protocol.Grpc;
-using Spear.Protocol.WebSocket;
 
 namespace Spear.Tests.Server
 {
@@ -43,14 +37,14 @@ namespace Spear.Tests.Server
             {
                 builder
                     //.AddJsonCodec()
-                    //.AddMessagePackCodec()
+                    .AddMessagePackCodec()
                     //.AddProtoBufCodec()
                     .AddSession()
                     //.AddNacos()
                     .AddConsul()
                     ;
-                builder.AddGrpcProtocol();
-                //builder.AddWebSocketProtocol();
+                //builder.AddGrpcProtocol();
+                builder.AddWebSocketProtocol();
                 //switch (protocol)
                 //{
                 //    case ServiceProtocol.Tcp:
@@ -65,9 +59,12 @@ namespace Spear.Tests.Server
             services.AddScoped<AccountService>();
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Information);
+                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.AddFilter("System", level => level >= LogLevel.Warning);
+                builder.AddFilter("Microsoft", level => level >= LogLevel.Warning);
                 builder.AddConsole();
             });
+
             _provider = services.BuildServiceProvider();
             //_provider.UseNacosConfig();
 

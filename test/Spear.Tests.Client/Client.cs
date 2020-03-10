@@ -4,7 +4,6 @@ using Acb.Core.Helper;
 using Acb.Core.Logging;
 using Acb.Core.Serialize;
 using Acb.Core.Tests;
-using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Codec.MessagePack;
@@ -21,6 +20,7 @@ using Spear.Tests.Client.Logging;
 using Spear.Tests.Client.Services;
 using Spear.Tests.Client.Services.Impl;
 using Spear.Tests.Contracts;
+using Spear.Tests.Contracts.Dtos;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
@@ -49,10 +49,10 @@ namespace Spear.Tests.Client
                         //})
                         .AddConsul("http://192.168.0.231:8500")
                         ;
-                });
+                }, config => config.Gzip = false);
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Warning);
+                builder.SetMinimumLevel(LogLevel.Debug);
                 builder.AddConsole();
             });
             services.AddSingleton<DefaultAdapter>();
@@ -118,7 +118,8 @@ namespace Spear.Tests.Client
             Task.Run(async () =>
             {
                 var proxy = provider.GetService<IProxyFactory>();
-                var service = proxy.Create<Account.AccountClient>();
+                //var service = proxy.Create<Account.AccountClient>();
+                var service = proxy.Create<ITestContract>();
 
                 var result = await CodeTimer.Time("micro test", repeat, async () =>
                 {
@@ -138,25 +139,25 @@ namespace Spear.Tests.Client
                             });
                         }
                         //var header = new Metadata();
-                        var dto = await service.LoginAsync(new LoginRequest
-                        {
-                            Account = message,
-                            Password = RandomHelper.RandomNumAndLetters(6),
-                            Code = RandomHelper.RandomLetters(4)
-                        });
-                        logger.LogInformation(JsonHelper.ToJson(dto));
+                        //var dto = await service.LoginAsync(new LoginRequest
+                        //{
+                        //    Account = message,
+                        //    Password = RandomHelper.RandomNumAndLetters(6),
+                        //    Code = RandomHelper.RandomLetters(4)
+                        //});
+                        //logger.LogInformation(JsonHelper.ToJson(dto));
 
-                        //if (isNotice)
-                        //{
-                        //    await service.Notice(m);
-                        //}
-                        //else
-                        //{
-                        //    //var msg = await service.Get(m);
-                        //    var user = await service.User(new UserInputDto
-                        //    { Id = RandomHelper.Random().Next(1000, 10000), Name = message });
-                        //    logger.LogInformation(JsonHelper.ToJson(user));
-                        //}
+                        if (isNotice)
+                        {
+                            await service.Notice(m);
+                        }
+                        else
+                        {
+                            //var msg = await service.Get(m);
+                            var user = await service.User(new UserInputDto
+                            { Id = RandomHelper.Random().Next(1000, 10000), Name = message });
+                            logger.LogInformation(JsonHelper.ToJson(user));
+                        }
                     }
                     catch (Exception ex)
                     {

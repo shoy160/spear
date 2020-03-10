@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Spear.Core;
+using Spear.Core.Exceptions;
 using Spear.Core.Message;
 using Spear.Core.Message.Models;
 

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Exceptions;
 using Spear.Core.Message;
 using Spear.Core.Message.Models;
 using Spear.Core.Micro.Services;

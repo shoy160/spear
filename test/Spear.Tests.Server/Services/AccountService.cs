@@ -9,7 +9,7 @@ using Spear.Tests.Contracts;
 
 namespace Spear.Tests.Server.Services
 {
-    public class AccountService : Account.AccountBase, ISpearService
+    public class AccountService : Account.AccountBase//, ISpearService
     {
         private readonly ILogger<AccountService> _logger;
         private readonly IMicroSession _session;

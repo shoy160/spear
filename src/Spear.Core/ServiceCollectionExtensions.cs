@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Spear.Core.Message;
-using Spear.Core.Message.Codec;
 using Spear.Core.Message.Implementation;
 using Spear.Core.Message.Json;
 using Spear.Core.Micro;
@@ -78,12 +77,14 @@ namespace Spear.Core
         public static T AddJsonCodec<T>(this T builder) where T : IMicroBuilder
         {
             builder.AddSingleton<IMessageSerializer, JsonMessageSerializer>();
-            builder.TryAddSingleton<IMessageCodecFactory>(provider =>
-            {
-                var serializer = provider.GetService<IMessageSerializer>();
-                var codec = new JsonCodec(serializer);
-                return new DMessageCodecFactory<JsonCodec>(codec);
-            });
+            builder.AddSingleton<JsonCodec>();
+            builder.TryAddSingleton<IMessageCodecFactory, DMessageCodecFactory<JsonCodec>>();
+            //builder.TryAddSingleton<IMessageCodecFactory>(provider =>
+            //{
+            //    var serializer = provider.GetService<IMessageSerializer>();
+            //    var codec = new JsonCodec(serializer);
+            //    return new DMessageCodecFactory<JsonCodec>(codec);
+            //});
             return builder;
         }
 
@@ -134,10 +135,14 @@ namespace Spear.Core
         /// <summary> 添加微服务客户端 </summary>
         /// <param name="services"></param>
         /// <param name="builderAction"></param>
+        /// <param name="configAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddMicroClient(this IMicroClientBuilder services, Action<IMicroClientBuilder> builderAction)
+        public static IServiceCollection AddMicroClient(this IMicroClientBuilder services, Action<IMicroClientBuilder> builderAction, Action<SpearConfig> configAction = null)
         {
             //services.TryAddSingleton<Counter>();
+            var config = "spear".Config<SpearConfig>() ?? new SpearConfig();
+            configAction?.Invoke(config);
+            services.AddSingleton(config);
             services.AddProxy<ClientProxy>();
             builderAction.Invoke(services);
             return services;
@@ -146,9 +151,14 @@ namespace Spear.Core
         /// <summary> 添加微服务 </summary>
         /// <param name="services"></param>
         /// <param name="builderAction"></param>
+        /// <param name="configAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddMicroService(this IMicroServerBuilder services, Action<IMicroServerBuilder> builderAction)
+        public static IServiceCollection AddMicroService(this IMicroServerBuilder services,
+            Action<IMicroServerBuilder> builderAction, Action<SpearConfig> configAction = null)
         {
+            var config = "spear".Config<SpearConfig>() ?? new SpearConfig();
+            configAction?.Invoke(config);
+            services.AddSingleton(config);
             services.AddSingleton<IAssemblyFinder, DefaultAssemblyFinder>();
             services.AddSingleton<ITypeFinder, DefaultTypeFinder>();
             services.AddSingleton<IMicroEntryFactory, MicroEntryFactory>();

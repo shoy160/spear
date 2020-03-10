@@ -12,12 +12,7 @@ namespace Spear.Protocol.WebSocket
         /// <returns></returns>
         public static IMicroServerBuilder AddWebSocketProtocol(this IMicroServerBuilder builder)
         {
-            builder.AddSingleton<IMicroListener>(provider =>
-            {
-                var coderFactory = provider.GetService<IMessageCodecFactory>();
-                var loggerFactory = provider.GetService<ILoggerFactory>();
-                return new WebSocketListener(loggerFactory, coderFactory);
-            });
+            builder.AddSingleton<IMicroListener, WebSocketListener>();
             return builder;
         }
 

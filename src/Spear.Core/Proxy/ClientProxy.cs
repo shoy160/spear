@@ -10,6 +10,7 @@ using System.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
+using Spear.Core.Exceptions;
 using Spear.Core.Message.Models;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
@@ -65,14 +66,15 @@ namespace Spear.Core.Proxy
             _logger.LogInformation($"找到{services.Count}个服务,{string.Join(";", services)}");
             if (!services.Any())
             {
-                throw new SpearException("没有可用的服务", 20001);
+                throw ErrorCodes.NoService.CodeException();
             }
             var invokeMessage = Create(targetMethod, args);
             ServiceAddress service = null;
             var builder = Policy
                 .Handle<Exception>(ex =>
                     ex.GetBaseException() is SocketException ||
-                    ex.GetBaseException() is HttpRequestException) //服务器异常
+                    ex.GetBaseException() is HttpRequestException ||
+                    (ex.GetBaseException() is SpearException spearEx && spearEx.Code == ErrorCodes.SystemError)) //服务器异常
                 .OrResult<MessageResult>(r => r.Code != 200); //服务未找到
 
             //熔断,3次异常,熔断5分钟
@@ -94,7 +96,7 @@ namespace Spear.Core.Proxy
                 if (!services.Any())
                 {
                     await _serviceFinder.CleanCache(serviceType);
-                    throw new SpearException("没有可用的服务", 20001);
+                    throw ErrorCodes.NoService.CodeException();
                 }
 
                 service = services.Random();
