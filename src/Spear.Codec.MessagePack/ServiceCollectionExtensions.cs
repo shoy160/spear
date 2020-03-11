@@ -17,21 +17,8 @@ namespace Spear.Codec.MessagePack
         {
             Constants.Codec = ServiceCodec.MessagePack;
             builder.AddSingleton<IMessageSerializer, MessagePackMessageSerializer>();
-
-            //builder.AddTransient<IMessageDynamic, MessagePackDynamic>();
-            //builder.AddTransient<IMessageInvoke<MessagePackDynamic>>(provider =>
-            //{
-            //    return new MessagePackInvoke();
-            //});
-            //builder.AddTransient<IMessageResult<>, MessagePackResult>();
             builder.AddSingleton<MessagePackCodec>();
             builder.TryAddScoped<IMessageCodecFactory, DMessageCodecFactory<MessagePackCodec>>();
-            //builder.TryAddSingleton<IMessageCodecFactory>(provider =>
-            //{
-            //    var serializer = provider.GetService<IMessageSerializer>();
-            //    var codec = new MessagePackCodec(serializer);
-            //    return new DMessageCodecFactory<MessagePackCodec>(codec);
-            //});
             return builder;
         }
     }

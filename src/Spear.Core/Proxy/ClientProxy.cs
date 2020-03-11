@@ -136,9 +136,6 @@ namespace Spear.Core.Proxy
                 Headers = headers,
                 Parameters = args
             };
-            var type = targetMethod.ReturnType;
-            if (type == typeof(void) || type == typeof(Task))
-                invokeMessage.IsNotice = true;
             return invokeMessage;
         }
 

@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Spear.Core.Attributes;
 using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
@@ -32,6 +33,17 @@ namespace Spear.Core
         {
             var list = provider.GetServices<T>();
             return list.First(t => t.GetType().GetCustomAttribute<ProtocolAttribute>()?.Protocol == protocol);
+        }
+
+        /// <summary> 获取服务 </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="provider"></param>
+        /// <param name="codec"></param>
+        /// <returns></returns>
+        public static T GetService<T>(this IServiceProvider provider, ServiceCodec codec)
+        {
+            var list = provider.GetServices<T>();
+            return list.First(t => t.GetType().GetCustomAttribute<CodecAttribute>()?.Codec == codec);
         }
 
         /// <summary> 获取服务 </summary>

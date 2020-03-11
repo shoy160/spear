@@ -14,15 +14,11 @@ namespace Spear.Codec.MessagePack.Models
         [Key(1)]
         public override string ServiceId { get; set; }
 
-        /// <summary> 是否是通知 </summary>
-        [Key(2)]
-        public override bool IsNotice { get; set; }
-
         /// <summary> 服务参数 </summary>
-        [Key(3)]
+        [Key(2)]
         public override IDictionary<string, MessagePackDynamic> Parameters { get; set; }
 
-        [Key(4)]
+        [Key(3)]
         public override IDictionary<string, string> Headers { get; set; }
 
         public MessagePackInvoke() { }

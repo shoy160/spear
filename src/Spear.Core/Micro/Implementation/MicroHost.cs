@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Spear.Core.Config;
 using Spear.Core.Micro.Services;
 
 namespace Spear.Core.Micro.Implementation
@@ -13,7 +11,7 @@ namespace Spear.Core.Micro.Implementation
         private readonly IServiceRegister _serviceRegister;
         private readonly IMicroEntryFactory _entryFactory;
         private readonly ILogger<MicroHost> _logger;
-        private readonly ServiceProtocol _protocol;
+        //private readonly ServiceProtocol _protocol;
 
         /// <summary> 服务宿主机 </summary>
         /// <param name="serviceExecutor"></param>
@@ -28,9 +26,9 @@ namespace Spear.Core.Micro.Implementation
             _serviceRegister = serviceRegister;
             _entryFactory = entryFactory;
             _logger = loggerFactory.CreateLogger<MicroHost>();
-            var protocol = microListener.GetType().GetCustomAttribute<ProtocolAttribute>();
-            if (protocol != null)
-                _protocol = protocol.Protocol;
+            //var protocol = microListener.GetType().GetCustomAttribute<ProtocolAttribute>();
+            //if (protocol != null)
+            //    _protocol = protocol.Protocol;
         }
 
         public override void Dispose()
@@ -44,7 +42,8 @@ namespace Spear.Core.Micro.Implementation
         /// <returns>一个任务。</returns>
         public override Task Start(ServiceAddress serviceAddress)
         {
-            serviceAddress.Protocol = _protocol;
+            serviceAddress.Protocol = Constants.Protocol;
+            serviceAddress.Codec = Constants.Codec;
             try
             {
                 Task.Factory.StartNew(async () =>

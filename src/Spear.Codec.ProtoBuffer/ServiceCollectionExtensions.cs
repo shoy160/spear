@@ -19,12 +19,6 @@ namespace Spear.Codec.ProtoBuffer
             builder.AddSingleton<IMessageSerializer, ProtoBufferSerializer>();
             builder.AddSingleton<ProtoBufferCodec>();
             builder.TryAddScoped<IMessageCodecFactory, DMessageCodecFactory<ProtoBufferCodec>>();
-            //builder.TryAddSingleton<IMessageCodecFactory>(provider =>
-            //{
-            //    var serializer = provider.GetService<IMessageSerializer>();
-            //    var codec = new ProtoBufferCodec(serializer);
-            //    return new DMessageCodecFactory<ProtoBufferCodec>(codec);
-            //});
             return builder;
         }
     }

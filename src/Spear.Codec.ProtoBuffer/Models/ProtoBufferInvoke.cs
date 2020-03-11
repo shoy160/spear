@@ -14,15 +14,11 @@ namespace Spear.Codec.ProtoBuffer.Models
         [ProtoMember(2)]
         public override string ServiceId { get; set; }
 
-        /// <summary> 是否是通知 </summary>
-        [ProtoMember(3)]
-        public override bool IsNotice { get; set; }
-
         /// <summary> 服务参数 </summary>
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public override IDictionary<string, ProtoBufferDynamic> Parameters { get; set; }
 
-        [ProtoMember(5)]
+        [ProtoMember(4)]
         public override IDictionary<string, string> Headers { get; set; }
 
         public ProtoBufferInvoke() { }

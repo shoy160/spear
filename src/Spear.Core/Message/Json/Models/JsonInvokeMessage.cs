@@ -14,15 +14,11 @@ namespace Spear.Core.Message.Json.Models
         [JsonProperty(Order = 2)]
         public override string ServiceId { get; set; }
 
-        /// <summary> 是否是通知 </summary>
-        [JsonProperty(Order = 3)]
-        public override bool IsNotice { get; set; }
-
         /// <summary> 服务参数 </summary>
-        [JsonProperty(Order = 4)]
+        [JsonProperty(Order = 3)]
         public override IDictionary<string, JsonDynamic> Parameters { get; set; }
 
-        [JsonProperty(Order = 5)]
+        [JsonProperty(Order = 4)]
         public override IDictionary<string, string> Headers { get; set; }
 
         public JsonInvokeMessage() { }

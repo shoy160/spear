@@ -254,9 +254,6 @@
         <member name="P:Spear.Core.Message.Json.Models.JsonInvokeMessage.ServiceId">
             <summary> 服务Id </summary>
         </member>
-        <member name="P:Spear.Core.Message.Json.Models.JsonInvokeMessage.IsNotice">
-            <summary> 是否是通知 </summary>
-        </member>
         <member name="P:Spear.Core.Message.Json.Models.JsonInvokeMessage.Parameters">
             <summary> 服务参数 </summary>
         </member>
@@ -298,9 +295,6 @@
         <member name="P:Spear.Core.Message.Models.IMessageInvoke`1.ServiceId">
             <summary> 服务Id </summary>
         </member>
-        <member name="P:Spear.Core.Message.Models.IMessageInvoke`1.IsNotice">
-            <summary> 是否是通知 </summary>
-        </member>
         <member name="P:Spear.Core.Message.Models.IMessageInvoke`1.Parameters">
             <summary> 服务参数 </summary>
         </member>
@@ -318,9 +312,6 @@
         </member>
         <member name="P:Spear.Core.Message.Models.InvokeMessage.ServiceId">
             <summary> 服务Id </summary>
-        </member>
-        <member name="P:Spear.Core.Message.Models.InvokeMessage.IsNotice">
-            <summary> 是否是通知 </summary>
         </member>
         <member name="P:Spear.Core.Message.Models.InvokeMessage.Parameters">
             <summary> 服务参数 </summary>

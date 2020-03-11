@@ -27,14 +27,12 @@ namespace Spear.Core.Micro.Implementation
             _provider = provider;
         }
 
-        private async Task LocalExecute(InvokeMessage invokeMessage, MessageResult messageResult)
+        private async Task LocalExecute(MicroEntry entry, InvokeMessage invokeMessage, MessageResult messageResult)
         {
             try
             {
-                if (_logger.IsEnabled(LogLevel.Debug))
-                    _logger.LogDebug(JsonConvert.SerializeObject(invokeMessage));
-                var entry = _entryFactory.Find(invokeMessage.ServiceId);
-
+                //if (_logger.IsEnabled(LogLevel.Debug))
+                //    _logger.LogDebug(JsonConvert.SerializeObject(invokeMessage));
                 if (entry.IsNotify)
                 {
                     await entry.Invoke(invokeMessage.Parameters);
@@ -103,8 +101,18 @@ namespace Spear.Core.Micro.Implementation
                     session.Role = HttpUtility.UrlDecode(role);
                 accessor.SetSession(session);
             }
+
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug(JsonConvert.SerializeObject(message));
+            var entry = _entryFactory.Find(message.ServiceId);
+            if (entry == null)
+            {
+                //向客户端发送结果
+                await SendResult(sender, message.Id, new MessageResult("服务未找到"));
+                return;
+            }
             var result = new MessageResult();
-            if (message.IsNotice)
+            if (entry.IsNotify)
             {
                 //向客户端发送结果
                 await SendResult(sender, message.Id, result);
@@ -113,13 +121,13 @@ namespace Spear.Core.Micro.Implementation
                 await Task.Factory.StartNew(async () =>
                 {
                     //执行本地代码
-                    await LocalExecute(message, result);
+                    await LocalExecute(entry, message, result);
                 }, TaskCreationOptions.LongRunning);
                 return;
             }
 
             //执行本地代码
-            await LocalExecute(message, result);
+            await LocalExecute(entry, message, result);
             //向客户端发送结果
             await SendResult(sender, message.Id, result);
         }

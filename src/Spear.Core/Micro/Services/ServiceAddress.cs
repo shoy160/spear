@@ -12,9 +12,13 @@ namespace Spear.Core.Micro.Services
 
     public class ServiceAddress
     {
+        /// <summary> IP </summary>
         public IPAddress Ip { get; set; }
+        /// <summary> 服务协议 </summary>
         public ServiceProtocol Protocol { get; set; }
+        /// <summary> Host </summary>
         public string Host { get; set; }
+        /// <summary> 端口号 </summary>
         public int Port { get; set; }
 
         /// <summary> 对外注册的服务地址(ip或DNS) </summary>
@@ -23,7 +27,11 @@ namespace Spear.Core.Micro.Services
         /// <summary> 权重 </summary>
         public double Weight { get; set; } = 1;
 
+        /// <summary> 是否开启Gzip </summary>
         public bool Gzip { get; set; } = true;
+
+        /// <summary> 服务编码 </summary>
+        public ServiceCodec Codec { get; set; }
 
         public ServiceAddress() { }
 

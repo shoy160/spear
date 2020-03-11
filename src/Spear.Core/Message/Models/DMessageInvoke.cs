@@ -7,7 +7,6 @@ namespace Spear.Core.Message.Models
     where TDynamice : DMessageDynamic, new()
     {
         public virtual string ServiceId { get; set; }
-        public virtual bool IsNotice { get; set; }
         public virtual IDictionary<string, TDynamice> Parameters { get; set; }
         public virtual IDictionary<string, string> Headers { get; set; }
 
@@ -22,7 +21,6 @@ namespace Spear.Core.Message.Models
         {
             Id = message.Id;
             ServiceId = message.ServiceId;
-            IsNotice = message.IsNotice;
             if (message.Parameters != null)
             {
                 Parameters =
@@ -45,8 +43,7 @@ namespace Spear.Core.Message.Models
             var message = new InvokeMessage
             {
                 Id = Id,
-                ServiceId = ServiceId,
-                IsNotice = IsNotice
+                ServiceId = ServiceId
             };
             if (Parameters != null)
             {

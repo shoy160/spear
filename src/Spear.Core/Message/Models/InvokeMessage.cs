@@ -8,8 +8,8 @@ namespace Spear.Core.Message.Models
         /// <summary> 服务Id </summary>
         public string ServiceId { get; set; }
 
-        /// <summary> 是否是通知 </summary>
-        public bool IsNotice { get; set; }
+        ///// <summary> 是否是通知 </summary>
+        //public bool IsNotice { get; set; }
 
         /// <summary> 服务参数 </summary>
         public IDictionary<string, object> Parameters { get; set; }
