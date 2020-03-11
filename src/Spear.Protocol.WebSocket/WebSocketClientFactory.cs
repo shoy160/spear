@@ -1,16 +1,17 @@
 ﻿using System;
-using System.IO;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 using Spear.Core.Message.Models;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
+using Spear.Protocol.WebSocket.Sender;
 
 namespace Spear.Protocol.WebSocket
 {
@@ -22,46 +23,26 @@ namespace Spear.Protocol.WebSocket
         {
         }
 
-        private void ReceiveMessage(System.Net.WebSockets.WebSocket webSocket, IMessageListener listener, IMessageSender sender)
-        {
-            Task.Run(async () =>
-            {
-                var ms = new MemoryStream();
-                var buffer = new byte[1024 * 4];
-                while (true)
-                {
-                    var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer),
-                        CancellationToken.None);
-                    await ms.WriteAsync(buffer, 0, buffer.Length);
-                    if (result.EndOfMessage)
-                    {
-                        var resultMessage = await CodecFactory.GetDecoder().DecodeAsync<MessageResult>(ms.ToArray());
-                        await listener.OnReceived(sender, resultMessage);
-                        ms.Dispose();
-                        ms = new MemoryStream();
-                    }
-                    if (result.CloseStatus.HasValue)
-                    {
-                        await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription,
-                            CancellationToken.None);
-                        Logger.LogInformation($"Client关闭");
-                        break;
-                    }
-                }
-            });
-        }
-
         protected override async Task<IMicroClient> Create(ServiceAddress address)
         {
             var listener = new MessageListener();
             var webSocket = new ClientWebSocket();
             var uri = new Uri(new Uri(address.ToString()), "/micro/ws");
             await webSocket.ConnectAsync(uri, CancellationToken.None);
-            var sender = new WebSocketMessageSender(webSocket, CodecFactory.GetEncoder());
-            ReceiveMessage(webSocket, listener, sender);
-            var client = new MicroClient(sender, listener, MicroExecutor, LoggerFactory);
-            return client;
 
+            var sender = new WebSocketMessageSender(webSocket, CodecFactory.GetEncoder(), address.Gzip);
+
+            var completion = new TaskCompletionSource<object>();
+            var socketClient = new WebSocketClient(webSocket, LoggerFactory, completion);
+            socketClient.OnReceive += async buffer =>
+            {
+                var resultMessage = await CodecFactory.GetDecoder().DecodeAsync<MessageResult>(buffer, address.Gzip);
+                await listener.OnReceived(sender, resultMessage);
+            };
+            socketClient.OnClose += (key, socket) => Remove(address);
+
+            _ = Task.Run(() => socketClient.ReceiveAsync(CancellationToken.None).ConfigureAwait(false));
+            return new MicroClient(sender, listener, MicroExecutor, LoggerFactory);
         }
     }
 }

@@ -3,6 +3,7 @@ using Spear.Core.Message;
 using System;
 using System.Threading.Tasks;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Message.Models;
 using Spear.Core.Micro.Services;
 
@@ -15,10 +16,13 @@ namespace Spear.Protocol.Tcp.Sender
     public class DotNettyClientSender : DotNettyMessageSender, IMessageSender, IDisposable
     {
         private readonly IChannel _channel;
+        private readonly ServiceAddress _address;
 
-        public DotNettyClientSender(IMessageEncoder messageEncoder, IChannel channel) : base(messageEncoder)
+        public DotNettyClientSender(IMessageEncoder messageEncoder, IChannel channel, ServiceAddress address)
+            : base(messageEncoder)
         {
             _channel = channel;
+            _address = address;
         }
 
         public void Dispose()
@@ -35,7 +39,7 @@ namespace Spear.Protocol.Tcp.Sender
         /// <returns>一个任务。</returns>
         public async Task Send(DMessage message, bool flush = true)
         {
-            var buffer = await GetByteBuffer(message);
+            var buffer = await GetByteBuffer(message, _address.Gzip);
             //Counter.Send(buffer.ReadableBytes);
             if (flush)
             {

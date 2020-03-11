@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 using Spear.Core.Message.Json;
@@ -76,6 +77,7 @@ namespace Spear.Core
         /// <returns>服务构建者。</returns>
         public static T AddJsonCodec<T>(this T builder) where T : IMicroBuilder
         {
+            Constants.Codec = ServiceCodec.Json;
             builder.AddSingleton<IMessageSerializer, JsonMessageSerializer>();
             builder.AddSingleton<JsonCodec>();
             builder.TryAddSingleton<IMessageCodecFactory, DMessageCodecFactory<JsonCodec>>();

@@ -10,10 +10,12 @@ namespace Spear.Protocol.Tcp.Adapter
         where T : DMessage
     {
         private readonly IMessageDecoder _messageDecoder;
+        private readonly bool _gzip;
 
-        public MicroMessageHandler(IMessageDecoder messageDecoder)
+        public MicroMessageHandler(IMessageDecoder messageDecoder, bool gzip)
         {
             _messageDecoder = messageDecoder;
+            _gzip = gzip;
         }
 
         public override void ChannelRead(IChannelHandlerContext context, object message)
@@ -23,8 +25,7 @@ namespace Spear.Protocol.Tcp.Adapter
             buffer.ReadBytes(data);
 
             //Counter.Received(buffer.ReadableBytes);
-
-            var microMessage = _messageDecoder.Decode<T>(data);
+            var microMessage = _messageDecoder.Decode<T>(data, _gzip);
             context.FireChannelRead(microMessage);
             ReferenceCountUtil.Release(buffer);
         }

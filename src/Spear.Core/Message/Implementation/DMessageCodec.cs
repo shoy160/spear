@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Spear.Core.Config;
 using Spear.Core.Message.Models;
 
 namespace Spear.Core.Message.Implementation
@@ -62,19 +63,19 @@ namespace Spear.Core.Message.Implementation
             return _serializer.DeserializeNoType(data, type);
         }
 
-        public async Task<byte[]> EncodeAsync(object message)
+        public async Task<byte[]> EncodeAsync(object message, bool gzip = true)
         {
             if (message == null) return new byte[0];
             var buffer = OnEncode(message);
-            if (_config.Gzip)
+            if (gzip)
                 return await buffer.Zip();
             return buffer;
         }
 
-        public async Task<object> DecodeAsync(byte[] data, Type type)
+        public async Task<object> DecodeAsync(byte[] data, Type type, bool gzip = true)
         {
             var buffer = data;
-            if (_config.Gzip)
+            if (gzip)
                 buffer = await data.UnZip();
             var obj = OnDecode(buffer, type);
             var result = obj.CastTo(type);

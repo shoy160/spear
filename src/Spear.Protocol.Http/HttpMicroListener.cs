@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Exceptions;
 using Spear.Core.Message;
 using Spear.Core.Message.Models;
@@ -33,6 +34,7 @@ namespace Spear.Protocol.Http
         private readonly IMessageCodecFactory _codecFactory;
         private readonly IMicroEntryFactory _entryFactory;
         private readonly ILogger<HttpMicroListener> _logger;
+        private ServiceAddress _address;
         private IHost _host;
 
         public HttpMicroListener(IMessageCodecFactory codecFactory, IMicroEntryFactory entryFactory, ILoggerFactory loggerFactory)
@@ -44,6 +46,7 @@ namespace Spear.Protocol.Http
 
         public override async Task Start(ServiceAddress serviceAddress)
         {
+            _address = serviceAddress;
             //var endpoint = serviceAddress.ToEndPoint() as IPEndPoint;
             _host = new HostBuilder()
                 .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
@@ -104,10 +107,10 @@ namespace Spear.Protocol.Http
                     routes.MapPost("micro/executor", async ctx =>
                     {
                         //route.Values.TryGetValue("serviceId", out var serviceId);
-                        var sender = new HttpServerMessageSender(_codecFactory.GetEncoder(), ctx.Response);
+                        var sender = new HttpServerMessageSender(_codecFactory.GetEncoder(), ctx.Response, _address.Gzip);
                         try
                         {
-                            await OnReceived(sender, ctx.Request);
+                            await OnReceived(sender, ctx);
                         }
                         catch (Exception ex)
                         {
@@ -130,9 +133,9 @@ namespace Spear.Protocol.Http
                 });
         }
 
-        private async Task OnReceived(IMessageSender sender, HttpRequest request)
+        private async Task OnReceived(IMessageSender sender, HttpContext context)
         {
-            var input = request.Body;
+            var input = context.Request.Body;
             if (input.CanSeek)
                 input.Seek(0, SeekOrigin.Begin);
             byte[] buffers;
@@ -141,11 +144,11 @@ namespace Spear.Protocol.Http
                 await input.CopyToAsync(memstream);
                 buffers = memstream.ToArray();
             }
-            var invoke = await _codecFactory.GetDecoder().DecodeAsync<InvokeMessage>(buffers);
-            invoke.Headers = invoke.Headers ?? new Dictionary<string, string>();
-            foreach (var header in request.Headers)
+            var invoke = await _codecFactory.GetDecoder().DecodeAsync<InvokeMessage>(buffers, _address.Gzip);
+            invoke.Headers ??= new Dictionary<string, string>();
+            foreach (var (key, value) in context.Request.Headers)
             {
-                invoke.Headers[header.Key] = header.Value;
+                invoke.Headers[key] = value;
             }
             await OnReceived(sender, invoke);
         }

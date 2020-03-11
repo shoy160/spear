@@ -3,6 +3,7 @@ using System.Linq;
 using Grpc.Core;
 using Grpc.Net.Client;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Exceptions;
 using Spear.Core.Micro.Services;
 using Spear.ProxyGenerator;

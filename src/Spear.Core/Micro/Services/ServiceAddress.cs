@@ -4,17 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
+using Spear.Core.Config;
 
 namespace Spear.Core.Micro.Services
 {
-    public enum ServiceProtocol
-    {
-        Tcp,
-        Http,
-        Ws,
-        Udp,
-        Grpc
-    }
+
 
     public class ServiceAddress
     {
@@ -22,11 +16,14 @@ namespace Spear.Core.Micro.Services
         public ServiceProtocol Protocol { get; set; }
         public string Host { get; set; }
         public int Port { get; set; }
+
         /// <summary> 对外注册的服务地址(ip或DNS) </summary>
         public string Service { get; set; }
 
         /// <summary> 权重 </summary>
         public double Weight { get; set; } = 1;
+
+        public bool Gzip { get; set; } = true;
 
         public ServiceAddress() { }
 
@@ -91,9 +88,10 @@ namespace Spear.Core.Micro.Services
         /// <returns></returns>
         public static ServiceAddress Random(this IList<ServiceAddress> services)
         {
-            //权重随机
             if (services == null || !services.Any()) return null;
-            if (services.Count() == 1) return services.First();
+            if (services.Count == 1) return services.First();
+
+            //权重随机
             var sum = services.Sum(t => t.Weight);
             var rand = Random().NextDouble() * sum;
             var tempWeight = 0D;

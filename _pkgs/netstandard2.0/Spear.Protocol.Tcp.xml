@@ -24,7 +24,7 @@
         <member name="T:Spear.Protocol.Tcp.Adapter.ServerHandler">
             <summary> 服务端处理器 </summary>
         </member>
-        <member name="M:Spear.Protocol.Tcp.DotNettyClientFactory.CreateClient(Spear.Core.Micro.Services.ServiceAddress)">
+        <member name="M:Spear.Protocol.Tcp.DotNettyClientFactory.Create(Spear.Core.Micro.Services.ServiceAddress)">
             <inheritdoc />
             <summary> 创建客户端 </summary>
             <param name="serviceAddress">终结点。</param>

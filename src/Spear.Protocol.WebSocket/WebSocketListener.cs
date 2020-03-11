@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
@@ -18,6 +19,7 @@ namespace Spear.Protocol.WebSocket
     {
         private readonly IServiceProvider _hostProvider;
         private IHost _host;
+        private ServiceAddress _address;
 
         public WebSocketListener(IServiceProvider hostProvider)
         {
@@ -26,7 +28,7 @@ namespace Spear.Protocol.WebSocket
 
         public override async Task Start(ServiceAddress serviceAddress)
         {
-            //var endpoint = serviceAddress.ToEndPoint() as IPEndPoint;
+            _address = serviceAddress;
             _host = new HostBuilder()
                 .UseContentRoot(AppDomain.CurrentDomain.BaseDirectory)
                 .ConfigureWebHostDefaults(builder =>
@@ -63,7 +65,7 @@ namespace Spear.Protocol.WebSocket
                 var lifetime = provider.GetService<IHostApplicationLifetime>();
                 var codecFactory = _hostProvider.GetService<IMessageCodecFactory>();
                 var loggerFactory = _hostProvider.GetService<ILoggerFactory>();
-                return new WebSocketMiddleware(this, lifetime, codecFactory, loggerFactory);
+                return new WebSocketMiddleware(this, lifetime, codecFactory, loggerFactory, _address);
             });
             //services.AddHostedService<BroadcastTimestamp>();
         }

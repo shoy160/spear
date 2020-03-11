@@ -1,5 +1,4 @@
-﻿using Spear.Core.Message;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Spear.Core.Message.Models;
 
 namespace Spear.Core.Micro

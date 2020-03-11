@@ -1,5 +1,6 @@
 ﻿using Spear.Core.Micro.Services;
 using System;
+using Spear.Core.Config;
 
 namespace Spear.Core
 {

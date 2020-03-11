@@ -49,10 +49,10 @@ namespace Spear.Tests.Client
                         //})
                         .AddConsul("http://192.168.0.231:8500")
                         ;
-                }, config => config.Gzip = false);
+                });
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.SetMinimumLevel(LogLevel.Warning);
                 builder.AddConsole();
             });
             services.AddSingleton<DefaultAdapter>();

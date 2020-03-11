@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 using Spear.Core.Micro;
@@ -31,7 +32,7 @@ namespace Spear.Protocol.Http
             Logger.LogDebug($"创建客户端：{serviceAddress}创建客户端。");
             var listener = new MessageListener();
             var url = serviceAddress.ToString();
-            var sender = new HttpClientMessageSender(LoggerFactory, _clientFactory, CodecFactory, url, listener);
+            var sender = new HttpClientMessageSender(LoggerFactory, _clientFactory, CodecFactory, serviceAddress, listener);
             IMicroClient client = new MicroClient(sender, listener, MicroExecutor, LoggerFactory);
             return Task.FromResult(client);
         }

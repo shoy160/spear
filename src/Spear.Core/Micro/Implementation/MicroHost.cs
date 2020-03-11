@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Spear.Core.Config;
 using Spear.Core.Micro.Services;
 
 namespace Spear.Core.Micro.Implementation
@@ -14,6 +15,12 @@ namespace Spear.Core.Micro.Implementation
         private readonly ILogger<MicroHost> _logger;
         private readonly ServiceProtocol _protocol;
 
+        /// <summary> 服务宿主机 </summary>
+        /// <param name="serviceExecutor"></param>
+        /// <param name="microListener"></param>
+        /// <param name="serviceRegister"></param>
+        /// <param name="entryFactory"></param>
+        /// <param name="loggerFactory"></param>
         public MicroHost(IMicroExecutor serviceExecutor, IMicroListener microListener,
             IServiceRegister serviceRegister, IMicroEntryFactory entryFactory, ILoggerFactory loggerFactory)
             : base(serviceExecutor, microListener, loggerFactory)
@@ -44,7 +51,9 @@ namespace Spear.Core.Micro.Implementation
                 {
                     await MicroListener.Start(serviceAddress);
                 });
-                _logger.LogInformation($"服务已启动：{serviceAddress}");
+
+                _logger.LogInformation(
+                    $"服务已启动：{serviceAddress},Gzip:{serviceAddress.Gzip},Codec:{Constants.Codec},Protocol:{Constants.Protocol}");
             }
             catch (Exception ex)
             {

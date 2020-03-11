@@ -14,9 +14,9 @@ namespace Spear.Protocol.Tcp.Sender
             _messageEncoder = messageEncoder;
         }
 
-        protected async Task<IByteBuffer> GetByteBuffer(DMessage message)
+        protected async Task<IByteBuffer> GetByteBuffer(DMessage message, bool gzip)
         {
-            var data = await _messageEncoder.EncodeAsync(message);
+            var data = await _messageEncoder.EncodeAsync(message, gzip);
             return Unpooled.WrappedBuffer(data);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;

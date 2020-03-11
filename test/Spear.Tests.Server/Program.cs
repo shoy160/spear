@@ -4,11 +4,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Codec.MessagePack;
+using Spear.Codec.ProtoBuffer;
 using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Config;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
+using Spear.Protocol.Grpc;
+using Spear.Protocol.Http;
+using Spear.Protocol.Tcp;
 using Spear.Protocol.WebSocket;
 using Spear.Tests.Contracts;
 using Spear.Tests.Server.Services;
@@ -22,11 +26,18 @@ namespace Spear.Tests.Server
         private static void Main(string[] args)
         {
             var port = -1;
+            bool? gzip = null;
             if (args.Length > 0)
                 int.TryParse(args[0], out port);
-            var protocol = ServiceProtocol.Http;
+            var protocol = ServiceProtocol.Ws;
+            var codec = ServiceCodec.MessagePack;
+
             if (args.Length > 1)
-                Enum.TryParse(args[1], out protocol);
+                protocol = args[1].CastTo(ServiceProtocol.Tcp);
+            if (args.Length > 2)
+                codec = args[2].CastTo(ServiceCodec.Json);
+            if (args.Length > 3)
+                gzip = args[3].CastTo(false);
 
             ConfigManager.Instance.UseLocal("_config");
 
@@ -35,31 +46,45 @@ namespace Spear.Tests.Server
             var services = new MicroBuilder();
             services.AddMicroService(builder =>
             {
+                switch (codec)
+                {
+                    case ServiceCodec.Json:
+                        builder.AddJsonCodec();
+                        break;
+                    case ServiceCodec.MessagePack:
+                        builder.AddMessagePackCodec();
+                        break;
+                    case ServiceCodec.ProtoBuf:
+                        builder.AddProtoBufCodec();
+                        break;
+                }
                 builder
-                    //.AddJsonCodec()
-                    .AddMessagePackCodec()
-                    //.AddProtoBufCodec()
                     .AddSession()
                     //.AddNacos()
                     .AddConsul()
                     ;
-                //builder.AddGrpcProtocol();
-                builder.AddWebSocketProtocol();
-                //switch (protocol)
-                //{
-                //    case ServiceProtocol.Tcp:
-                //        builder.AddTcpProtocol();
-                //        break;
-                //    case ServiceProtocol.Http:
-                //        builder.AddHttpProtocol();
-                //        break;
-                //}
+
+                switch (protocol)
+                {
+                    case ServiceProtocol.Tcp:
+                        builder.AddTcpProtocol();
+                        break;
+                    case ServiceProtocol.Http:
+                        builder.AddHttpProtocol();
+                        break;
+                    case ServiceProtocol.Ws:
+                        builder.AddWebSocketProtocol();
+                        break;
+                    case ServiceProtocol.Grpc:
+                        builder.AddGrpcProtocol();
+                        break;
+                }
             });
             services.AddSingleton<ITestContract, TestService>();
             services.AddScoped<AccountService>();
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Debug);
+                builder.SetMinimumLevel(LogLevel.Information);
                 builder.AddFilter("System", level => level >= LogLevel.Warning);
                 builder.AddFilter("Microsoft", level => level >= LogLevel.Warning);
                 builder.AddConsole();
@@ -78,6 +103,7 @@ namespace Spear.Tests.Server
                 if (address.Port < 80)
                     address.Port = 5000;
                 address.Weight = m.Weight;
+                address.Gzip = gzip ?? m.Gzip;
             });
             AppDomain.CurrentDomain.ProcessExit += async (sender, eventArgs) => await Shutdown();
             Console.CancelKeyPress += async (sender, eventArgs) =>

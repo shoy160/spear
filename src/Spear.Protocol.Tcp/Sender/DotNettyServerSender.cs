@@ -3,6 +3,7 @@ using Spear.Core;
 using Spear.Core.Message;
 using Spear.Core.Micro.Services;
 using System.Threading.Tasks;
+using Spear.Core.Config;
 using Spear.Core.Message.Models;
 
 namespace Spear.Protocol.Tcp.Sender
@@ -14,11 +15,13 @@ namespace Spear.Protocol.Tcp.Sender
     public class DotNettyServerSender : DotNettyMessageSender, IMessageSender
     {
         private readonly IChannelHandlerContext _context;
+        private readonly ServiceAddress _address;
 
-        public DotNettyServerSender(IMessageEncoder messageEncoder, IChannelHandlerContext context)
+        public DotNettyServerSender(IMessageEncoder messageEncoder, IChannelHandlerContext context, ServiceAddress address)
             : base(messageEncoder)
         {
             _context = context;
+            _address = address;
         }
 
         /// <summary> 发送消息 </summary>
@@ -27,7 +30,7 @@ namespace Spear.Protocol.Tcp.Sender
         /// <returns>一个任务。</returns>
         public async Task Send(DMessage message, bool flush = true)
         {
-            var buffer = await GetByteBuffer(message);
+            var buffer = await GetByteBuffer(message, _address.Gzip);
             if (flush)
                 await _context.WriteAndFlushAsync(buffer);
             else

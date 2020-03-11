@@ -7,6 +7,7 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 using Spear.Core.Message.Models;
@@ -21,8 +22,6 @@ namespace Spear.Protocol.Tcp
     [Protocol(ServiceProtocol.Tcp)]
     public class DotNettyClientFactory : DMicroClientFactory
     {
-        private readonly Bootstrap _bootstrap;
-
         private static readonly AttributeKey<ServiceAddress> ServiceAddressKey =
             AttributeKey<ServiceAddress>.ValueOf(typeof(DotNettyClientFactory), nameof(ServiceAddress));
 
@@ -34,13 +33,17 @@ namespace Spear.Protocol.Tcp
         public DotNettyClientFactory(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory, IMicroExecutor executor = null)
             : base(loggerFactory, codecFactory, executor)
         {
-            _bootstrap = GetBootstrap();
-            _bootstrap.Handler(new ActionChannelInitializer<ISocketChannel>(c =>
+        }
+
+        private Bootstrap CreateBootstrap(bool gzip)
+        {
+            var bootstrap = GetBootstrap();
+            bootstrap.Handler(new ActionChannelInitializer<ISocketChannel>(c =>
             {
                 var pipeline = c.Pipeline;
                 pipeline.AddLast(new LengthFieldPrepender(4));
                 pipeline.AddLast(new LengthFieldBasedFrameDecoder(int.MaxValue, 0, 4, 0, 4));
-                pipeline.AddLast(new MicroMessageHandler<MessageResult>(CodecFactory.GetDecoder()));
+                pipeline.AddLast(new MicroMessageHandler<MessageResult>(CodecFactory.GetDecoder(), gzip));
                 pipeline.AddLast(new ClientHandler((context, message) =>
                 {
                     var messageListener = context.Channel.GetAttribute(ListenerKey).Get();
@@ -50,8 +53,9 @@ namespace Spear.Protocol.Tcp
                 {
                     var k = channel.GetAttribute(ServiceAddressKey).Get();
                     Remove(k);
-                }, loggerFactory));
+                }, LoggerFactory));
             }));
+            return bootstrap;
         }
 
         private static Bootstrap GetBootstrap()
@@ -83,10 +87,10 @@ namespace Spear.Protocol.Tcp
         /// <returns>传输客户端实例。</returns>
         protected override async Task<IMicroClient> Create(ServiceAddress serviceAddress)
         {
-            var bootstrap = _bootstrap;
+            var bootstrap = CreateBootstrap(serviceAddress.Gzip);
             var channel = await bootstrap.ConnectAsync(serviceAddress.ToEndPoint(false));
             var listener = new MessageListener();
-            var sender = new DotNettyClientSender(CodecFactory.GetEncoder(), channel);
+            var sender = new DotNettyClientSender(CodecFactory.GetEncoder(), channel, serviceAddress);
             channel.GetAttribute(ListenerKey).Set(listener);
             channel.GetAttribute(SenderKey).Set(sender);
             channel.GetAttribute(ServiceAddressKey).Set(serviceAddress);

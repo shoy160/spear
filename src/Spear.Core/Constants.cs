@@ -5,6 +5,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
+using Spear.Core.Config;
 
 namespace Spear.Core
 {
@@ -59,7 +60,10 @@ namespace Spear.Core
                 .SelectMany(p => p.UnicastAddresses).FirstOrDefault(p =>
                     p.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(p.Address))?.Address?.ToString();
         }
-        
+
+        public static ServiceProtocol Protocol { get; set; }
+
+        public static ServiceCodec Codec { get; set; }
 
     }
 }

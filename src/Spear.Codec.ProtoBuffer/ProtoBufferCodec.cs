@@ -1,5 +1,5 @@
 ﻿using Spear.Codec.ProtoBuffer.Models;
-using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
 
