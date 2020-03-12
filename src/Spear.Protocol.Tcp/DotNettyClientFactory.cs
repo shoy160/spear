@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Common.Utilities;
@@ -30,20 +31,21 @@ namespace Spear.Protocol.Tcp
         private static readonly AttributeKey<IMessageListener> ListenerKey =
             AttributeKey<IMessageListener>.ValueOf(typeof(DotNettyClientFactory), nameof(IMessageListener));
 
-        public DotNettyClientFactory(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory, IMicroExecutor executor = null)
-            : base(loggerFactory, codecFactory, executor)
+        public DotNettyClientFactory(ILoggerFactory loggerFactory, IServiceProvider provider, IMicroExecutor executor = null)
+            : base(loggerFactory, provider, executor)
         {
         }
 
-        private Bootstrap CreateBootstrap(bool gzip)
+        private Bootstrap CreateBootstrap(ServiceAddress service)
         {
             var bootstrap = GetBootstrap();
+            var codec = Provider.GetClientCodec(service.Codec);
             bootstrap.Handler(new ActionChannelInitializer<ISocketChannel>(c =>
             {
                 var pipeline = c.Pipeline;
                 pipeline.AddLast(new LengthFieldPrepender(4));
                 pipeline.AddLast(new LengthFieldBasedFrameDecoder(int.MaxValue, 0, 4, 0, 4));
-                pipeline.AddLast(new MicroMessageHandler<MessageResult>(CodecFactory.GetDecoder(), gzip));
+                pipeline.AddLast(new MicroMessageHandler<MessageResult>(codec, service.Gzip));
                 pipeline.AddLast(new ClientHandler((context, message) =>
                 {
                     var messageListener = context.Channel.GetAttribute(ListenerKey).Get();
@@ -87,10 +89,11 @@ namespace Spear.Protocol.Tcp
         /// <returns>传输客户端实例。</returns>
         protected override async Task<IMicroClient> Create(ServiceAddress serviceAddress)
         {
-            var bootstrap = CreateBootstrap(serviceAddress.Gzip);
+            var bootstrap = CreateBootstrap(serviceAddress);
             var channel = await bootstrap.ConnectAsync(serviceAddress.ToEndPoint(false));
             var listener = new MessageListener();
-            var sender = new DotNettyClientSender(CodecFactory.GetEncoder(), channel, serviceAddress);
+            var codec = Provider.GetClientCodec(serviceAddress.Codec);
+            var sender = new DotNettyClientSender(codec, channel, serviceAddress);
             channel.GetAttribute(ListenerKey).Set(listener);
             channel.GetAttribute(SenderKey).Set(sender);
             channel.GetAttribute(ServiceAddressKey).Set(serviceAddress);

@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Spear.Core;
 using Spear.Core.Config;
-using Spear.Core.Message;
 using Spear.Core.Micro;
 
 namespace Spear.Protocol.Tcp
@@ -15,12 +13,7 @@ namespace Spear.Protocol.Tcp
         public static IMicroServerBuilder AddTcpProtocol(this IMicroServerBuilder builder)
         {
             Constants.Protocol = ServiceProtocol.Tcp;
-            builder.AddSingleton<IMicroListener>(provider =>
-            {
-                var coderFactory = provider.GetService<IMessageCodecFactory>();
-                var loggerFactory = provider.GetService<ILoggerFactory>();
-                return new DotNettyMicroListener(loggerFactory, coderFactory);
-            });
+            builder.AddSingleton<IMicroListener, DotNettyMicroListener>();
             return builder;
         }
 

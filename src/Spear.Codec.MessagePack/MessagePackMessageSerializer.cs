@@ -1,10 +1,13 @@
 ﻿using System;
 using MessagePack;
 using MessagePack.Resolvers;
+using Spear.Core.Attributes;
+using Spear.Core.Config;
 using Spear.Core.Message;
 
 namespace Spear.Codec
 {
+    [Codec(ServiceCodec.MessagePack)]
     public class MessagePackMessageSerializer : IMessageSerializer
     {
         public byte[] Serialize(object value)

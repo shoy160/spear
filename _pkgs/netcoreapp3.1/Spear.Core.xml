@@ -4,6 +4,12 @@
         <name>Spear.Core</name>
     </assembly>
     <members>
+        <member name="T:Spear.Core.ProtocolAttribute">
+            <summary> 协议属性 </summary>
+        </member>
+        <member name="P:Spear.Core.ProtocolAttribute.Protocol">
+            <summary> 协议 </summary>
+        </member>
         <member name="T:Spear.Core.Config.ConfigManager">
             <summary> 配置管理器 </summary>
         </member>
@@ -59,17 +65,6 @@
         <member name="M:Spear.Core.Config.JsonConfigurationParser.Parse(System.IO.Stream)">
             <summary> 转换json流 </summary>
             <param name="input"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spear.Core.Constants.Md5(System.String,System.Text.Encoding)">
-            <summary> MD5加密 </summary>
-            <param name="data">数据</param>
-            <param name="encoding">编码</param>
-            <returns></returns>
-        </member>
-        <member name="M:Spear.Core.Constants.AssemblyKey(System.Reflection.Assembly)">
-            <summary> 程序集key </summary>
-            <param name="assembly"></param>
             <returns></returns>
         </member>
         <member name="P:Spear.Core.Constants.Mode">
@@ -169,14 +164,6 @@
             <param name="data"></param>
             <param name="type"></param>
             <param name="gzip"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spear.Core.Message.IMessageCodecFactory.GetEncoder">
-            <summary> 获取编码器 </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Spear.Core.Message.IMessageCodecFactory.GetDecoder">
-            <summary> 获取解码器 </summary>
             <returns></returns>
         </member>
         <member name="M:Spear.Core.Message.MessageCodecExtensions.DecodeAsync``1(Spear.Core.Message.IMessageDecoder,System.Byte[],System.Boolean)">
@@ -578,11 +565,29 @@
         <member name="M:Spear.Core.Micro.Services.IServiceRegister.Deregist">
             <summary> 注销服务 </summary>
         </member>
+        <member name="P:Spear.Core.Micro.Services.ServiceAddress.Ip">
+            <summary> IP </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Services.ServiceAddress.Protocol">
+            <summary> 服务协议 </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Services.ServiceAddress.Host">
+            <summary> Host </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Services.ServiceAddress.Port">
+            <summary> 端口号 </summary>
+        </member>
         <member name="P:Spear.Core.Micro.Services.ServiceAddress.Service">
             <summary> 对外注册的服务地址(ip或DNS) </summary>
         </member>
         <member name="P:Spear.Core.Micro.Services.ServiceAddress.Weight">
             <summary> 权重 </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Services.ServiceAddress.Gzip">
+            <summary> 是否开启Gzip </summary>
+        </member>
+        <member name="P:Spear.Core.Micro.Services.ServiceAddress.Codec">
+            <summary> 服务编码 </summary>
         </member>
         <member name="M:Spear.Core.Micro.Services.ServiceAddressExtensions.Random">
             <summary>
@@ -609,12 +614,6 @@
         </member>
         <member name="F:Spear.Core.ProductMode.Prod">
             <summary> 正式 </summary>
-        </member>
-        <member name="T:Spear.Core.ProtocolAttribute">
-            <summary> 协议属性 </summary>
-        </member>
-        <member name="P:Spear.Core.ProtocolAttribute.Protocol">
-            <summary> 协议 </summary>
         </member>
         <member name="T:Spear.Core.Proxy.ClientProxy">
             <summary> 代理调用 </summary>
@@ -658,9 +657,10 @@
             <param name="protocol"></param>
             <returns></returns>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.ServiceKey(System.Reflection.MethodInfo)">
-            <summary> 获取服务主键 </summary>
-            <param name="method"></param>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.GetCodec(System.IServiceProvider,Spear.Core.Config.ServiceCodec)">
+            <summary> 获取服务 </summary>
+            <param name="provider"></param>
+            <param name="codec"></param>
             <returns></returns>
         </member>
         <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCodec``1(``0)">
@@ -926,6 +926,22 @@
         <member name="M:Spear.Core.SpearExtensions.UnZip(System.Byte[])">
             <summary> zip解压 </summary>
             <param name="zipBuffer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.Md5(System.String,System.Text.Encoding)">
+            <summary> MD5加密 </summary>
+            <param name="data">数据</param>
+            <param name="encoding">编码</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.AssemblyKey(System.Reflection.Assembly)">
+            <summary> 程序集key </summary>
+            <param name="assembly"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.SpearExtensions.ServiceKey(System.Reflection.MethodInfo)">
+            <summary> 获取服务主键 </summary>
+            <param name="method"></param>
             <returns></returns>
         </member>
         <member name="T:Spear.Core.Tenant.ITenantResolver">

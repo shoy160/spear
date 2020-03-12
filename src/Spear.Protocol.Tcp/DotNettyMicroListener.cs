@@ -1,19 +1,19 @@
-﻿using DotNetty.Buffers;
+﻿using System;
+using System.Threading.Tasks;
+using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Message;
+using Spear.Core.Message.Models;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Protocol.Tcp.Adapter;
 using Spear.Protocol.Tcp.Sender;
-using System;
-using System.Threading.Tasks;
-using Spear.Core.Config;
-using Spear.Core.Message.Models;
 
 namespace Spear.Protocol.Tcp
 {
@@ -23,13 +23,13 @@ namespace Spear.Protocol.Tcp
         private IChannel _channel;
         private readonly ILogger<DotNettyMicroListener> _logger;
         private readonly ILoggerFactory _loggerFactory;
-        private readonly IMessageCodecFactory _codecFactory;
+        private readonly IMessageCodec _messageCodec;
 
-        public DotNettyMicroListener(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory)
+        public DotNettyMicroListener(ILoggerFactory loggerFactory, IMessageCodec messageCodec)
         {
             _loggerFactory = loggerFactory;
             _logger = loggerFactory.CreateLogger<DotNettyMicroListener>();
-            _codecFactory = codecFactory;
+            _messageCodec = messageCodec;
         }
 
         public override async Task Start(ServiceAddress serviceAddress)
@@ -48,10 +48,10 @@ namespace Spear.Protocol.Tcp
                     var pipeline = channel.Pipeline;
                     pipeline.AddLast(new LengthFieldPrepender(4));
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(int.MaxValue, 0, 4, 0, 4));
-                    pipeline.AddLast(new MicroMessageHandler<InvokeMessage>(_codecFactory.GetDecoder(), serviceAddress.Gzip));
+                    pipeline.AddLast(new MicroMessageHandler<InvokeMessage>(_messageCodec, serviceAddress.Gzip));
                     pipeline.AddLast(new ServerHandler(async (contenxt, message) =>
                     {
-                        var sender = new DotNettyServerSender(_codecFactory.GetEncoder(), contenxt, serviceAddress);
+                        var sender = new DotNettyServerSender(_messageCodec, contenxt, serviceAddress);
                         await OnReceived(sender, message);
                     }, _loggerFactory));
                 }));

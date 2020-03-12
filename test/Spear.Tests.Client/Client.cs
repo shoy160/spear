@@ -7,6 +7,7 @@ using Acb.Core.Tests;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Codec.MessagePack;
+using Spear.Codec.ProtoBuffer;
 using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Micro;
@@ -34,7 +35,7 @@ namespace Spear.Tests.Client
                 .AddMicroClient(builder =>
                 {
                     builder
-                        //.AddJsonCodec()
+                        .AddJsonCodec()
                         .AddMessagePackCodec()
                         //.AddProtoBufCodec()
                         .AddSession()
@@ -52,7 +53,7 @@ namespace Spear.Tests.Client
                 });
             services.AddLogging(builder =>
             {
-                builder.SetMinimumLevel(LogLevel.Warning);
+                builder.SetMinimumLevel(LogLevel.Information);
                 builder.AddConsole();
             });
             services.AddSingleton<DefaultAdapter>();

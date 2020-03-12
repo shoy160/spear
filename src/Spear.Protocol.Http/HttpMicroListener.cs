@@ -31,15 +31,15 @@ namespace Spear.Protocol.Http
     [Protocol(ServiceProtocol.Http)]
     public class HttpMicroListener : MicroListener, IDisposable
     {
-        private readonly IMessageCodecFactory _codecFactory;
+        private readonly IMessageCodec _messageCodec;
         private readonly IMicroEntryFactory _entryFactory;
         private readonly ILogger<HttpMicroListener> _logger;
         private ServiceAddress _address;
         private IHost _host;
 
-        public HttpMicroListener(IMessageCodecFactory codecFactory, IMicroEntryFactory entryFactory, ILoggerFactory loggerFactory)
+        public HttpMicroListener(IMessageCodec messageCodec, IMicroEntryFactory entryFactory, ILoggerFactory loggerFactory)
         {
-            _codecFactory = codecFactory;
+            _messageCodec = messageCodec;
             _entryFactory = entryFactory;
             _logger = loggerFactory.CreateLogger<HttpMicroListener>();
         }
@@ -107,7 +107,7 @@ namespace Spear.Protocol.Http
                     routes.MapPost("micro/executor", async ctx =>
                     {
                         //route.Values.TryGetValue("serviceId", out var serviceId);
-                        var sender = new HttpServerMessageSender(_codecFactory.GetEncoder(), ctx.Response, _address.Gzip);
+                        var sender = new HttpServerMessageSender(_messageCodec, ctx.Response, _address.Gzip);
                         try
                         {
                             await OnReceived(sender, ctx);
@@ -144,7 +144,7 @@ namespace Spear.Protocol.Http
                 await input.CopyToAsync(memstream);
                 buffers = memstream.ToArray();
             }
-            var invoke = await _codecFactory.GetDecoder().DecodeAsync<InvokeMessage>(buffers, _address.Gzip);
+            var invoke = await _messageCodec.DecodeAsync<InvokeMessage>(buffers, _address.Gzip);
             invoke.Headers ??= new Dictionary<string, string>();
             foreach (var (key, value) in context.Request.Headers)
             {

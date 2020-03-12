@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Text;
 using Newtonsoft.Json;
+using Spear.Core.Attributes;
+using Spear.Core.Config;
 using Spear.Core.Message.Implementation;
 
 namespace Spear.Core.Message.Json
 {
+    [Codec(ServiceCodec.Json)]
     public class JsonMessageSerializer : DMessageSerializer
     {
         public override byte[] Serialize(object value)

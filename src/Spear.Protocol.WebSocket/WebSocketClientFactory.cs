@@ -18,8 +18,8 @@ namespace Spear.Protocol.WebSocket
     [Protocol(ServiceProtocol.Ws)]
     public class WebSocketClientFactory : DMicroClientFactory
     {
-        public WebSocketClientFactory(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory, IMicroExecutor microExecutor = null)
-            : base(loggerFactory, codecFactory, microExecutor)
+        public WebSocketClientFactory(ILoggerFactory loggerFactory, IServiceProvider provider, IMicroExecutor microExecutor = null)
+            : base(loggerFactory, provider, microExecutor)
         {
         }
 
@@ -29,14 +29,14 @@ namespace Spear.Protocol.WebSocket
             var webSocket = new ClientWebSocket();
             var uri = new Uri(new Uri(address.ToString()), "/micro/ws");
             await webSocket.ConnectAsync(uri, CancellationToken.None);
-
-            var sender = new WebSocketMessageSender(webSocket, CodecFactory.GetEncoder(), address.Gzip);
+            var codec = Provider.GetClientCodec(address.Codec);
+            var sender = new WebSocketMessageSender(webSocket, codec, address.Gzip);
 
             var completion = new TaskCompletionSource<object>();
             var socketClient = new WebSocketClient(webSocket, LoggerFactory, completion);
             socketClient.OnReceive += async buffer =>
             {
-                var resultMessage = await CodecFactory.GetDecoder().DecodeAsync<MessageResult>(buffer, address.Gzip);
+                var resultMessage = await codec.DecodeAsync<MessageResult>(buffer, address.Gzip);
                 await listener.OnReceived(sender, resultMessage);
             };
             socketClient.OnClose += (key, socket) => Remove(address);

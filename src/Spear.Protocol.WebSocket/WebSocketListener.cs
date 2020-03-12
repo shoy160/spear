@@ -63,7 +63,7 @@ namespace Spear.Protocol.WebSocket
             services.AddTransient(provider =>
             {
                 var lifetime = provider.GetService<IHostApplicationLifetime>();
-                var codecFactory = _hostProvider.GetService<IMessageCodecFactory>();
+                var codecFactory = _hostProvider.GetService<IMessageCodec>();
                 var loggerFactory = _hostProvider.GetService<ILoggerFactory>();
                 return new WebSocketMiddleware(this, lifetime, codecFactory, loggerFactory, _address);
             });

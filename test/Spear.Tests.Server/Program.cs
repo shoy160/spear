@@ -30,7 +30,7 @@ namespace Spear.Tests.Server
             if (args.Length > 0)
                 int.TryParse(args[0], out port);
             var protocol = ServiceProtocol.Ws;
-            var codec = ServiceCodec.MessagePack;
+            var codec = ServiceCodec.Json;
 
             if (args.Length > 1)
                 protocol = args[1].CastTo(ServiceProtocol.Tcp);
@@ -44,7 +44,8 @@ namespace Spear.Tests.Server
             Console.WriteLine("shay".Config<string>());
 
             var services = new MicroBuilder();
-            services.AddMicroService(builder =>
+            services
+                .AddMicroService(builder =>
             {
                 switch (codec)
                 {
@@ -79,7 +80,21 @@ namespace Spear.Tests.Server
                         builder.AddGrpcProtocol();
                         break;
                 }
-            });
+            })
+                .AddMicroClient(builder =>
+                {
+                    //支持多编解码&多协议
+                    builder
+                        .AddJsonCodec()
+                        .AddMessagePackCodec()
+                        .AddProtoBufCodec()
+                        .AddHttpProtocol()
+                        .AddTcpProtocol()
+                        .AddWebSocketProtocol()
+                        .AddGrpcProtocol()
+                        .AddSession()
+                        .AddConsul("http://192.168.0.231:8500");
+                });
             services.AddSingleton<ITestContract, TestService>();
             services.AddScoped<AccountService>();
             services.AddLogging(builder =>

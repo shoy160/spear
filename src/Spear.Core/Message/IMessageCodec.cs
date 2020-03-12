@@ -24,17 +24,11 @@ namespace Spear.Core.Message
         Task<object> DecodeAsync(byte[] data, Type type, bool gzip = true);
     }
 
-    public interface IMessageCodec : IMessageEncoder, IMessageDecoder { }
 
-    public interface IMessageCodecFactory
-    {
-        /// <summary> 获取编码器 </summary>
-        /// <returns></returns>
-        IMessageEncoder GetEncoder();
-        /// <summary> 获取解码器 </summary>
-        /// <returns></returns>
-        IMessageDecoder GetDecoder();
-    }
+    public interface IMessageCodec : IClientMessageCodec { }
+
+    public interface IClientMessageCodec : IMessageEncoder, IMessageDecoder { }
+
 
     public static class MessageCodecExtensions
     {

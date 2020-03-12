@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Spear.Core;
 using Spear.Core.Config;
 using Spear.Core.Message;
-using Spear.Core.Message.Implementation;
 using Spear.Core.Micro;
 
 namespace Spear.Codec.ProtoBuffer
@@ -13,12 +11,31 @@ namespace Spear.Codec.ProtoBuffer
         /// <summary> 使用Json编解码器。 </summary>
         /// <param name="builder">服务构建者。</param>
         /// <returns>服务构建者。</returns>
-        public static T AddProtoBufCodec<T>(this T builder) where T : IMicroBuilder
+        public static IMicroServerBuilder AddProtoBufCodec(this IMicroServerBuilder builder)
         {
             Constants.Codec = ServiceCodec.ProtoBuf;
             builder.AddSingleton<IMessageSerializer, ProtoBufferSerializer>();
-            builder.AddSingleton<ProtoBufferCodec>();
-            builder.TryAddScoped<IMessageCodecFactory, DMessageCodecFactory<ProtoBufferCodec>>();
+            builder.AddSingleton<IMessageCodec, ProtoBufferCodec>(provider =>
+            {
+                var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.ProtoBuf);
+                var config = provider.GetService<SpearConfig>();
+                return new ProtoBufferCodec(serializer, config);
+            });
+            return builder;
+        }
+
+        /// <summary> 使用Json编解码器。 </summary>
+        /// <param name="builder">服务构建者。</param>
+        /// <returns>服务构建者。</returns>
+        public static IMicroClientBuilder AddProtoBufCodec(this IMicroClientBuilder builder)
+        {
+            builder.AddSingleton<IMessageSerializer, ProtoBufferSerializer>();
+            builder.AddSingleton<IClientMessageCodec, ProtoBufferCodec>(provider =>
+            {
+                var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.ProtoBuf);
+                var config = provider.GetService<SpearConfig>();
+                return new ProtoBufferCodec(serializer, config);
+            });
             return builder;
         }
     }

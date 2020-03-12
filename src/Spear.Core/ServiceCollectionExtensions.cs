@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Spear.Core.Attributes;
 using Spear.Core.Config;
+using Spear.Core.Exceptions;
 using Spear.Core.Message;
-using Spear.Core.Message.Implementation;
 using Spear.Core.Message.Json;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
@@ -23,7 +22,7 @@ namespace Spear.Core
 {
     public static class ServiceCollectionExtensions
     {
-        private static readonly IDictionary<MethodInfo, string> RouteCache = new Dictionary<MethodInfo, string>();
+
         /// <summary> 获取服务 </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="provider"></param>
@@ -33,17 +32,6 @@ namespace Spear.Core
         {
             var list = provider.GetServices<T>();
             return list.First(t => t.GetType().GetCustomAttribute<ProtocolAttribute>()?.Protocol == protocol);
-        }
-
-        /// <summary> 获取服务 </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="provider"></param>
-        /// <param name="codec"></param>
-        /// <returns></returns>
-        public static T GetService<T>(this IServiceProvider provider, ServiceCodec codec)
-        {
-            var list = provider.GetServices<T>();
-            return list.First(t => t.GetType().GetCustomAttribute<CodecAttribute>()?.Codec == codec);
         }
 
         /// <summary> 获取服务 </summary>
@@ -57,48 +45,57 @@ namespace Spear.Core
             return list.First(t => t.GetType().GetCustomAttribute<ProtocolAttribute>()?.Protocol == protocol);
         }
 
-        /// <summary> 获取服务主键 </summary>
-        /// <param name="method"></param>
+        /// <summary> 获取服务 </summary>
+        /// <param name="provider"></param>
+        /// <param name="codec"></param>
         /// <returns></returns>
-        public static string ServiceKey(this MethodInfo method)
+        public static IClientMessageCodec GetClientCodec(this IServiceProvider provider, ServiceCodec codec)
         {
-            if (RouteCache.TryGetValue(method, out var route))
-                return route;
-            var key = string.Empty;
-            var attr = method.DeclaringType?.GetCustomAttribute<ServiceRouteAttribute>();
-            if (attr != null)
-                key = attr.Route;
-            attr = method.GetCustomAttribute<ServiceRouteAttribute>();
-            if (attr != null && !string.IsNullOrWhiteSpace(attr.Route))
-                route = (attr.Route.StartsWith("/") ? attr.Route.TrimStart('/') : $"{key}/{attr.Route}").ToLower();
-            else if (!string.IsNullOrWhiteSpace(key))
-            {
-                route = $"{key}/{method.Name}".ToLower();
-            }
-            else
-            {
-                route = $"{method.DeclaringType?.Name}/{method.Name}".ToLower();
-            }
-            RouteCache.Add(method, route);
+            var messageCodec = provider.GetService<IClientMessageCodec>(codec);
+            if (messageCodec == null)
+                throw ErrorCodes.ClientError.CodeException($"不支持消息编解码{codec}");
+            provider.GetService<ILoggerFactory>().CreateLogger("codec").LogInformation($"使用编解码器：{codec}");
+            return messageCodec;
+        }
 
-            return route;
+        /// <summary> 获取服务 </summary>
+        /// <param name="provider"></param>
+        /// <param name="codec"></param>
+        /// <returns></returns>
+        public static T GetService<T>(this IServiceProvider provider, ServiceCodec codec)
+        {
+            var list = provider.GetServices<T>();
+            return list.FirstOrDefault(t => t.GetType().GetCustomAttribute<CodecAttribute>()?.Codec == codec);
         }
 
         /// <summary> 使用Json编解码器。 </summary>
         /// <param name="builder">服务构建者。</param>
         /// <returns>服务构建者。</returns>
-        public static T AddJsonCodec<T>(this T builder) where T : IMicroBuilder
+        public static IMicroServerBuilder AddJsonCodec(this IMicroServerBuilder builder)
         {
             Constants.Codec = ServiceCodec.Json;
             builder.AddSingleton<IMessageSerializer, JsonMessageSerializer>();
-            builder.AddSingleton<JsonCodec>();
-            builder.TryAddSingleton<IMessageCodecFactory, DMessageCodecFactory<JsonCodec>>();
-            //builder.TryAddSingleton<IMessageCodecFactory>(provider =>
-            //{
-            //    var serializer = provider.GetService<IMessageSerializer>();
-            //    var codec = new JsonCodec(serializer);
-            //    return new DMessageCodecFactory<JsonCodec>(codec);
-            //});
+            builder.AddSingleton<IMessageCodec, JsonCodec>(provider =>
+             {
+                 var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.Json);
+                 var config = provider.GetService<SpearConfig>();
+                 return new JsonCodec(serializer, config);
+             });
+            return builder;
+        }
+
+        /// <summary> 使用Json编解码器。 </summary>
+        /// <param name="builder">服务构建者。</param>
+        /// <returns>服务构建者。</returns>
+        public static IMicroClientBuilder AddJsonCodec(this IMicroClientBuilder builder)
+        {
+            builder.AddSingleton<IMessageSerializer, JsonMessageSerializer>();
+            builder.AddSingleton<IClientMessageCodec, JsonCodec>(provider =>
+            {
+                var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.Json);
+                var config = provider.GetService<SpearConfig>();
+                return new JsonCodec(serializer, config);
+            });
             return builder;
         }
 
@@ -151,7 +148,7 @@ namespace Spear.Core
         /// <param name="builderAction"></param>
         /// <param name="configAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddMicroClient(this IMicroClientBuilder services, Action<IMicroClientBuilder> builderAction, Action<SpearConfig> configAction = null)
+        public static MicroBuilder AddMicroClient(this MicroBuilder services, Action<IMicroClientBuilder> builderAction, Action<SpearConfig> configAction = null)
         {
             //services.TryAddSingleton<Counter>();
             var config = "spear".Config<SpearConfig>() ?? new SpearConfig();
@@ -167,7 +164,7 @@ namespace Spear.Core
         /// <param name="builderAction"></param>
         /// <param name="configAction"></param>
         /// <returns></returns>
-        public static IServiceCollection AddMicroService(this IMicroServerBuilder services,
+        public static MicroBuilder AddMicroService(this MicroBuilder services,
             Action<IMicroServerBuilder> builderAction, Action<SpearConfig> configAction = null)
         {
             var config = "spear".Config<SpearConfig>() ?? new SpearConfig();

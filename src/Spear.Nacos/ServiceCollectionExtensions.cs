@@ -1,13 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Spear.Core.Config;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
 using Spear.Nacos.Sdk;
-using System;
-using System.Linq;
-using Microsoft.Extensions.Caching.Memory;
 using WebApiClient;
 
 namespace Spear.Nacos
@@ -27,9 +27,9 @@ namespace Spear.Nacos
             {
                 var config = provider.GetService<NacosConfig>();
                 var client = provider.GetService<INacosClient>();
-                var loggerFactory = provider.GetService<ILoggerFactory>();
                 var cache = provider.GetService<IMemoryCache>();
-                return new NacosServiceFinder(config, client, loggerFactory, cache);
+                var logger = provider.GetService<ILogger<NacosServiceFinder>>();
+                return new NacosServiceFinder(config, client, logger, cache);
             });
             return builder;
         }

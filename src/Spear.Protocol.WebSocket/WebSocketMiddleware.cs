@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
@@ -26,16 +25,16 @@ namespace Spear.Protocol.WebSocket
 
         private static CancellationTokenRegistration _appShutdownHandler;
         private readonly IMessageListener _listener;
-        private readonly IMessageCodecFactory _codecFactory;
+        private readonly IMessageCodec _messageCodec;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger<WebSocketMiddleware> _logger;
         private readonly ServiceAddress _address;
 
         public WebSocketMiddleware(IMessageListener listener, IHostApplicationLifetime hostLifetime,
-            IMessageCodecFactory codecFactory, ILoggerFactory loggerFactory, ServiceAddress address)
+            IMessageCodec messageCodec, ILoggerFactory loggerFactory, ServiceAddress address)
         {
             _listener = listener;
-            _codecFactory = codecFactory;
+            _messageCodec = messageCodec;
             _loggerFactory = loggerFactory;
             _address = address;
             _logger = loggerFactory.CreateLogger<WebSocketMiddleware>();
@@ -61,10 +60,17 @@ namespace Spear.Protocol.WebSocket
                         client.OnClose += (key, websocket) => Clients.TryRemove(key, out _);
                         client.OnReceive += async buffer =>
                         {
-                            var invokeMessage = await _codecFactory.GetDecoder()
-                                .DecodeAsync<InvokeMessage>(buffer, _address.Gzip);
-                            var sender = new WebSocketMessageSender(client.Socket, _codecFactory.GetEncoder(), _address.Gzip);
-                            await _listener.OnReceived(sender, invokeMessage);
+                            var sender = new WebSocketMessageSender(client.Socket, _messageCodec, _address.Gzip);
+                            try
+                            {
+                                var invokeMessage =
+                                    await _messageCodec.DecodeAsync<InvokeMessage>(buffer, _address.Gzip);
+                                await _listener.OnReceived(sender, invokeMessage);
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, $"接收消息异常:{ex.Message}");
+                            }
                         };
                         Clients.TryAdd(client.SocketId, client);
                         _logger.LogInformation($"Socket {client.SocketId}: New connection.");

@@ -8,7 +8,7 @@ namespace Spear.Core.Message.Json
     [Codec(ServiceCodec.Json)]
     public class JsonCodec : DMessageCodec<JsonDynamic, JsonInvokeMessage, JsonResultMessage>
     {
-        public JsonCodec(IMessageSerializer serializer) : base(serializer)
+        public JsonCodec(IMessageSerializer serializer, SpearConfig config = null) : base(serializer, config)
         {
         }
     }

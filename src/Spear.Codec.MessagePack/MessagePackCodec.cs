@@ -9,7 +9,7 @@ namespace Spear.Codec.MessagePack
     [Codec(ServiceCodec.MessagePack)]
     public class MessagePackCodec : DMessageCodec<MessagePackDynamic, MessagePackInvoke, MessagePackResult>
     {
-        public MessagePackCodec(IMessageSerializer serializer) : base(serializer)
+        public MessagePackCodec(IMessageSerializer serializer, SpearConfig config = null) : base(serializer, config)
         {
         }
     }

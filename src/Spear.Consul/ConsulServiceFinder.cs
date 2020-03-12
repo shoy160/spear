@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Spear.Consul
 {
@@ -15,7 +16,7 @@ namespace Spear.Consul
         private readonly string _consulServer;
         private readonly string _consulToken;
 
-        public ConsulServiceFinder(IMemoryCache cache, string server, string token = null) : base(cache)
+        public ConsulServiceFinder(IMemoryCache cache, ILogger logger, string server, string token = null) : base(cache, logger)
         {
             _consulServer = server;
             _consulToken = token;

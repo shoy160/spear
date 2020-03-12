@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IO;
 using ProtoBuf;
+using Spear.Core.Attributes;
+using Spear.Core.Config;
 using Spear.Core.Message;
 
 namespace Spear.Codec.ProtoBuffer
 {
+    [Codec(ServiceCodec.ProtoBuf)]
     public class ProtoBufferSerializer : IMessageSerializer
     {
         public byte[] Serialize(object value)

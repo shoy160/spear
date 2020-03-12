@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Spear.Core.Message;
 using Spear.Core.Micro.Services;
 
 namespace Spear.Core.Micro.Implementation
@@ -12,14 +11,14 @@ namespace Spear.Core.Micro.Implementation
     {
         protected readonly ILoggerFactory LoggerFactory;
         protected readonly ILogger Logger;
-        protected readonly IMessageCodecFactory CodecFactory;
+        protected readonly IServiceProvider Provider;
         protected readonly IMicroExecutor MicroExecutor;
 
         private readonly ConcurrentDictionary<ServiceAddress, Lazy<Task<IMicroClient>>> _clients;
 
-        protected DMicroClientFactory(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory, IMicroExecutor microExecutor = null)
+        protected DMicroClientFactory(ILoggerFactory loggerFactory, IServiceProvider provider, IMicroExecutor microExecutor = null)
         {
-            CodecFactory = codecFactory;
+            Provider = provider;
             MicroExecutor = microExecutor;
             LoggerFactory = loggerFactory;
             Logger = loggerFactory.CreateLogger(GetType());

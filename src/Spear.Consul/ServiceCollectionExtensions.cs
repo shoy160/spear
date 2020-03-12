@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Core.Config;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
-using System;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Spear.Consul
 {
@@ -25,7 +25,8 @@ namespace Spear.Consul
                 var option = ConsulOption.Config();
                 optionAction?.Invoke(option);
                 var cache = provider.GetService<IMemoryCache>();
-                return new ConsulServiceFinder(cache, option.Server, option.Token);
+                var logger = provider.GetService<ILogger<ConsulServiceFinder>>();
+                return new ConsulServiceFinder(cache, logger, option.Server, option.Token);
             });
             return builder;
         }
@@ -61,7 +62,8 @@ namespace Spear.Consul
             builder.AddSingleton<IServiceFinder>(provider =>
             {
                 var cache = provider.GetService<IMemoryCache>();
-                return new ConsulServiceFinder(cache, server, token);
+                var logger = provider.GetService<ILogger<ConsulServiceFinder>>();
+                return new ConsulServiceFinder(cache, logger, server, token);
             });
             return builder;
         }

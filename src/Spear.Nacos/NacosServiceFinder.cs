@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Spear.Core;
 using Spear.Core.Micro.Services;
 using Spear.Nacos.Sdk;
 using Spear.Nacos.Sdk.Requests.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Spear.Nacos
 {
@@ -18,12 +18,12 @@ namespace Spear.Nacos
         private readonly INacosClient _client;
         private readonly ILogger<NacosServiceFinder> _logger;
 
-        public NacosServiceFinder(NacosConfig config, INacosClient client, ILoggerFactory loggerFactory, IMemoryCache cache) 
-            : base(cache)
+        public NacosServiceFinder(NacosConfig config, INacosClient client, ILogger<NacosServiceFinder> logger, IMemoryCache cache)
+            : base(cache, logger)
         {
             _config = config;
             _client = client;
-            loggerFactory.CreateLogger<NacosServiceFinder>();
+            _logger = logger;
         }
 
         protected override async Task<List<ServiceAddress>> QueryService(Type serviceType, ProductMode[] modes)

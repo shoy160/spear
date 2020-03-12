@@ -365,5 +365,61 @@ namespace Spear.Core
                 return type.FullName;
             return type.AssemblyQualifiedName;
         }
+
+        /// <summary> MD5加密 </summary>
+        /// <param name="data">数据</param>
+        /// <param name="encoding">编码</param>
+        /// <returns></returns>
+        public static string Md5(this string data, Encoding encoding = null)
+        {
+            var md5 = System.Security.Cryptography.MD5.Create();
+            encoding = encoding ?? Encoding.UTF8;
+            var dataByte = md5.ComputeHash(encoding.GetBytes(data));
+            var sb = new StringBuilder();
+            foreach (var b in dataByte)
+            {
+                sb.Append(b.ToString("X2"));
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary> 程序集key </summary>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static string AssemblyKey(this Assembly assembly)
+        {
+            var assName = assembly.GetName();
+            return $"{assName.Name}_{assName.Version}";
+        }
+
+        private static readonly IDictionary<MethodInfo, string> RouteCache = new Dictionary<MethodInfo, string>();
+
+        /// <summary> 获取服务主键 </summary>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public static string ServiceKey(this MethodInfo method)
+        {
+            if (RouteCache.TryGetValue(method, out var route))
+                return route;
+            var key = string.Empty;
+            var attr = method.DeclaringType?.GetCustomAttribute<ServiceRouteAttribute>();
+            if (attr != null)
+                key = attr.Route;
+            attr = method.GetCustomAttribute<ServiceRouteAttribute>();
+            if (attr != null && !string.IsNullOrWhiteSpace(attr.Route))
+                route = (attr.Route.StartsWith("/") ? attr.Route.TrimStart('/') : $"{key}/{attr.Route}").ToLower();
+            else if (!string.IsNullOrWhiteSpace(key))
+            {
+                route = $"{key}/{method.Name}".ToLower();
+            }
+            else
+            {
+                route = $"{method.DeclaringType?.Name}/{method.Name}".ToLower();
+            }
+            RouteCache.Add(method, route);
+
+            return route;
+        }
     }
 }

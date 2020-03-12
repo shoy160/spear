@@ -17,7 +17,7 @@ namespace Spear.Protocol.Udp
             Constants.Protocol = ServiceProtocol.Udp;
             builder.AddSingleton<IMicroListener>(provider =>
             {
-                var coderFactory = provider.GetService<IMessageCodecFactory>();
+                var coderFactory = provider.GetService<IMessageCodec>();
                 var loggerFactory = provider.GetService<ILoggerFactory>();
                 return new UdpMicroListener(loggerFactory, coderFactory);
             });

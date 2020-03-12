@@ -13,7 +13,7 @@ namespace Spear.Core.Message.Implementation
         private readonly IMessageSerializer _serializer;
         private readonly SpearConfig _config;
 
-        protected DMessageCodec(IMessageSerializer serializer, SpearConfig config = null)
+        protected DMessageCodec(IMessageSerializer serializer, SpearConfig config)
         {
             _serializer = serializer;
             _config = config ?? new SpearConfig();

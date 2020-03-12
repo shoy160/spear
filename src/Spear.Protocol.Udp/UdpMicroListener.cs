@@ -14,12 +14,12 @@ namespace Spear.Protocol.Udp
     {
         private readonly ILogger<UdpMicroListener> _logger;
         private readonly ILoggerFactory _loggerFactory;
-        private readonly IMessageCodecFactory _codecFactory;
+        private readonly IMessageCodec _messageCodec;
 
-        public UdpMicroListener(ILoggerFactory loggerFactory, IMessageCodecFactory codecFactory)
+        public UdpMicroListener(ILoggerFactory loggerFactory, IMessageCodec messageCodec)
         {
             _loggerFactory = loggerFactory;
-            _codecFactory = codecFactory;
+            _messageCodec = messageCodec;
             _logger = loggerFactory.CreateLogger<UdpMicroListener>();
         }
 
