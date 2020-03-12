@@ -94,40 +94,40 @@ var service = proxy.Create<ITestContract>();
 
 ### BenchMark
 #### Protocol:Tcp,Codec:Json,Gzip:False
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-0-0-0.png)
+![image](docs/images/benchmark-0-0-0.png)
 
 #### Protocol:Tcp,Codec:Json,Gzip:True
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-0-0-1.png)
+![image](docs/images/benchmark-0-0-1.png)
 
 #### Protocol:Tcp,Codec:MessagePack,Gzip:True
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-0-1-1.png)
+![image](docs/images/benchmark-0-1-1.png)
 
 #### Protocol:Tcp,Codec:ProtoBuf,Gzip:True
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-0-2-1.png)
+![image](docs/images/benchmark-0-2-1.png)
 
 #### Protocol:Http,Codec:Json,Gzip:False
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-1-0-0.png)
+![image](docs/images/benchmark-1-0-0.png)
 
 #### Protocol:Http,Codec:Json,Gzip:True
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-1-0-1.png)
+![image](docs/images/benchmark-1-0-1.png)
 
 #### Protocol:Http,Codec:MessagePack,Gzip:True
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-1-1-1.png)
+![image](docs/images/benchmark-1-1-1.png)
 
 #### Protocol:Http,Codec:ProtoBuf,Gzip:True
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-1-2-1.png)
+![image](docs/images/benchmark-1-2-1.png)
 
 #### Protocol:WebSocket,Codec:Json,Gzip:False
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-2-0-0.png)
+![image](docs/images/benchmark-2-0-0.png)
 
 #### Protocol:WebSocket,Codec:Json,Gzip:True
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-2-0-1.png)
+![image](docs/images/benchmark-2-0-1.png)
 
 #### Protocol:WebSocket,Codec:MessagePack,Gzip:True
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-2-1-1.png)
+![image](docs/images/benchmark-2-1-1.png)
 
 #### Protocol:WebSocket,Codec:ProtoBuf,Gzip:True
-![image](https://raw.githubusercontent.com/shoy160/spear/master/docs/images/benchmark-2-2-1.png)
+![image](docs/images/benchmark-2-2-1.png)
 
 #### Protocol:GRpc
 ![image](docs/images/benchmark-4-0-0.png)
