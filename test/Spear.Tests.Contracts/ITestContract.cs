@@ -5,7 +5,7 @@ using Spear.Tests.Contracts.Dtos;
 namespace Spear.Tests.Contracts
 {
     [ServiceRoute("test")]
-    public interface ITestContract : ISpearService
+    public interface ITestContract //: ISpearService
     {
         Task Notice(string name);
 

@@ -32,10 +32,10 @@ namespace Spear.Tests.Client
             //Console.WriteLine("large.json".ResolvePath());
             //var summary = BenchmarkRunner.Run<DeserializeBenchmarks>();
             //Console.ReadLine();
-            Client.Start(args);
+            //Client.Start(args);
             //GrpcClientTest.Start(args);
             //BenchmarkRunner.Run<GrpcClient>();
-            //BenchmarkRunner.Run<SpearBenchmarks>();
+            BenchmarkRunner.Run<SpearBenchmarks>();
             //TaxiFarePrediction.Start(args);
         }
     }
