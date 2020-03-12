@@ -64,7 +64,7 @@ provider.UseMicroService(address =>
     address.Service = "192.168.1.xx";   //服务注册地址,需要保持与客户端的网络访问
     address.Host = "localhost";         //主机地址
     address.Port = 5001;                //端口地址
-    address.Weight = m.Weight;          //服务权重
+    address.Weight = 1.5;               //服务权重
     address.Gzip = true;                //是否启用GZip压缩
 });
 ```
