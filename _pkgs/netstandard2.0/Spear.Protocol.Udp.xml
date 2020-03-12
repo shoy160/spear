@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Protocol.Udp</name>
+    </assembly>
+    <members>
+        <member name="M:Spear.Protocol.Udp.ServiceCollectionExtensions.AddUdpProtocol(Spear.Core.Micro.IMicroServerBuilder)">
+            <summary> 使用DotNetty的UDP传输协议 </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Protocol.Udp.ServiceCollectionExtensions.AddUdpProtocol(Spear.Core.Micro.IMicroClientBuilder)">
+            <summary> 使用DotNetty的UDP传输协议 </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

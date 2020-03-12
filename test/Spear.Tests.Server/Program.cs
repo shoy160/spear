@@ -46,41 +46,42 @@ namespace Spear.Tests.Server
             var services = new MicroBuilder();
             services
                 .AddMicroService(builder =>
-            {
-                switch (codec)
                 {
-                    case ServiceCodec.Json:
-                        builder.AddJsonCodec();
-                        break;
-                    case ServiceCodec.MessagePack:
-                        builder.AddMessagePackCodec();
-                        break;
-                    case ServiceCodec.ProtoBuf:
-                        builder.AddProtoBufCodec();
-                        break;
-                }
-                builder
-                    .AddSession()
-                    //.AddNacos()
-                    .AddConsul()
-                    ;
+                    switch (codec)
+                    {
+                        case ServiceCodec.Json:
+                            builder.AddJsonCodec();
+                            break;
+                        case ServiceCodec.MessagePack:
+                            builder.AddMessagePackCodec();
+                            break;
+                        case ServiceCodec.ProtoBuf:
+                            builder.AddProtoBufCodec();
+                            break;
+                    }
 
-                switch (protocol)
-                {
-                    case ServiceProtocol.Tcp:
-                        builder.AddTcpProtocol();
-                        break;
-                    case ServiceProtocol.Http:
-                        builder.AddHttpProtocol();
-                        break;
-                    case ServiceProtocol.Ws:
-                        builder.AddWebSocketProtocol();
-                        break;
-                    case ServiceProtocol.Grpc:
-                        builder.AddGrpcProtocol();
-                        break;
-                }
-            })
+                    builder
+                        .AddSession()
+                        //.AddNacos()
+                        .AddConsul()
+                        ;
+
+                    switch (protocol)
+                    {
+                        case ServiceProtocol.Tcp:
+                            builder.AddTcpProtocol();
+                            break;
+                        case ServiceProtocol.Http:
+                            builder.AddHttpProtocol();
+                            break;
+                        case ServiceProtocol.Ws:
+                            builder.AddWebSocketProtocol();
+                            break;
+                        case ServiceProtocol.Grpc:
+                            builder.AddGrpcProtocol();
+                            break;
+                    }
+                })
                 .AddMicroClient(builder =>
                 {
                     //支持多编解码&多协议

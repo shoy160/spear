@@ -43,27 +43,27 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Nacos", "src\Spear.Na
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Infrastructure", "02.Infrastructure", "{67C57E6D-E13C-4053-AA48-F72DD00FA398}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Protocol.WebSocket", "src\Spear.Protocol.WebSocket\Spear.Protocol.WebSocket.csproj", "{34E52D05-23A8-4CD5-8094-E98DA12A3D76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Protocol.WebSocket", "src\Spear.Protocol.WebSocket\Spear.Protocol.WebSocket.csproj", "{34E52D05-23A8-4CD5-8094-E98DA12A3D76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Protocol.Udp", "src\Spear.Protocol.Udp\Spear.Protocol.Udp.csproj", "{39782A47-9D82-4696-8464-48D004C7B2D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Protocol.Udp", "src\Spear.Protocol.Udp\Spear.Protocol.Udp.csproj", "{39782A47-9D82-4696-8464-48D004C7B2D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.EventBus.RabbitMq", "src\Spear.EventBus.RabbitMq\Spear.EventBus.RabbitMq.csproj", "{6A0B6138-966B-496A-A839-62B76CC112F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.EventBus.RabbitMq", "src\Spear.EventBus.RabbitMq\Spear.EventBus.RabbitMq.csproj", "{6A0B6138-966B-496A-A839-62B76CC112F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.EventBus.Kafka", "src\Spear.EventBus.Kafka\Spear.EventBus.Kafka.csproj", "{06828456-8767-4A36-8CCB-7109D7722B32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.EventBus.Kafka", "src\Spear.EventBus.Kafka\Spear.EventBus.Kafka.csproj", "{06828456-8767-4A36-8CCB-7109D7722B32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Redis", "src\Spear.Redis\Spear.Redis.csproj", "{C726F6F2-2E48-4C88-94B5-4A9107D6582C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Redis", "src\Spear.Redis\Spear.Redis.csproj", "{C726F6F2-2E48-4C88-94B5-4A9107D6582C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Memcached", "src\Spear.Memcached\Spear.Memcached.csproj", "{FC018635-1F0A-4C26-9AE9-7124BCFB3990}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Memcached", "src\Spear.Memcached\Spear.Memcached.csproj", "{FC018635-1F0A-4C26-9AE9-7124BCFB3990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Protocol.Grpc", "src\Spear.Protocol.Grpc\Spear.Protocol.Grpc.csproj", "{88AEE715-8891-45C2-868C-3D11186F4AA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Protocol.Grpc", "src\Spear.Protocol.Grpc\Spear.Protocol.Grpc.csproj", "{88AEE715-8891-45C2-868C-3D11186F4AA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Apollo", "src\Spear.Apollo\Spear.Apollo.csproj", "{937D24BD-381A-4BD5-931C-3B9E85A6235A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Apollo", "src\Spear.Apollo\Spear.Apollo.csproj", "{937D24BD-381A-4BD5-931C-3B9E85A6235A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Zookeeper", "src\Spear.Zookeeper\Spear.Zookeeper.csproj", "{B79D6032-BFB1-4160-B6D0-EA3032253CFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Zookeeper", "src\Spear.Zookeeper\Spear.Zookeeper.csproj", "{B79D6032-BFB1-4160-B6D0-EA3032253CFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Codec.MessagePack", "src\Spear.Codec.MessagePack\Spear.Codec.MessagePack.csproj", "{4CE49E02-41CA-4242-99F5-5565AB238D10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Codec.MessagePack", "src\Spear.Codec.MessagePack\Spear.Codec.MessagePack.csproj", "{4CE49E02-41CA-4242-99F5-5565AB238D10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Codec.ProtoBuffer", "src\Spear.Codec.ProtoBuffer\Spear.Codec.ProtoBuffer.csproj", "{6A0676C5-3220-48D3-ABEE-5C96664DE00C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Codec.ProtoBuffer", "src\Spear.Codec.ProtoBuffer\Spear.Codec.ProtoBuffer.csproj", "{6A0676C5-3220-48D3-ABEE-5C96664DE00C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

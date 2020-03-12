@@ -2,6 +2,28 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Product>Spear EventBus - Kafka</Product>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/shoy160/spear</PackageProjectUrl>
+    <Authors>shoy</Authors>
+    <Company>shoy@icb</Company>
+    <RepositoryUrl>https://github.com/shoy160/spear.git</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <Version>0.2.0</Version>
+    <Description>Spear轻量级微服务框架，高扩展性，目前已支持Json、MessagePack、ProtoBuf编解码器以及TCP、HTTP、WebSocket、GRpc服务协议。</Description>
+    <PackageReleaseNotes>
+      1.add more codes(messagepack and protobuf),
+      2.add ws protoco and grpc support,
+      3.change MicroBuilder to support both server and client,
+      4.etc.
+    </PackageReleaseNotes>
+    <PackageLicenseUrl>https://github.com/shoy160/spear/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>shoy</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>..\..\_pkgs\netstandard2.0\Spear.EventBus.Kafka.xml</DocumentationFile>
+    <OutputPath>..\..\_pkgs\</OutputPath>
   </PropertyGroup>
 
 </Project>

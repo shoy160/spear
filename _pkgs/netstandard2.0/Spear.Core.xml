@@ -657,13 +657,24 @@
             <param name="protocol"></param>
             <returns></returns>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.GetCodec(System.IServiceProvider,Spear.Core.Config.ServiceCodec)">
+        <member name="M:Spear.Core.ServiceCollectionExtensions.GetClientCodec(System.IServiceProvider,Spear.Core.Config.ServiceCodec)">
             <summary> 获取服务 </summary>
             <param name="provider"></param>
             <param name="codec"></param>
             <returns></returns>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCodec``1(``0)">
+        <member name="M:Spear.Core.ServiceCollectionExtensions.GetService``1(System.IServiceProvider,Spear.Core.Config.ServiceCodec)">
+            <summary> 获取服务 </summary>
+            <param name="provider"></param>
+            <param name="codec"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCodec(Spear.Core.Micro.IMicroServerBuilder)">
+            <summary> 使用Json编解码器。 </summary>
+            <param name="builder">服务构建者。</param>
+            <returns>服务构建者。</returns>
+        </member>
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddJsonCodec(Spear.Core.Micro.IMicroClientBuilder)">
             <summary> 使用Json编解码器。 </summary>
             <param name="builder">服务构建者。</param>
             <returns>服务构建者。</returns>
@@ -688,14 +699,14 @@
             <param name="builder">服务构建者。</param>
             <returns>服务构建者。</returns>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroClient(Spear.Core.Micro.IMicroClientBuilder,System.Action{Spear.Core.Micro.IMicroClientBuilder},System.Action{Spear.Core.Config.SpearConfig})">
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroClient(Spear.Core.Micro.MicroBuilder,System.Action{Spear.Core.Micro.IMicroClientBuilder},System.Action{Spear.Core.Config.SpearConfig})">
             <summary> 添加微服务客户端 </summary>
             <param name="services"></param>
             <param name="builderAction"></param>
             <param name="configAction"></param>
             <returns></returns>
         </member>
-        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroService(Spear.Core.Micro.IMicroServerBuilder,System.Action{Spear.Core.Micro.IMicroServerBuilder},System.Action{Spear.Core.Config.SpearConfig})">
+        <member name="M:Spear.Core.ServiceCollectionExtensions.AddMicroService(Spear.Core.Micro.MicroBuilder,System.Action{Spear.Core.Micro.IMicroServerBuilder},System.Action{Spear.Core.Config.SpearConfig})">
             <summary> 添加微服务 </summary>
             <param name="services"></param>
             <param name="builderAction"></param>

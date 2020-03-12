@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Codec.ProtoBuffer</name>
+    </assembly>
+    <members>
+        <member name="P:Spear.Codec.ProtoBuffer.Models.ProtoBufferInvoke.ServiceId">
+            <summary> 服务Id </summary>
+        </member>
+        <member name="P:Spear.Codec.ProtoBuffer.Models.ProtoBufferInvoke.Parameters">
+            <summary> 服务参数 </summary>
+        </member>
+        <member name="P:Spear.Codec.ProtoBuffer.Models.ProtoBufferResult.Code">
+            <summary> 状态码 </summary>
+        </member>
+        <member name="P:Spear.Codec.ProtoBuffer.Models.ProtoBufferResult.Message">
+            <summary> 错误消息 </summary>
+        </member>
+        <member name="P:Spear.Codec.ProtoBuffer.Models.ProtoBufferResult.Content">
+            <summary> 数据实体 </summary>
+        </member>
+        <member name="M:Spear.Codec.ProtoBuffer.ServiceCollectionExtensions.AddProtoBufCodec(Spear.Core.Micro.IMicroServerBuilder)">
+            <summary> 使用Json编解码器。 </summary>
+            <param name="builder">服务构建者。</param>
+            <returns>服务构建者。</returns>
+        </member>
+        <member name="M:Spear.Codec.ProtoBuffer.ServiceCollectionExtensions.AddProtoBufCodec(Spear.Core.Micro.IMicroClientBuilder)">
+            <summary> 使用Json编解码器。 </summary>
+            <param name="builder">服务构建者。</param>
+            <returns>服务构建者。</returns>
+        </member>
+    </members>
+</doc>
