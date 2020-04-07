@@ -41,7 +41,8 @@ namespace Spear.Protocol.Grpc
                     Credentials = ChannelCredentials.Insecure
                 });
 
-                return Activator.CreateInstance(type, channel);
+                var client = Activator.CreateInstance(type, channel);
+                return client;
             }
             return null;
         }

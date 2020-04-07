@@ -7,10 +7,10 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Spear.Codec.ProtoBuffer/0.2.0": {
+      "Spear.Codec.ProtoBuffer/0.2.1": {
         "dependencies": {
           "NETStandard.Library": "2.0.3",
-          "Spear.Core": "0.2.0",
+          "Spear.Core": "0.2.1",
           "protobuf-net": "2.4.4"
         },
         "runtime": {
@@ -636,7 +636,7 @@
           }
         }
       },
-      "Spear.Core/0.2.0": {
+      "Spear.Core/0.2.1": {
         "dependencies": {
           "Microsoft.Extensions.Caching.Abstractions": "3.1.2",
           "Microsoft.Extensions.Configuration": "3.1.2",
@@ -648,7 +648,7 @@
           "Microsoft.Extensions.Logging.Abstractions": "3.1.2",
           "Newtonsoft.Json": "12.0.3",
           "Polly": "7.2.0",
-          "Spear.ProxyGenerator": "0.2.0",
+          "Spear.ProxyGenerator": "0.2.1",
           "System.Reflection.Emit": "4.7.0",
           "System.Runtime.Loader": "4.3.0"
         },
@@ -656,7 +656,7 @@
           "Spear.Core.dll": {}
         }
       },
-      "Spear.ProxyGenerator/0.2.0": {
+      "Spear.ProxyGenerator/0.2.1": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.2",
           "System.Reflection.Emit": "4.7.0",
@@ -669,7 +669,7 @@
     }
   },
   "libraries": {
-    "Spear.Codec.ProtoBuffer/0.2.0": {
+    "Spear.Codec.ProtoBuffer/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1094,12 +1094,12 @@
       "path": "system.xml.xmlserializer/4.3.0",
       "hashPath": "system.xml.xmlserializer.4.3.0.nupkg.sha512"
     },
-    "Spear.Core/0.2.0": {
+    "Spear.Core/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Spear.ProxyGenerator/0.2.0": {
+    "Spear.ProxyGenerator/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

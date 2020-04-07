@@ -7,11 +7,11 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Spear.Codec.MessagePack/0.2.0": {
+      "Spear.Codec.MessagePack/0.2.1": {
         "dependencies": {
           "MessagePack": "2.1.90",
           "NETStandard.Library": "2.0.3",
-          "Spear.Core": "0.2.0"
+          "Spear.Core": "0.2.1"
         },
         "runtime": {
           "Spear.Codec.MessagePack.dll": {}
@@ -392,7 +392,7 @@
           }
         }
       },
-      "Spear.Core/0.2.0": {
+      "Spear.Core/0.2.1": {
         "dependencies": {
           "Microsoft.Extensions.Caching.Abstractions": "3.1.2",
           "Microsoft.Extensions.Configuration": "3.1.2",
@@ -404,7 +404,7 @@
           "Microsoft.Extensions.Logging.Abstractions": "3.1.2",
           "Newtonsoft.Json": "12.0.3",
           "Polly": "7.2.0",
-          "Spear.ProxyGenerator": "0.2.0",
+          "Spear.ProxyGenerator": "0.2.1",
           "System.Reflection.Emit": "4.7.0",
           "System.Runtime.Loader": "4.3.0"
         },
@@ -412,7 +412,7 @@
           "Spear.Core.dll": {}
         }
       },
-      "Spear.ProxyGenerator/0.2.0": {
+      "Spear.ProxyGenerator/0.2.1": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.2",
           "System.Reflection.Emit": "4.7.0",
@@ -425,7 +425,7 @@
     }
   },
   "libraries": {
-    "Spear.Codec.MessagePack/0.2.0": {
+    "Spear.Codec.MessagePack/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -703,12 +703,12 @@
       "path": "system.threading.tasks.extensions/4.5.3",
       "hashPath": "system.threading.tasks.extensions.4.5.3.nupkg.sha512"
     },
-    "Spear.Core/0.2.0": {
+    "Spear.Core/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Spear.ProxyGenerator/0.2.0": {
+    "Spear.ProxyGenerator/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

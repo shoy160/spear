@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coreProperties xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.openxmlformats.org/package/2006/metadata/core-properties">
+  <dc:creator>shoy</dc:creator>
+  <dc:description>Spear轻量级微服务框架，高扩展性，目前已支持Json、MessagePack、ProtoBuf编解码器以及TCP、HTTP、WebSocket、GRpc服务协议。</dc:description>
+  <dc:identifier>Spear.ProxyGenerator</dc:identifier>
+  <version>0.2.1</version>
+  <keywords></keywords>
+  <lastModifiedBy>NuGet.Build.Tasks.Pack, Version=5.4.0.2, Culture=neutral, PublicKeyToken=31bf3856ad364e35;Microsoft Windows NT 10.0.18363.0;.NET Framework 4.7.2</lastModifiedBy>
+</coreProperties>

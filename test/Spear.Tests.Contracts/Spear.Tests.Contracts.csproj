@@ -5,7 +5,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Protobuf Include="Protos\*.proto" ProtoRoot="Protos" OutputDir="%(RelativePath)Grpc" CompileOutputs="false" />
-
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.11.4" />

@@ -6,11 +6,11 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Spear.Protocol.Grpc/0.2.0": {
+      "Spear.Protocol.Grpc/0.2.1": {
         "dependencies": {
           "Grpc.Core": "2.27.0",
           "Grpc.Net.Client": "2.27.0",
-          "Spear.Core": "0.2.0"
+          "Spear.Core": "0.2.1"
         },
         "runtime": {
           "Spear.Protocol.Grpc.dll": {}
@@ -323,7 +323,7 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "Spear.Core/0.2.0": {
+      "Spear.Core/0.2.1": {
         "dependencies": {
           "Microsoft.Extensions.Caching.Abstractions": "3.1.2",
           "Microsoft.Extensions.Configuration": "3.1.2",
@@ -335,7 +335,7 @@
           "Microsoft.Extensions.Logging.Abstractions": "3.1.2",
           "Newtonsoft.Json": "12.0.3",
           "Polly": "7.2.0",
-          "Spear.ProxyGenerator": "0.2.0",
+          "Spear.ProxyGenerator": "0.2.1",
           "System.Reflection.Emit": "4.7.0",
           "System.Runtime.Loader": "4.3.0"
         },
@@ -343,7 +343,7 @@
           "Spear.Core.dll": {}
         }
       },
-      "Spear.ProxyGenerator/0.2.0": {
+      "Spear.ProxyGenerator/0.2.1": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.2",
           "System.Reflection.Emit": "4.7.0",
@@ -356,7 +356,7 @@
     }
   },
   "libraries": {
-    "Spear.Protocol.Grpc/0.2.0": {
+    "Spear.Protocol.Grpc/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -599,12 +599,12 @@
       "path": "system.threading.tasks/4.3.0",
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
-    "Spear.Core/0.2.0": {
+    "Spear.Core/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Spear.ProxyGenerator/0.2.0": {
+    "Spear.ProxyGenerator/0.2.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
