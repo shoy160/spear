@@ -10,11 +10,11 @@ namespace Spear.Core.Micro.Services
     public abstract class DServiceFinder : DServiceRoute, IServiceFinder
     {
         private readonly IMemoryCache _cache;
-        private readonly ILogger _logger;
+        protected readonly ILogger Logger;
         protected DServiceFinder(IMemoryCache memoryCache, ILogger logger)
         {
             _cache = memoryCache;
-            _logger = logger;
+            Logger = logger;
         }
 
         /// <summary> 查询服务 </summary>
@@ -29,20 +29,26 @@ namespace Spear.Core.Micro.Services
         public async Task<List<ServiceAddress>> Find(Type serviceType)
         {
             var key = serviceType.Assembly.ServiceName();
-            if (_cache.TryGetValue<List<ServiceAddress>>(key, out var services))
-                return services;
             var modes = new List<ProductMode> { Constants.Mode };
             if (Constants.Mode == ProductMode.Dev)
                 modes.Add(ProductMode.Test);
+
+            if (_cache == null)
+            {
+                return await QueryService(serviceType, modes.ToArray());
+            }
+
+            if (_cache.TryGetValue<List<ServiceAddress>>(key, out var services))
+                return services;            
             services = await QueryService(serviceType, modes.ToArray());
             if (services != null && services.Any())
             {
-                _logger.LogInformation($"找到{services.Count}个服务,{string.Join(";", services)}");
+                Logger?.LogInformation($"找到{services.Count}个服务,{string.Join(";", services)}");
                 _cache.Set(key, services, TimeSpan.FromMinutes(2));
             }
             else
             {
-                _logger.LogInformation($"未找到相关服务:{key}");
+                Logger?.LogInformation($"未找到相关服务:{key}");
             }
 
             return services;

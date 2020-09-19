@@ -10,7 +10,9 @@ using Spear.Codec.MessagePack;
 using Spear.Codec.ProtoBuffer;
 using Spear.Consul;
 using Spear.Core;
+using Spear.Core.Config;
 using Spear.Core.Micro;
+using Spear.Core.Micro.Services;
 using Spear.Core.Session;
 using Spear.Protocol.Grpc;
 using Spear.Protocol.Http;
@@ -31,31 +33,42 @@ namespace Spear.Tests.Client
     {
         public static void Start(params string[] args)
         {
-            var services = new MicroBuilder()
+            var builder = new MicroBuilder();
+            builder.AddLogging(builder =>
+             {
+                 builder.SetMinimumLevel(LogLevel.Information);
+                 builder.AddConsole();
+             });
+            var services = builder
                 .AddMicroClient(builder =>
                 {
                     builder
                         .AddJsonCodec()
-                        .AddMessagePackCodec()
+                        //.AddMessagePackCodec()
                         //.AddProtoBufCodec()
                         .AddSession()
-                        .AddHttpProtocol()
+                        //.AddHttpProtocol()
                         .AddTcpProtocol()
-                        .AddWebSocketProtocol()
-                        .AddGrpcProtocol()
+                        //.AddWebSocketProtocol()
+                        //.AddGrpcProtocol()
                         //.AddNacos(opt =>
                         //{
                         //    opt.Host = "http://192.168.0.231:8848/";
                         //    opt.Tenant = "ef950bae-865b-409b-9c3b-bc113cf7bf37";
                         //})
-                        .AddConsul("http://192.168.0.231:8500")
+                        //.AddConsul("http://192.168.0.231:8500")
+                        .AddDefaultRouter(r =>
+                        {
+                            r.Regist("Spear.Tests.Contracts_v1", new ServiceAddress("127.0.0.1", 5003)
+                            {
+                                Service = "192.168.10.217",
+                                Protocol = ServiceProtocol.Tcp,
+                                Codec = ServiceCodec.Json,
+                                Gzip = false
+                            });
+                        })
                         ;
                 });
-            services.AddLogging(builder =>
-            {
-                builder.SetMinimumLevel(LogLevel.Information);
-                builder.AddConsole();
-            });
             services.AddSingleton<DefaultAdapter>();
             services.AddSingleton<IService, ServieA>();
             services.AddSingleton<IService, ServieB>();

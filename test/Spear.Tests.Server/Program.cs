@@ -14,6 +14,7 @@ using Spear.Protocol.Grpc;
 using Spear.Protocol.Http;
 using Spear.Protocol.Tcp;
 using Spear.Protocol.WebSocket;
+using Spear.ProxyGenerator;
 using Spear.Tests.Contracts;
 using Spear.Tests.Server.Services;
 
@@ -29,7 +30,7 @@ namespace Spear.Tests.Server
             bool? gzip = null;
             if (args.Length > 0)
                 int.TryParse(args[0], out port);
-            var protocol = ServiceProtocol.Ws;
+            var protocol = ServiceProtocol.Tcp;
             var codec = ServiceCodec.Json;
 
             if (args.Length > 1)
@@ -44,6 +45,14 @@ namespace Spear.Tests.Server
             Console.WriteLine("shay".Config<string>());
 
             var services = new MicroBuilder();
+            services.AddLogging(builder =>
+            {
+                builder.SetMinimumLevel(LogLevel.Information);
+                builder.AddFilter("System", level => level >= LogLevel.Warning);
+                builder.AddFilter("Microsoft", level => level >= LogLevel.Warning);
+                builder.AddConsole();
+            });
+
             services
                 .AddMicroService(builder =>
                 {
@@ -63,8 +72,9 @@ namespace Spear.Tests.Server
                     builder
                         .AddSession()
                         //.AddNacos()
-                        .AddConsul()
-                        ;
+                        //.AddConsul()
+                        .AddDefaultRouter();
+                    ;
 
                     switch (protocol)
                     {
@@ -94,17 +104,12 @@ namespace Spear.Tests.Server
                         .AddWebSocketProtocol()
                         .AddGrpcProtocol()
                         .AddSession()
-                        .AddConsul("http://192.168.0.231:8500");
+                        .AddDefaultRouter()
+                        //.AddConsul("http://192.168.0.231:8500")
+                        ;
                 });
             services.AddSingleton<ITestContract, TestService>();
             services.AddScoped<AccountService>();
-            services.AddLogging(builder =>
-            {
-                builder.SetMinimumLevel(LogLevel.Information);
-                builder.AddFilter("System", level => level >= LogLevel.Warning);
-                builder.AddFilter("Microsoft", level => level >= LogLevel.Warning);
-                builder.AddConsole();
-            });
 
             _provider = services.BuildServiceProvider();
             //_provider.UseNacosConfig();
@@ -127,9 +132,15 @@ namespace Spear.Tests.Server
                 await Shutdown();
                 eventArgs.Cancel = true;
             };
-            var config = "oss:keyId".Config<string>();
-            _provider.GetService<ILogger<Program>>().LogInformation(config);
-            Console.ReadLine();
+            var proxy = _provider.GetService<IProxyFactory>();
+            var contract = proxy.Create<ITestContract>();
+            var result = contract.Get("shay");
+            Console.WriteLine(result.Result);
+            while (true)
+            {
+                var cmd = Console.ReadLine();
+                if (cmd == "exit") break;
+            }
         }
 
         private static async Task Shutdown()

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Core.Attributes;
@@ -140,6 +141,44 @@ namespace Spear.Core
             //Session
             builder.AddScoped<IPrincipalAccessor, T>();
             builder.AddScoped<IMicroSession, ClaimMicroSession>();
+            return builder;
+        }
+
+        /// <summary> 添加默认服务路由 </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="builder"></param>
+        /// <param name="router"></param>
+        /// <returns></returns>
+        public static IMicroServerBuilder AddDefaultRouter(this IMicroServerBuilder builder, Action<DefaultServiceRouter> routerAction = null)
+        {
+            builder.AddSingleton<DefaultServiceRouter>();
+            builder.AddSingleton<IServiceRegister>(provider =>
+            {
+                var router = provider.GetService<DefaultServiceRouter>();
+                routerAction?.Invoke(router);
+                return router;
+            });
+            return builder;
+        }
+
+        /// <summary> 添加默认服务路由 </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="builder"></param>
+        /// <param name="router"></param>
+        /// <returns></returns>
+        public static IMicroClientBuilder AddDefaultRouter(this IMicroClientBuilder builder, Action<DefaultServiceRouter> routerAction = null)
+        {
+            builder.AddSingleton(provider =>
+            {
+                var loggerFactory = provider.GetService<ILoggerFactory>();
+                return new DefaultServiceRouter(loggerFactory?.CreateLogger<DefaultServiceRouter>());
+            });
+            builder.AddSingleton<IServiceFinder>(provider =>
+            {
+                var router = provider.GetService<DefaultServiceRouter>();
+                routerAction?.Invoke(router);
+                return router;
+            });
             return builder;
         }
 

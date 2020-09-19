@@ -24,6 +24,8 @@ namespace Spear.Core.Micro.Services
         /// <summary> 对外注册的服务地址(ip或DNS) </summary>
         public string Service { get; set; }
 
+        public int ServicePort { get; set; }
+
         /// <summary> 权重 </summary>
         public double Weight { get; set; } = 1;
 
@@ -39,6 +41,7 @@ namespace Spear.Core.Micro.Services
         {
             Host = host;
             Port = port;
+            ServicePort = port;
         }
 
         public string IpAddress => string.IsNullOrWhiteSpace(Service) ? Host : Service;
@@ -47,7 +50,8 @@ namespace Spear.Core.Micro.Services
         {
             if (string.IsNullOrWhiteSpace(Host))
                 Host = Ip.ToString();
-            return $"{this.Address()}:{Port}";
+            var port = ServicePort <= 0 ? Port : ServicePort;
+            return $"{this.Address()}:{port}";
         }
     }
 
@@ -66,14 +70,16 @@ namespace Spear.Core.Micro.Services
         public static EndPoint ToEndPoint(this ServiceAddress address, bool isServer = true)
         {
             var service = isServer ? address.Host : address.Service;
+            var port = isServer ? address.Port : (address.ServicePort <= 0 ? address.Port : address.ServicePort);
+
             if (string.IsNullOrWhiteSpace(service) || service == "localhost")
             {
-                return new IPEndPoint(IPAddress.Any, address.Port);
+                return new IPEndPoint(IPAddress.Any, port);
             }
 
             if (service.IsIp())
-                return new IPEndPoint(IPAddress.Parse(service), address.Port);
-            return new DnsEndPoint(service, address.Port);
+                return new IPEndPoint(IPAddress.Parse(service), port);
+            return new DnsEndPoint(service, port);
         }
 
         /// <summary>
