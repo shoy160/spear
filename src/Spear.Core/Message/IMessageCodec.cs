@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spear.Core.Extensions;
+using System;
 using System.Threading.Tasks;
 
 namespace Spear.Core.Message

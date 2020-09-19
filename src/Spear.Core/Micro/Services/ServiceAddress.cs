@@ -5,6 +5,7 @@ using System.Net;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
 using Spear.Core.Config;
+using Spear.Core.Extensions;
 
 namespace Spear.Core.Micro.Services
 {

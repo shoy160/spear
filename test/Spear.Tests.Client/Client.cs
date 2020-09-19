@@ -1,31 +1,25 @@
-﻿using System;
-using System.Threading.Tasks;
-using Acb.Core.Helper;
-using Acb.Core.Logging;
-using Acb.Core.Serialize;
-using Acb.Core.Tests;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Spear.Codec.MessagePack;
-using Spear.Codec.ProtoBuffer;
-using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Config;
+using Spear.Core.Dependency;
+using Spear.Core.Helper;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Services;
+using Spear.Core.Serialize;
 using Spear.Core.Session;
-using Spear.Protocol.Grpc;
-using Spear.Protocol.Http;
+using Spear.Core.Extensions;
 using Spear.Protocol.Tcp;
-using Spear.Protocol.WebSocket;
 using Spear.ProxyGenerator;
-using Spear.Tests.Client.Logging;
 using Spear.Tests.Client.Services;
 using Spear.Tests.Client.Services.Impl;
 using Spear.Tests.Contracts;
 using Spear.Tests.Contracts.Dtos;
+using System;
+using System.Threading.Tasks;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 using LogLevel = Microsoft.Extensions.Logging.LogLevel;
+using Spear.Core.Tests;
 
 namespace Spear.Tests.Client
 {
@@ -69,13 +63,11 @@ namespace Spear.Tests.Client
                         })
                         ;
                 });
-            services.AddSingleton<DefaultAdapter>();
             services.AddSingleton<IService, ServieA>();
             services.AddSingleton<IService, ServieB>();
             var provider = services.BuildServiceProvider();
 
-            LogManager.AddAdapter(provider.GetService<DefaultAdapter>());
-            LogManager.Logger<Client>().Info("test");
+            CurrentIocManager.CreateLogger<Client>().LogInformation("test");
 
             var logger = provider.GetService<ILogger<Client>>();
             logger.LogInformation("请输入消息");
@@ -145,7 +137,7 @@ namespace Spear.Tests.Client
                         {
                             m += " loged";
                             var accessor = provider.GetService<IPrincipalAccessor>();
-                            accessor.SetSession(new MicroSessionDto
+                            accessor.SetSession(new SessionDto
                             {
                                 UserId = name,
                                 UserName = name,

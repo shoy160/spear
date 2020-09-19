@@ -1,4 +1,4 @@
-﻿using Acb.Core.Serialize;
+﻿using Spear.Core.Serialize;
 
 namespace Spear.Tests.Client.Services.Impl
 {

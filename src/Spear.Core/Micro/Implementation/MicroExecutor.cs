@@ -87,17 +87,17 @@ namespace Spear.Core.Micro.Implementation
             var accessor = _provider.GetService<IPrincipalAccessor>();
             if (accessor != null && message.Headers != null && message.Headers.Any())
             {
-                var session = new MicroSessionDto();
+                var session = new SessionDto();
                 //解析Claims
-                if (message.Headers.TryGetValue(MicroClaimTypes.HeaderUserId, out var userId))
+                if (message.Headers.TryGetValue(SpearClaimTypes.HeaderUserId, out var userId))
                     session.UserId = userId;
-                if (message.Headers.TryGetValue(MicroClaimTypes.HeaderTenantId, out var tenantId))
+                if (message.Headers.TryGetValue(SpearClaimTypes.HeaderTenantId, out var tenantId))
                     session.TenantId = tenantId;
                 //username
-                if (message.Headers.TryGetValue(MicroClaimTypes.HeaderUserName, out var userName))
+                if (message.Headers.TryGetValue(SpearClaimTypes.HeaderUserName, out var userName))
                     session.UserName = HttpUtility.UrlDecode(userName);
                 //role
-                if (message.Headers.TryGetValue(MicroClaimTypes.HeaderRole, out var role))
+                if (message.Headers.TryGetValue(SpearClaimTypes.HeaderRole, out var role))
                     session.Role = HttpUtility.UrlDecode(role);
                 accessor.SetSession(session);
             }

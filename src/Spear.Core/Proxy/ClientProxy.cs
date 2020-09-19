@@ -1,4 +1,14 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Polly;
+using Spear.Core.Exceptions;
+using Spear.Core.Extensions;
+using Spear.Core.Message.Models;
+using Spear.Core.Micro;
+using Spear.Core.Micro.Services;
+using Spear.Core.Session;
+using Spear.ProxyGenerator;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,15 +17,6 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Polly;
-using Spear.Core.Exceptions;
-using Spear.Core.Message.Models;
-using Spear.Core.Micro;
-using Spear.Core.Micro.Services;
-using Spear.Core.Session;
-using Spear.ProxyGenerator;
 
 namespace Spear.Core.Proxy
 {
@@ -109,9 +110,9 @@ namespace Spear.Core.Proxy
             var localIp = Constants.LocalIp();
             var headers = new Dictionary<string, string>
             {
-                {MicroClaimTypes.HeaderForward, localIp},
-                {MicroClaimTypes.HeaderRealIp, localIp},
-                {MicroClaimTypes.HeaderUserAgent, "spear-client"}
+                {SpearClaimTypes.HeaderForward, localIp},
+                {SpearClaimTypes.HeaderRealIp, localIp},
+                {SpearClaimTypes.HeaderUserAgent, "spear-client"}
                 //{MicroClaimTypes.HeaderReferer, string.Empty}
             };
             var session = _provider.GetService<IMicroSession>();
@@ -119,14 +120,14 @@ namespace Spear.Core.Proxy
             {
                 if (session.UserId != null)
                 {
-                    headers.Add(MicroClaimTypes.HeaderUserId, session.GetUserId<string>());
-                    headers.Add(MicroClaimTypes.HeaderUserName,
+                    headers.Add(SpearClaimTypes.HeaderUserId, session.GetUserId<string>());
+                    headers.Add(SpearClaimTypes.HeaderUserName,
                         HttpUtility.UrlEncode(session.UserName ?? string.Empty));
-                    headers.Add(MicroClaimTypes.HeaderRole, HttpUtility.UrlEncode(session.Role ?? string.Empty));
+                    headers.Add(SpearClaimTypes.HeaderRole, HttpUtility.UrlEncode(session.Role ?? string.Empty));
                 }
 
                 if (session.TenantId != null)
-                    headers.Add(MicroClaimTypes.HeaderTenantId, session.GetTenantId<string>());
+                    headers.Add(SpearClaimTypes.HeaderTenantId, session.GetTenantId<string>());
             }
             var serviceId = targetMethod.ServiceKey();
             var invokeMessage = new InvokeMessage

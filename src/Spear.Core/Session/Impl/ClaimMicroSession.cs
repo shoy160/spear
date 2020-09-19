@@ -22,18 +22,18 @@ namespace Spear.Core.Session.Impl
         }
 
         public override string UserName =>
-            TempSession != null ? TempSession.UserName : GetClaimValue(MicroClaimTypes.UserName);
+            TempSession != null ? TempSession.UserName : GetClaimValue(SpearClaimTypes.UserName);
 
-        public override string Role => TempSession != null ? TempSession.Role : GetClaimValue(MicroClaimTypes.Role);
+        public override string Role => TempSession != null ? TempSession.Role : GetClaimValue(SpearClaimTypes.Role);
 
         protected override object GetUserId()
         {
-            return GetClaimValue(MicroClaimTypes.UserId);
+            return GetClaimValue(SpearClaimTypes.UserId);
         }
 
         protected override object GetTenantId()
         {
-            var tenantId = GetClaimValue(MicroClaimTypes.TenantId);
+            var tenantId = GetClaimValue(SpearClaimTypes.TenantId);
             if (tenantId != null)
                 return tenantId;
             return _tenantResolver?.ResolveTenantId();

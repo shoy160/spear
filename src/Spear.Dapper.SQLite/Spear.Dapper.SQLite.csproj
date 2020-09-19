@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>成都爱车保信息技术有限公司</Company>
+    <Authors>icb@shay</Authors>
+    <Product>爱车保 - SQLite基础类</Product>
+    <Description>爱车保 - SQLite基础类</Description>
+    <Version>1.9.0</Version>
+    <PackageProjectUrl>https://github.com/i-cbao/Spear.Framework</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/i-cbao/Spear.Framework.git</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>爱车保 - SQLite基础类</Title>
+    <Owners>成都爱车保信息技术有限公司</Owners>
+    <Copyright>爱车保 © 2018-2020</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\_pkgs\</OutputPath>
+    <DocumentationFile>..\..\_pkgs\netstandard2.0\Spear.Dapper.SQLite.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spear.Core\Spear.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,4 @@
-﻿using Spear.Core;
+﻿using Spear.Core.Extensions;
 using WebApiClient.DataAnnotations;
 
 namespace Spear.Nacos.Sdk.Requests.Config

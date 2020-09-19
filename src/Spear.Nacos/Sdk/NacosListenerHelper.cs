@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Spear.Core;
+using Spear.Core.Extensions;
 using Spear.Nacos.Sdk.Requests.Config;
 using Spear.Nacos.Sdk.Requests.Service;
 using System;

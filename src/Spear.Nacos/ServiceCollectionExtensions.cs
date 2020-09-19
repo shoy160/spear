@@ -87,7 +87,7 @@ namespace Spear.Nacos
 
         /// <summary> 使用Nacos配置中心 </summary>
         /// <param name="provider"></param>
-        public static void UseNacosConfig(this IServiceProvider provider)
+        public static void AddNacosConfig(this IServiceProvider provider)
         {
             var nacosConfig = provider.GetService<NacosConfig>();
             if (string.IsNullOrWhiteSpace(nacosConfig?.Applications))
@@ -95,18 +95,20 @@ namespace Spear.Nacos
             var client = provider.GetService<INacosClient>();
             var loggerFactory = provider.GetService<ILoggerFactory>();
             var listener = provider.GetService<NacosListenerHelper>();
-            var manager = ConfigManager.Instance;
+
+            var builder = provider.GetService<ISpearConfigBuilder>();
+            //var manager = ConfigManager.Instance;
             var apps = nacosConfig.Applications.Split(new[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries);
             var providers = apps
                 .Select(app => new NacosConfigProvider(nacosConfig, client, listener, loggerFactory, app)).ToList();
-            manager.Build(b =>
+            foreach (var configProvider in providers)
             {
-                foreach (var configProvider in providers)
-                {
-                    b.Add(configProvider);
-                }
-            });
-            manager.ConfigChanged += o => { providers.ForEach(p => p.Reload()); };
+                var config = builder.Sources.FirstOrDefault(t => t is NacosConfigProvider nacos && nacos.App == configProvider.App);
+                if (config == null)
+                    builder.Sources.Remove(config);
+
+                builder.Sources.Insert(0, configProvider);
+            }
         }
     }
 }

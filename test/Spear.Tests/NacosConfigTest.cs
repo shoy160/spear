@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Spear.Core;
+using Spear.Core.Extensions;
+using Spear.Framework;
 using Spear.Nacos;
 using Spear.Nacos.Sdk;
-using Spear.Nacos.Sdk.Requests;
+using Spear.Nacos.Sdk.Requests.Config;
 using System;
 using System.Threading.Tasks;
-using Spear.Nacos.Sdk.Requests.Config;
 
 namespace Spear.Tests
 {
     [TestClass]
-    public class NacosConfigTest : BaseTest
+    public class NacosConfigTest : DTest
     {
         private readonly INacosClient _client;
         public NacosConfigTest()
@@ -33,7 +33,7 @@ namespace Spear.Tests
 
         protected override void UseServices(IServiceProvider provider)
         {
-            provider.UseNacosConfig();
+            provider.AddNacosConfig();
             base.UseServices(provider);
         }
 

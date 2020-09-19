@@ -1,6 +1,8 @@
-﻿namespace Spear.Tests
+﻿using Spear.Framework;
+
+namespace Spear.Tests
 {
-    public class ConsulConfigTest : BaseTest
+    public class ConsulConfigTest : DTest
     {
     }
 }

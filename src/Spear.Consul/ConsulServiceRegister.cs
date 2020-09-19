@@ -1,6 +1,7 @@
 ﻿using Consul;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Extensions;
 using Spear.Core.Micro.Services;
 using System;
 using System.Collections.Generic;

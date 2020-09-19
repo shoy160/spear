@@ -1,6 +1,8 @@
-﻿namespace Spear.Tests
+﻿using Spear.Framework;
+
+namespace Spear.Tests
 {
-    public class NacosRouteTest : BaseTest
+    public class NacosRouteTest : DTest
     {
     }
 }

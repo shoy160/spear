@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Acb.Core" Version="1.8.2" />
     <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
     <PackageReference Include="Google.Protobuf" Version="3.11.4" />
     <PackageReference Include="Grpc.Net.Client" Version="2.27.0" />

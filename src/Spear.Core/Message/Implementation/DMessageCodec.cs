@@ -1,7 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Spear.Core.Config;
+﻿using Spear.Core.Config;
+using Spear.Core.Extensions;
 using Spear.Core.Message.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace Spear.Core.Message.Implementation
 {

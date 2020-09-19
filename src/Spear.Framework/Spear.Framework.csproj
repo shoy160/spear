@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>成都爱车保信息技术有限公司</Company>
+    <Authors>icb@shay</Authors>
+    <Product>爱车保 - 基础框架类</Product>
+    <Description>爱车保 - 基础框架类</Description>
+    <Version>1.9.1</Version>
+    <PackageProjectUrl>https://github.com/i-cbao/Spear.Framework</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/i-cbao/Spear.Framework.git</RepositoryUrl>
+    <Title>爱车保 - 基础框架类</Title>
+    <Owners>成都爱车保信息技术有限公司</Owners>
+    <Copyright>爱车保 © 2018-2020</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>..\..\_pkgs\netstandard2.0\Spear.Framework.xml</DocumentationFile>
+    <OutputPath>..\..\_pkgs\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spear.Core\Spear.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Spear.Dapper.Mysql\Spear.Dapper.Mysql.csproj" />
+    <ProjectReference Include="..\..\src\Spear.Dapper\Spear.Dapper.csproj" />
+    <ProjectReference Include="..\..\src\Spear.WebApi\Spear.WebApi.csproj" />
+  </ItemGroup>
+
+
+</Project>

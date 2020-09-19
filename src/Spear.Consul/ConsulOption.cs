@@ -1,4 +1,4 @@
-﻿using Spear.Core;
+﻿using Spear.Core.Extensions;
 
 namespace Spear.Consul
 {

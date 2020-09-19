@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -86,12 +87,15 @@ namespace Spear.Consul
 
         /// <summary> 使用Consul配置中心 </summary>
         /// <param name="manager"></param>
-        public static void UseConsul(this ConfigManager manager)
+        public static ISpearConfigBuilder AddConsulConfig(this ISpearConfigBuilder builder)
         {
             //配置中心
             var provider = new ConsulConfigProvider();
-            manager.Build(b => b.Add(provider));
-            manager.ConfigChanged += provider.Reload;
+            var t = builder.Sources.FirstOrDefault(c => c is ConsulConfigProvider);
+            if (t != null)
+                builder.Sources.Remove(t);
+            builder.Sources.Insert(0, provider);
+            return builder;
         }
     }
 }

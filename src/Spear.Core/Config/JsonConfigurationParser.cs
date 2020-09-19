@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Spear.Core.Dependency;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,22 +10,13 @@ using System.Linq;
 
 namespace Spear.Core.Config
 {
-    public class JsonConfigurationParser
+    public class JsonConfigurationParser : ISingleDependency
     {
-        private readonly IDictionary<string, string> _data;
-        private readonly Stack<string> _context;
+        private readonly IDictionary<string, string> _data = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private readonly Stack<string> _context = new Stack<string>();
         private string _currentPath;
         private JsonTextReader _reader;
 
-        public JsonConfigurationParser()
-        {
-            _data = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            _context = new Stack<string>();
-        }
-
-        /// <summary> 转换Json字符 </summary>
-        /// <param name="json"></param>
-        /// <returns></returns>
         public IDictionary<string, string> Parse(string json)
         {
             _data.Clear();
@@ -34,9 +26,6 @@ namespace Spear.Core.Config
             return _data;
         }
 
-        /// <summary> 转换json流 </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
         public IDictionary<string, string> Parse(Stream input)
         {
             _data.Clear();

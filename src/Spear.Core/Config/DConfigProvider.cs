@@ -1,15 +1,26 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Spear.Core.Dependency;
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using Spear.Core.Exceptions;
+using System.Threading.Tasks;
 
 namespace Spear.Core.Config
 {
-    /// <summary> 基础配置提供者 </summary>
     public abstract class DConfigProvider : ConfigurationProvider
     {
         private const string ArrayPattern = @"(\[[0-9]+\])*$";
+        protected readonly ILogger Logger;
+        private static readonly object LockObj = new object();
+
+        /// <summary> 是否已加载 </summary>
+        private bool _hasLoaded;
+
+        protected DConfigProvider()
+        {
+            Logger = CurrentIocManager.CreateLogger<DConfigProvider>();
+        }
 
         /// <summary> 键转换 </summary>
         /// <param name="key"></param>
@@ -63,10 +74,23 @@ namespace Spear.Core.Config
             }
             catch (Exception ex)
             {
-                throw new SpearException($"加载配置异常:{ex.Message}");
+                Logger.LogError(ex, ex.Message);
             }
         }
 
-        public abstract void Reload(object state = null);
+        protected abstract Task LoadConfig(bool reload = false);
+
+        public override void Load()
+        {
+            if (_hasLoaded)
+                return;
+            lock (LockObj)
+            {
+                if (_hasLoaded) return;
+                _hasLoaded = true;
+            }
+
+            LoadConfig().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
     }
 }

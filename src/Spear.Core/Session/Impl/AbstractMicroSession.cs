@@ -5,7 +5,7 @@ namespace Spear.Core.Session.Impl
 {
     public abstract class AbstractMicroSession : IMicroSession
     {
-        protected MicroSessionDto TempSession { get; private set; }
+        protected SessionDto TempSession { get; private set; }
 
         public object UserId => TempSession?.UserId ?? GetUserId();
 
@@ -21,7 +21,7 @@ namespace Spear.Core.Session.Impl
             ? TenancySides.Tenant
             : TenancySides.Host;
 
-        public IDisposable Use(MicroSessionDto sessionDto)
+        public IDisposable Use(SessionDto sessionDto)
         {
             TempSession = sessionDto;
             return new DisposeAction(() => { TempSession = null; });

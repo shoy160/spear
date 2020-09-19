@@ -2,10 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Spear.Core.Config;
 using Spear.Nacos.Sdk;
-using Spear.Nacos.Sdk.Requests;
+using Spear.Nacos.Sdk.Requests.Config;
 using System;
 using System.Threading.Tasks;
-using Spear.Nacos.Sdk.Requests.Config;
 
 namespace Spear.Nacos
 {
@@ -16,6 +15,8 @@ namespace Spear.Nacos
         private readonly NacosListenerHelper _listenerHelper;
         private readonly ILogger<NacosConfigProvider> _logger;
         private readonly string _application;
+
+        public string App => _application;
 
         public NacosConfigProvider(NacosConfig config, INacosClient client, NacosListenerHelper listenerHelper, ILoggerFactory loggerFactory,
              string application)
@@ -70,13 +71,9 @@ namespace Spear.Nacos
             }
         }
 
-        public override void Load()
+        protected override async Task LoadConfig(bool reload = false)
         {
-            LoadConfig().ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        public override void Reload(object state = null)
-        {
+            await LoadConfig();
         }
     }
 }

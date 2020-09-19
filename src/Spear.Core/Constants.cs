@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Spear.Core.Config;
+using Spear.Core.Extensions;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Reflection;
-using System.Text;
-using Spear.Core.Config;
 
 namespace Spear.Core
 {

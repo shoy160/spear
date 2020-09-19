@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>成都爱车保信息技术有限公司</Company>
+    <Authors>icb@shay</Authors>
+    <Product>爱车保 - Dapper基础类</Product>
+    <Description>爱车保 - Dapper基础类</Description>
+    <Version>1.9.0</Version>
+    <PackageProjectUrl>https://github.com/i-cbao/Spear.Framework</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/i-cbao/Spear.Framework.git</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>爱车保 - Dapper基础类</Title>
+    <Owners>成都爱车保信息技术有限公司</Owners>
+    <Copyright>爱车保 © 2018-2020</Copyright>
+    <PackageReleaseNotes>1.添加基础Repository通用方法；</PackageReleaseNotes>
+    <AssemblyName>Spear.Dapper</AssemblyName>
+    <RootNamespace>Spear.Dapper</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>..\..\_pkgs\netstandard2.0\Spear.Dapper.xml</DocumentationFile>
+    <OutputPath>..\..\_pkgs\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Compile Remove="Domain\Dtos\**" />
+    <Compile Remove="Domain\Entities\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Domain\Dtos\**" />
+    <EmbeddedResource Remove="Domain\Entities\**" />
+    <None Remove="Data\**" />
+    <None Remove="Domain\Dtos\**" />
+    <None Remove="Domain\Entities\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Domain\DPage.cs" />
+    <Compile Remove="Domain\DService.cs" />
+    <Compile Remove="Domain\DSort.cs" />
+    <Compile Remove="Domain\PagedList.cs" />
+    <Compile Remove="Domain\TransactionalBehavior.cs" />
+    <Compile Remove="Domain\ValueDto.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spear.Core\Spear.Core.csproj" />
+  </ItemGroup>
+
+</Project>

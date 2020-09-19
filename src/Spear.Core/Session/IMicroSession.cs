@@ -1,6 +1,7 @@
-﻿using Spear.Core.Tenant;
+﻿using Spear.Core.Exceptions;
+using Spear.Core.Extensions;
+using Spear.Core.Tenant;
 using System;
-using Spear.Core.Exceptions;
 
 namespace Spear.Core.Session
 {
@@ -24,7 +25,7 @@ namespace Spear.Core.Session
         /// <summary> 使用租户 </summary>
         /// <param name="session"></param>
         /// <returns></returns>
-        IDisposable Use(MicroSessionDto session);
+        IDisposable Use(SessionDto session);
     }
 
     public static class MicroSessionExtensions

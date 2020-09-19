@@ -1,11 +1,8 @@
-﻿//using Acb.Core.Extensions;
-using System;
-using System.Threading.Tasks;
+﻿using Spear.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Spear.Codec.MessagePack;
 using Spear.Codec.ProtoBuffer;
-using Spear.Consul;
 using Spear.Core;
 using Spear.Core.Config;
 using Spear.Core.Micro;
@@ -17,6 +14,8 @@ using Spear.Protocol.WebSocket;
 using Spear.ProxyGenerator;
 using Spear.Tests.Contracts;
 using Spear.Tests.Server.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace Spear.Tests.Server
 {
@@ -40,7 +39,7 @@ namespace Spear.Tests.Server
             if (args.Length > 3)
                 gzip = args[3].CastTo(false);
 
-            ConfigManager.Instance.UseLocal("_config");
+            //ConfigHelper.Instance.UseLocal("_config");
 
             Console.WriteLine("shay".Config<string>());
 

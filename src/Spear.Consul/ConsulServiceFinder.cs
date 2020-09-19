@@ -1,13 +1,14 @@
 ﻿using Consul;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Spear.Core;
+using Spear.Core.Extensions;
 using Spear.Core.Micro.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Spear.Consul
 {

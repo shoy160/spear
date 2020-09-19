@@ -1,17 +1,18 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Spear.Core.Config;
 using System;
+using System.Threading.Tasks;
 
 namespace Spear.Consul
 {
     public class ConsulConfigProvider : DConfigProvider, IConfigurationSource
     {
-        public override void Reload(object state = null)
+        public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
             throw new NotImplementedException();
         }
 
-        public IConfigurationProvider Build(IConfigurationBuilder builder)
+        protected override Task LoadConfig(bool reload = false)
         {
             throw new NotImplementedException();
         }

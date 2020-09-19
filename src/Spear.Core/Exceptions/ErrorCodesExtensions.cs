@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Spear.Core.Extensions;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,6 +34,23 @@ namespace Spear.Core.Exceptions
                 return message;
             var codes = Codes<T>();
             return codes.TryGetValue(code, out message) ? message : ErrorCodes.SystemError.Message<ErrorCodes>();
+        }
+
+        /// <summary> 错误编码对应DResult </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public static DResult CodeResult<T>(this int code) where T : ErrorCodes
+        {
+            return DResult.Error(code.Message<T>(), code);
+        }
+
+        /// <summary> 错误编码对应DResult </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public static DResult CodeResult(this int code)
+        {
+            return code.CodeResult<ErrorCodes>();
         }
 
         /// <summary> 错误编码对应的Exception </summary>
