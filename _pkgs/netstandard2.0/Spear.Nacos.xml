@@ -279,7 +279,7 @@
             <param name="configAction"></param>
             <returns></returns>
         </member>
-        <member name="M:Spear.Nacos.ServiceCollectionExtensions.UseNacosConfig(System.IServiceProvider)">
+        <member name="M:Spear.Nacos.ServiceCollectionExtensions.AddNacosConfig(System.IServiceProvider)">
             <summary> 使用Nacos配置中心 </summary>
             <param name="provider"></param>
         </member>

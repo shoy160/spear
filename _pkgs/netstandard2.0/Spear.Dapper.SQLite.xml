@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Dapper.SQLite</name>
+    </assembly>
+    <members>
+        <member name="M:Spear.Dapper.SQLite.SqliteExtensions.AutoCreateDb(System.String,System.String)">
+            <summary> 自动创建数据库(自动备份) </summary>
+            <param name="path">路径</param>
+            <param name="password">密码(可选)</param>
+        </member>
+        <member name="M:Spear.Dapper.SQLite.SqliteExtensions.CreateTableSql(System.Type)">
+            <summary> 生成创建表sql语句 </summary>
+        </member>
+    </members>
+</doc>

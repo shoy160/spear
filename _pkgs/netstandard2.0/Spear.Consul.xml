@@ -47,7 +47,7 @@
             <param name="token"></param>
             <returns></returns>
         </member>
-        <member name="M:Spear.Consul.ServiceCollectionExtensions.UseConsul(Spear.Core.Config.ConfigManager)">
+        <member name="M:Spear.Consul.ServiceCollectionExtensions.AddConsulConfig(Spear.Core.Config.ISpearConfigBuilder)">
             <summary> 使用Consul配置中心 </summary>
             <param name="manager"></param>
         </member>

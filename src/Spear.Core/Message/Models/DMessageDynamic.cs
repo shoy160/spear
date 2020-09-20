@@ -19,6 +19,7 @@ namespace Spear.Core.Message.Models
 
         public void SetValue(object value)
         {
+            if (value == null) return;
             var type = value.GetType();
             ContentType = type.TypeName();
             var code = Type.GetTypeCode(type);

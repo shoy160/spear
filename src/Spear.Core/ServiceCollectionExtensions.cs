@@ -147,7 +147,7 @@ namespace Spear.Core
         /// <summary> 添加默认服务路由 </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="builder"></param>
-        /// <param name="router"></param>
+        /// <param name="routerAction"></param>
         /// <returns></returns>
         public static IMicroServerBuilder AddDefaultRouter(this IMicroServerBuilder builder, Action<DefaultServiceRouter> routerAction = null)
         {
@@ -164,15 +164,11 @@ namespace Spear.Core
         /// <summary> 添加默认服务路由 </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="builder"></param>
-        /// <param name="router"></param>
+        /// <param name="routerAction"></param>
         /// <returns></returns>
         public static IMicroClientBuilder AddDefaultRouter(this IMicroClientBuilder builder, Action<DefaultServiceRouter> routerAction = null)
         {
-            builder.AddSingleton(provider =>
-            {
-                var loggerFactory = provider.GetService<ILoggerFactory>();
-                return new DefaultServiceRouter(loggerFactory?.CreateLogger<DefaultServiceRouter>());
-            });
+            builder.AddSingleton<DefaultServiceRouter>();
             builder.AddSingleton<IServiceFinder>(provider =>
             {
                 var router = provider.GetService<DefaultServiceRouter>();
@@ -243,6 +239,15 @@ namespace Spear.Core
             addressAction?.Invoke(address);
             var host = provider.GetService<IMicroHost>();
             Task.Factory.StartNew(async () => await host.Start(address));
+        }
+
+        public static void AppendTo(this MicroBuilder builder, IServiceCollection services)
+        {
+            if (builder == null || services == null) return;
+            foreach (var service in builder)
+            {
+                services.Add(service);
+            }
         }
     }
 }

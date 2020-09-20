@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Dapper.Mysql</name>
+    </assembly>
+    <members>
+        <member name="P:Spear.Dapper.Mysql.MySqlConnectionAdapter.ProviderName">
+            <summary> 适配器名称 </summary>
+        </member>
+        <member name="P:Spear.Dapper.Mysql.MySqlConnectionAdapter.ConnectionType">
+            <summary> 连接类型 </summary>
+        </member>
+        <member name="M:Spear.Dapper.Mysql.MySqlConnectionAdapter.FormatSql(System.String)">
+            <summary> 格式化SQL </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Mysql.MySqlConnectionAdapter.PageSql(System.String,System.String,System.String,System.String)">
+            <summary> 构造分页SQL </summary>
+            <param name="sql"></param>
+            <param name="columns"></param>
+            <param name="order"></param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Mysql.MySqlConnectionAdapter.Create">
+            <summary> 创建数据库连接 </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

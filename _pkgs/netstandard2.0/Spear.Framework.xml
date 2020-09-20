@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Framework</name>
+    </assembly>
+    <members>
+        <member name="T:Spear.Framework.AbstractBootstrap">
+            <summary> 启动基类 </summary>
+        </member>
+        <member name="M:Spear.Framework.AbstractBootstrap.Initialize">
+            <summary> 初始化 </summary>
+        </member>
+        <member name="F:Spear.Framework.AbstractBootstrap.IsDisposed">
+            <summary> 是否已释放 </summary>
+        </member>
+        <member name="P:Spear.Framework.AbstractBootstrap.IocManager">
+            <summary> 注入管理 </summary>
+        </member>
+        <member name="M:Spear.Framework.AbstractBootstrap.IocRegisters">
+            <summary> 注册依赖 </summary>
+        </member>
+        <member name="M:Spear.Framework.AbstractBootstrap.CacheInit">
+            <summary> 缓存初始化 </summary>
+        </member>
+        <member name="M:Spear.Framework.AbstractBootstrap.LoggerInit">
+            <summary> 日志初始化 </summary>
+        </member>
+        <member name="M:Spear.Framework.AbstractBootstrap.DatabaseInit">
+            <summary> 数据库初始化 </summary>
+        </member>
+        <member name="M:Spear.Framework.AbstractBootstrap.Dispose">
+            <summary> 释放资源 </summary>
+        </member>
+        <member name="T:Spear.Framework.SpearBootstrap">
+            <summary> 启动器 </summary>
+        </member>
+        <member name="F:Spear.Framework.SpearBootstrap._container">
+            <summary> Ioc容器 </summary>
+        </member>
+        <member name="E:Spear.Framework.SpearBootstrap.BuilderHandler">
+            <summary> Ioc构建事件 </summary>
+        </member>
+        <member name="M:Spear.Framework.SpearBootstrap.Initialize">
+            <summary> 初始化 </summary>
+        </member>
+        <member name="M:Spear.Framework.SpearBootstrap.IocRegisters">
+            <summary> Ioc注册 </summary>
+        </member>
+        <member name="T:Spear.Framework.ConsoleHost">
+            <summary> 控制台宿主机 </summary>
+        </member>
+        <member name="E:Spear.Framework.ConsoleHost.Command">
+            <summary> 命令事件 </summary>
+        </member>
+        <member name="E:Spear.Framework.ConsoleHost.MapServiceCollection">
+            <summary> 注册服务 </summary>
+        </member>
+        <member name="E:Spear.Framework.ConsoleHost.MapServices">
+            <summary> 注册服务 </summary>
+        </member>
+        <member name="E:Spear.Framework.ConsoleHost.UseServiceProvider">
+            <summary> 使用服务 </summary>
+        </member>
+        <member name="E:Spear.Framework.ConsoleHost.UseServices">
+            <summary> 使用服务 </summary>
+        </member>
+        <member name="E:Spear.Framework.ConsoleHost.ConfigBuild">
+            <summary> 配置构建 </summary>
+        </member>
+        <member name="E:Spear.Framework.ConsoleHost.StopEvent">
+            <summary> 停止事件 </summary>
+        </member>
+        <member name="P:Spear.Framework.ConsoleHost.Bootstrap">
+            <summary> 启动项 </summary>
+        </member>
+        <member name="M:Spear.Framework.ConsoleHost.Start(System.String[])">
+            <summary> 开启服务 </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Spear.Framework.ConsoleHost.Print(System.Object,System.Nullable{System.Int64})">
+            <summary> 打印数据 </summary>
+            <param name="result"></param>
+            <param name="times">耗时</param>
+        </member>
+        <member name="T:Spear.Framework.DTest">
+            <summary> 测试基类 </summary>
+        </member>
+        <member name="F:Spear.Framework.DTest.Bootstrap">
+            <summary> 项目启动项 </summary>
+        </member>
+        <member name="M:Spear.Framework.DTest.#ctor">
+            <summary> 默认构造函数 </summary>
+        </member>
+        <member name="M:Spear.Framework.DTest.Print(System.Object,System.Nullable{System.Int64})">
+            <summary> 打印数据 </summary>
+            <param name="result"></param>
+            <param name="times">耗时</param>
+        </member>
+        <member name="T:Spear.Framework.ExceptionHandler">
+            <summary> 异常处理类 </summary>
+        </member>
+        <member name="E:Spear.Framework.ExceptionHandler.OnException">
+            <summary> 异常事件 </summary>
+        </member>
+        <member name="E:Spear.Framework.ExceptionHandler.OnBusiException">
+            <summary> 业务异常事件 </summary>
+        </member>
+        <member name="M:Spear.Framework.ExceptionHandler.Handler(System.Exception,System.String)">
+            <summary> 异常处理 </summary>
+            <param name="exception"></param>
+            <param name="requestBody"></param>
+        </member>
+        <member name="M:Spear.Framework.ExceptionHandler.HandlerAsync(System.Exception,System.String)">
+            <summary> 异常处理 </summary>
+            <param name="exception"></param>
+            <param name="requestBody"></param>
+        </member>
+        <member name="T:Spear.Framework.IBootstrap">
+            <summary> 启动类接口 </summary>
+        </member>
+        <member name="M:Spear.Framework.IBootstrap.Initialize">
+            <summary> 初始化 </summary>
+        </member>
+        <member name="M:Spear.Framework.IocManager.Resolve``1">
+            <summary> 获取Ioc注入实例 </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Framework.IocManager.Resolve(System.Type)">
+            <summary> 获取Ioc注入实例 </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Framework.IocManager.IsRegistered(System.Type)">
+            <summary> 是否注册Ioc注入 </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Framework.LifetimeScopeManager.Resolve``1">
+            <summary> 获取Ioc注入实例 </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Framework.LifetimeScopeManager.Resolve(System.Type)">
+            <summary> 获取Ioc注入实例 </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Framework.LifetimeScopeManager.IsRegistered(System.Type)">
+            <summary> 是否注册Ioc注入 </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

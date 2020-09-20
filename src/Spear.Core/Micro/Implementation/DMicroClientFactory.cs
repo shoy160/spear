@@ -38,7 +38,7 @@ namespace Spear.Core.Micro.Implementation
             _clients.TryRemove(address, out _);
         }
 
-        public Task<IMicroClient> CreateClient(ServiceAddress serviceAddress)
+        public async Task<IMicroClient> CreateClient(ServiceAddress serviceAddress)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Spear.Core.Micro.Implementation
                         Logger.LogInformation($"创建客户端：{key}创建客户端。");
                         return await Create(key);
                     }));
-                return lazyClient.Value;
+                return await lazyClient.Value;
             }
             catch (Exception ex)
             {

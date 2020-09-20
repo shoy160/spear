@@ -39,7 +39,7 @@ namespace Spear.Core.Micro.Services
             }
 
             if (_cache.TryGetValue<List<ServiceAddress>>(key, out var services))
-                return services;            
+                return services;
             services = await QueryService(serviceType, modes.ToArray());
             if (services != null && services.Any())
             {
@@ -56,8 +56,11 @@ namespace Spear.Core.Micro.Services
 
         public Task CleanCache(Type serviceType)
         {
-            var key = serviceType.Assembly.ServiceName();
-            _cache.Remove(key);
+            if (_cache != null)
+            {
+                var key = serviceType.Assembly.ServiceName();
+                _cache.Remove(key);
+            }
             return Task.CompletedTask;
         }
     }

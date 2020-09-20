@@ -6,10 +6,10 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Spear.Protocol.WebSocket/0.2.1": {
+      "Spear.Protocol.WebSocket/0.2.3": {
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "3.1.2",
-          "Spear.Core": "0.2.1"
+          "Spear.Core": "0.2.3"
         },
         "runtime": {
           "Spear.Protocol.WebSocket.dll": {}
@@ -277,8 +277,9 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "Spear.Core/0.2.1": {
+      "Spear.Core/0.2.3": {
         "dependencies": {
+          "Microsoft.CSharp": "4.7.0",
           "Microsoft.Extensions.Caching.Abstractions": "3.1.2",
           "Microsoft.Extensions.Configuration": "3.1.2",
           "Microsoft.Extensions.Configuration.Binder": "3.1.2",
@@ -289,7 +290,7 @@
           "Microsoft.Extensions.Logging.Abstractions": "3.1.2",
           "Newtonsoft.Json": "12.0.3",
           "Polly": "7.2.0",
-          "Spear.ProxyGenerator": "0.2.1",
+          "Spear.ProxyGenerator": "0.2.3",
           "System.Reflection.Emit": "4.7.0",
           "System.Runtime.Loader": "4.3.0"
         },
@@ -297,7 +298,7 @@
           "Spear.Core.dll": {}
         }
       },
-      "Spear.ProxyGenerator/0.2.1": {
+      "Spear.ProxyGenerator/0.2.3": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.2",
           "System.Reflection.Emit": "4.7.0",
@@ -310,7 +311,7 @@
     }
   },
   "libraries": {
-    "Spear.Protocol.WebSocket/0.2.1": {
+    "Spear.Protocol.WebSocket/0.2.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -437,14 +438,14 @@
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-CppN9SmqdIjG9XZzWtlaFGAN3cC/LMMzQYGmeTKC39ozYYfShEYXzbl8WhAM1dsyNpn0mniDH4wnxU2doCCBlw==",
+      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
       "path": "microsoft.netcore.platforms/1.1.0",
       "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
     },
     "Microsoft.NETCore.Targets/1.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-e6DATZcNORKWAnT7mlcqkTShYT4Hkb3AhINkNgWzDyPUge4m33c+ZwWBeuZA3sWw7+zKjYMv3GkjtFdlidufGw==",
+      "sha512": "sha512-aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg==",
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
     },
@@ -472,14 +473,14 @@
     "System.IO/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-AtgWOYdv1+Zi/mJ7efrKBIF4uV9+NcLvPnGQKasiP8+qZgdv2EarPlb7Wx2ldprVXJdUNP836BAwBI+8s7pIOA==",
+      "sha512": "sha512-3qjaHvxQPDpSOYICjUoTsmoq5u6QJAFRUITgeT/4gqkF1bajbSmb1kwSxEA8AHlofqgcKJcM8udgieRNhaJ5Cg==",
       "path": "system.io/4.3.0",
       "hashPath": "system.io.4.3.0.nupkg.sha512"
     },
     "System.Reflection/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-hyMq7d6riYPsTT/AObzxBkKVtHc71t3N59XjAI97b7z8bdeZWd/Vnr08F6erCPrRNDg2sclvbIYTY8w15UNWWg==",
+      "sha512": "sha512-KMiAFoW7MfJGa9nDFNcfu+FpEdiHpWgTcS2HdMpDvt9saK3y/G4GwprPyzqjFH9NTaGPQeWNHU+iDlDILj96aQ==",
       "path": "system.reflection/4.3.0",
       "hashPath": "system.reflection.4.3.0.nupkg.sha512"
     },
@@ -500,14 +501,14 @@
     "System.Reflection.Primitives/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-gsBi6Dt2Xpw4wkNvq6xb3gTTQaX5vYrzBbObAbp8nFIl9NIyTUlhuSwaf/PuAhl91YLjZkPYwM5UYLzNmJKxJg==",
+      "sha512": "sha512-5RXItQz5As4xN2/YUDxdpsEkMhvw3e6aNveFXUn4Hl/udNTCNhnKp8lT9fnc3MhvGKh1baak5CovpuQUXHAlIA==",
       "path": "system.reflection.primitives/4.3.0",
       "hashPath": "system.reflection.primitives.4.3.0.nupkg.sha512"
     },
     "System.Runtime/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-wvkK2lgE9Gxdb1FJCqIThTW1CV7z4Vu4Tze7i8prTdVy6YdCMSzgN0D8E85Ib+bczZwZg6eWvXQXx4cnf6ajrA==",
+      "sha512": "sha512-JufQi0vPQ0xGnAczR13AUFglDyVYt4Kqnz1AZaiKZ5+GICq0/1MH/mO/eAJHt/mHW1zjKBJd7kV26SrxddAhiw==",
       "path": "system.runtime/4.3.0",
       "hashPath": "system.runtime.4.3.0.nupkg.sha512"
     },
@@ -521,7 +522,7 @@
     "System.Text.Encoding/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-vYdohSIYMRmdz+57QQLTT5O6oyXSwK8bPcZ0WU1UazIGiI/FPeTiMzrQ1WdHdPGOv0QAG7xVWrlCaEMqOM9CkQ==",
+      "sha512": "sha512-BiIg+KWaSDOITze6jGQynxg64naAPtqGHBwDrLaCtixsa5bKiR8dpPOHA7ge3C0JJQizJE+sfkz1wV+BAKAYZw==",
       "path": "system.text.encoding/4.3.0",
       "hashPath": "system.text.encoding.4.3.0.nupkg.sha512"
     },
@@ -535,16 +536,16 @@
     "System.Threading.Tasks/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oTZ72RM/Xb0SSNonTsB0XiERfnc0hYqA1YayWzogiFhCWHt+aSCQHo6W0EoFRQyfFMNgH+S9hvG3Lqba+cbnsA==",
+      "sha512": "sha512-LbSxKEdOUhVe8BezB/9uOGGppt+nZf6e1VFyw6v3DN6lqitm0OSn2uXMOdtP0M3W4iMcqcivm2J6UgqiwwnXiA==",
       "path": "system.threading.tasks/4.3.0",
       "hashPath": "system.threading.tasks.4.3.0.nupkg.sha512"
     },
-    "Spear.Core/0.2.1": {
+    "Spear.Core/0.2.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Spear.ProxyGenerator/0.2.1": {
+    "Spear.ProxyGenerator/0.2.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

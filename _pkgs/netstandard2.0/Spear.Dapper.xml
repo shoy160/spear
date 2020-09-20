@@ -1,0 +1,843 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Dapper</name>
+    </assembly>
+    <members>
+        <member name="P:Spear.Dapper.Adapters.SqlServerAdapter.ProviderName">
+            <summary> 适配器名称 </summary>
+        </member>
+        <member name="P:Spear.Dapper.Adapters.SqlServerAdapter.ConnectionType">
+            <summary> 连接类型 </summary>
+        </member>
+        <member name="M:Spear.Dapper.Adapters.SqlServerAdapter.FormatSql(System.String)">
+            <summary> 格式化SQL </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Adapters.SqlServerAdapter.PageSql(System.String,System.String,System.String,System.String)">
+            <summary> 构造分页SQL </summary>
+            <param name="sql"></param>
+            <param name="columns"></param>
+            <param name="order"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Adapters.SqlServerAdapter.Create">
+            <summary> 创建数据库连接 </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Dapper.ConnectionFactory">
+            <summary> 数据库连接管理 </summary>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionFactory.ClearDict">
+            <summary> 清理失效的线程级缓存 </summary>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionFactory.GetConnection(Spear.Core.Data.Config.ConnectionConfig,System.Boolean)">
+            <summary> 创建数据库连接 </summary>
+            <param name="config"></param>
+            <param name="fromCache"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionFactory.Connection(System.String,System.Boolean)">
+            <summary> 获取数据库连接 </summary>
+            <param name="connectionName">连接名称</param>
+            <param name="fromCache">是否启用线程缓存</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionFactory.Connection(System.Enum,System.Boolean)">
+            <summary> 获取数据库连接 </summary>
+            <param name="connectionName">连接名称</param>
+            <param name="fromCache">是否启用线程缓存</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionFactory.Connection(System.String,System.String,System.Boolean)">
+            <summary> 获取数据库连接 </summary>
+            <param name="connectionString"></param>
+            <param name="provider"></param>
+            <param name="fromCache"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Dapper.ConnectionFactory.Count">
+            <summary> 缓存总数/// </summary>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionFactory.ToString">
+            <summary> 连接缓存信息 </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Dapper.ConnectionStruct">
+            <summary> 连接管理类 </summary>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionStruct.#ctor(System.Data.IDbConnection,System.Nullable{System.DateTime},System.Nullable{System.TimeSpan})">
+            <summary> 构造函数 </summary>
+            <param name="connection">数据库连接</param>
+            <param name="createTime">创建时间</param>
+            <param name="aliveTime">存活时间</param>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionStruct.GetConnection">
+            <summary> 获取连接 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionStruct.IsAlive">
+            <summary> 是否存活 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.ConnectionStruct.ToString">
+            <summary> 连接信息 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.ContainBuilderExtension.Select(System.Type,System.String,System.String,System.String[],System.String[],System.String)">
+            <summary> select语句构建 </summary>
+            <param name="type"></param>
+            <param name="where">where</param>
+            <param name="orderby">order by</param>
+            <param name="excepts">排除字段</param>
+            <param name="includes">包含字段</param>
+            <param name="tableAlias">表别名</param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Dapper.DapperExtension">
+            <summary> Dapper自定义扩展 </summary>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.QueryAllAsync``1(System.Data.IDbConnection)">
+            <summary> 查询所有数据 </summary>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.QueryByIdAsync``1(System.Data.IDbConnection,System.Object,System.String)">
+            <summary> 根据主键查询单条 </summary>
+            <param name="conn"></param>
+            <param name="key"></param>
+            <param name="keyColumn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.PagedListAsync``1(System.Data.IDbConnection,System.String,System.Int32,System.Int32,System.Object,System.Boolean,System.String)">
+            <summary> 分页异步 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="sql"></param>
+            <param name="page"></param>
+            <param name="size"></param>
+            <param name="param"></param>
+            <param name="formatSql"></param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.InsertAsync``1(System.Data.IDbConnection,``0,System.String[],System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 插入单条数据,不支持有自增列 </summary>
+            <param name="conn"></param>
+            <param name="model"></param>
+            <param name="excepts">过滤项(如：自增ID)</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.InsertAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.String[],System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 批量插入 </summary>
+            <param name="conn"></param>
+            <param name="models"></param>
+            <param name="excepts"></param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.BatchInsertAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.String[],System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 批量新增 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="models"></param>
+            <param name="excepts"></param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.UpdateAsync``1(System.Data.IDbConnection,``0,System.String[],System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 更新数据 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="entityToUpdate">待更新实体</param>
+            <param name="updateProps">更新属性</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.UpdateAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.String[],System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 批量更新数据 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="entityToUpdate">待更新实体</param>
+            <param name="updateProps">更新属性</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.UpdateAsync``1(System.Data.IDbConnection,``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 更新数据 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="entityToUpdate">待更新实体</param>
+            <param name="fieldsExpression">更新属性</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.UpdateAsync``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 更新数据 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="entityToUpdate">待更新实体</param>
+            <param name="fieldsExpression">更新属性</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.DeleteAsync``1(System.Data.IDbConnection,System.Object,System.String,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 删除数据 </summary>
+            <param name="conn">连接</param>
+            <param name="value">列值</param>
+            <param name="keyColumn">列名</param>
+            <param name="trans">事务</param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.DeleteWhereAsync``1(System.Data.IDbConnection,System.String,System.Object,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 删除 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.CountAsync``1(System.Data.IDbConnection,System.String,System.Object)">
+            <summary> 统计数量 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.CountWhereAsync``1(System.Data.IDbConnection,System.String,System.Object)">
+            <summary> 统计数量 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.ExistsAsync``1(System.Data.IDbConnection,System.String,System.Object)">
+            <summary> 是否存在 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.ExistsWhereAsync``1(System.Data.IDbConnection,System.String,System.Object)">
+            <summary> 是否存在 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.MinAsync``1(System.Data.IDbConnection,System.String,System.String,System.Object)">
+            <summary> 最小 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.MaxAsync``1(System.Data.IDbConnection,System.String,System.String,System.Object)">
+            <summary> 最大 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.IncrementAsync``1(System.Data.IDbConnection,System.String,System.Object,System.String,System.Int32,System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 自增数据 </summary>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="key"></param>
+            <param name="keyColumn"></param>
+            <param name="count"></param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.TypeProperties(System.Type)">
+            <summary> 字段列表 </summary>
+            <param name="modelType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Columns(System.Type,System.String[],System.String[],System.String)">
+            <summary> 获取所有列名(as) </summary>
+            <param name="modelType"></param>
+            <param name="excepts">排除的字段</param>
+            <param name="includes">包含的字段</param>
+            <param name="tableAlias"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.InsertSql(System.Type,System.String[])">
+            <summary> 生成insert语句 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.SetPropValue(System.Object,System.String,System.Object)">
+            <summary> 设置对象属性 </summary>
+            <param name="model"></param>
+            <param name="propName"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.PropValue``1(System.Object,System.String)">
+            <summary> 获取对象属性 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="model"></param>
+            <param name="propName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.PropValue(System.Object,System.String)">
+            <summary> 获取对象属性 </summary>
+            <param name="model"></param>
+            <param name="propName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.QueryAll``1(System.Data.IDbConnection)">
+            <summary> 查询所有数据 </summary>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.QueryById``1(System.Data.IDbConnection,System.Object,System.String)">
+            <summary> 根据主键查询单条 </summary>
+            <param name="conn"></param>
+            <param name="key"></param>
+            <param name="keyColumn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.PagedList``1(System.Data.IDbConnection,System.String,System.Int32,System.Int32,System.Object)">
+            <summary> 分页 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="sql"></param>
+            <param name="page"></param>
+            <param name="size"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Insert``1(System.Data.IDbConnection,``0,System.String[],System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 插入单条数据,不支持有自增列 </summary>
+            <param name="conn"></param>
+            <param name="model"></param>
+            <param name="excepts">过滤项(如：自增ID)</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Insert``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.String[],System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 批量插入 </summary>
+            <param name="conn"></param>
+            <param name="models"></param>
+            <param name="excepts"></param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Update``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.String[],System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 批量更新数据 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="entityToUpdates">待更新实体</param>
+            <param name="updateProps">更新属性</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Update``1(System.Data.IDbConnection,System.Collections.Generic.IEnumerable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 更新数据 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="entityToUpdates">待更新实体</param>
+            <param name="updateProps">更新属性</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Update``1(System.Data.IDbConnection,``0,System.String[],System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 更新数据 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="entityToUpdate">待更新实体</param>
+            <param name="updateProps">更新属性</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Update``1(System.Data.IDbConnection,``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},System.Data.IDbTransaction,System.Nullable{System.Int32})">
+            <summary> 更新数据 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="entityToUpdate">待更新实体</param>
+            <param name="updateProps">更新属性</param>
+            <param name="trans"></param>
+            <param name="commandTimeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Delete``1(System.Data.IDbConnection,System.Object,System.String,System.Data.IDbTransaction)">
+            <summary> 删除数据 </summary>
+            <param name="conn">连接</param>
+            <param name="value">列值</param>
+            <param name="keyColumn">列名</param>
+            <param name="trans">事务</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.DeleteWhere``1(System.Data.IDbConnection,System.String,System.Object,System.Data.IDbTransaction)">
+            <summary> 删除 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <param name="trans"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Count``1(System.Data.IDbConnection,System.String,System.Object)">
+            <summary> 统计总数 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.CountWhere``1(System.Data.IDbConnection,System.String,System.Object)">
+            <summary> 统计总数 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Exists``1(System.Data.IDbConnection,System.String,System.Object)">
+            <summary> 是否存在 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.ExistsWhere``1(System.Data.IDbConnection,System.String,System.Object)">
+            <summary> 是否存在 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Min``1(System.Data.IDbConnection,System.String,System.String,System.Object)">
+            <summary> 最小 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Max``1(System.Data.IDbConnection,System.String,System.String,System.Object)">
+            <summary> 最大 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="where"></param>
+            <param name="param"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Increment``1(System.Data.IDbConnection,System.String,System.Object,System.String,System.Int32,System.Data.IDbTransaction)">
+            <summary> 自增数据 </summary>
+            <param name="conn"></param>
+            <param name="column"></param>
+            <param name="key"></param>
+            <param name="keyColumn"></param>
+            <param name="count"></param>
+            <param name="trans"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.ToDataTable``1(System.Collections.Generic.IEnumerable{``0},System.Func{System.String,System.String},System.String,System.String[],System.Boolean)">
+            <summary> 转换DataTable </summary>
+            <typeparam name="T"></typeparam>
+            <param name="data">数据列表</param>
+            <param name="formatHeader">表头信息</param>
+            <param name="tableName">表名</param>
+            <param name="excepts">排除字段</param>
+            <param name="exceptNoHeader">排除没有声明header的属性，默认True</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DapperExtension.Repository``1(Spear.Core.Domain.DService)">
+            <summary> 获取仓储对象 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="service"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Dapper.KeyAttribute">
+            <summary> 主键属性 </summary>
+        </member>
+        <member name="T:Spear.Dapper.DefaultDbConnectionProvider">
+            <summary> 数据库连接管理 </summary>
+        </member>
+        <member name="M:Spear.Dapper.DefaultDbConnectionProvider.Connection(System.String)">
+            <summary> 获取数据库连接 </summary>
+            <param name="connectionName">连接名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.DefaultDbConnectionProvider.Connection(System.Enum)">
+            <summary> 获取数据库连接 </summary>
+            <param name="connectionName">连接名称</param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Dapper.Domain.DapperRepository`1">
+            <summary> 基础仓储 </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.QueryAsync">
+            <summary> 查询所有数据 </summary>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.QueryByIdAsync(System.Object,System.String)">
+            <summary> 根据主键查询单条 </summary>
+            <param name="key"></param>
+            <param name="keyColumn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.InsertAsync(`0,System.String[])">
+            <summary> 插入单条数据,不支持有自增列 </summary>
+            <param name="model"></param>
+            <param name="excepts">过滤项(如：自增ID)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.InsertAsync(System.Collections.Generic.IEnumerable{`0},System.String[])">
+            <summary> 批量插入 </summary>
+            <param name="models"></param>
+            <param name="excepts"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.UpdateAsync(`0,System.String[])">
+            <summary> 更新数据 </summary>
+            <param name="model"></param>
+            <param name="props"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.UpdateAsync(`0,System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary> 更新数据 </summary>
+            <param name="model"></param>
+            <param name="propExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.UpdateAsync(System.Collections.Generic.IEnumerable{`0},System.String[])">
+            <summary> 批量更新数据 </summary>
+            <param name="models"></param>
+            <param name="props"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.UpdateAsync(System.Collections.Generic.IEnumerable{`0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary> 批量更新数据 </summary>
+            <param name="models"></param>
+            <param name="propExpression"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.DeleteAsync(System.Object,System.String)">
+            <summary> 删除 </summary>
+            <param name="key"></param>
+            <param name="keyColumn"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Dapper.Domain.DapperRepository`1.ModelType">
+            <summary> 仓储数据库实体类型 </summary>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.#ctor">
+            <summary> 构造函数 </summary>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.#ctor(Spear.Core.Domain.IUnitOfWork)">
+            <summary> 构造 </summary>
+            <param name="unitOfWork"></param>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.Select(System.String,System.String,System.String[],System.String[],System.String)">
+            <summary> 当前SELECT语句构建 </summary>
+            <param name="where">where</param>
+            <param name="orderby">order by</param>
+            <param name="excepts">排除字段</param>
+            <param name="includes">包含字段</param>
+            <param name="tableAlias">表别名</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.Query">
+            <summary> 查询所有数据 </summary>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.QueryById(System.Object,System.String)">
+            <summary> 根据主键查询单条 </summary>
+            <param name="key"></param>
+            <param name="keyColumn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.Insert(`0,System.String[])">
+            <summary> 插入单条数据,不支持有自增列 </summary>
+            <param name="model"></param>
+            <param name="excepts">过滤项(如：自增ID)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.Insert(System.Collections.Generic.IEnumerable{`0},System.String[])">
+            <summary> 批量插入 </summary>
+            <param name="models"></param>
+            <param name="excepts"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.Update(`0,System.String[])">
+            <summary> 更新 </summary>
+            <param name="model"></param>
+            <param name="props"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.Update(`0,System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary> 更新 </summary>
+            <param name="model"></param>
+            <param name="props"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.Update(System.Collections.Generic.IEnumerable{`0},System.String[])">
+            <summary> 批量更新 </summary>
+            <param name="model"></param>
+            <param name="props"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.Update(System.Collections.Generic.IEnumerable{`0},System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary> 批量更新 </summary>
+            <param name="model"></param>
+            <param name="props"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DapperRepository`1.Delete(System.Object,System.String)">
+            <summary> 删除 </summary>
+            <param name="key"></param>
+            <param name="keyColumn"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.Dapper.Domain.DRepository.UnitOfWork">
+            <summary> 数据库连接提供者 </summary>
+        </member>
+        <member name="P:Spear.Dapper.Domain.DRepository.Connection">
+            <summary> 获取默认连接 </summary>
+        </member>
+        <member name="P:Spear.Dapper.Domain.DRepository.Trans">
+            <summary> 当前事务 </summary>
+        </member>
+        <member name="P:Spear.Dapper.Domain.DRepository.TransConnection">
+            <summary> 开启事务的连接或者当前连接 </summary>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.Instance``1">
+            <summary> 建议使用Ioc注入的方式 </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.GetConnection(System.Enum)">
+            <summary> 获取数据库连接 </summary>
+            <param name="connectionName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.GetConnection(System.String)">
+            <summary> 获取数据库连接 </summary>
+            <param name="connectionName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.Transaction``1(System.Func{``0},System.Nullable{System.Data.IsolationLevel})">
+            <summary> 执行事务(当前连接) </summary>
+            <typeparam name="TResult"></typeparam>
+            <param name="action"></param>
+            <param name="level"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.Transaction(System.Func{System.Threading.Tasks.Task},System.Nullable{System.Data.IsolationLevel})">
+            <summary> 执行事务(当前连接) </summary>
+            <param name="action"></param>
+            <param name="level"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.Transaction``1(System.Func{System.Threading.Tasks.Task{``0}},System.Nullable{System.Data.IsolationLevel})">
+            <summary> 执行事务(当前连接) </summary>
+            <typeparam name="TResult"></typeparam>
+            <param name="action"></param>
+            <param name="level"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.Transaction(System.Action,System.Nullable{System.Data.IsolationLevel})">
+            <summary> 执行事务(当前连接) </summary>
+            <param name="action"></param>
+            <param name="level"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.Transaction``1(System.Func{System.Data.IDbConnection,System.Data.IDbTransaction,``0},System.String,System.Nullable{System.Data.IsolationLevel})">
+            <summary> 执行事务(新开连接) </summary>
+            <typeparam name="TResult"></typeparam>
+            <param name="action"></param>
+            <param name="level"></param>
+            <param name="connectionName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.Transaction(System.Action{System.Data.IDbConnection,System.Data.IDbTransaction},System.String,System.Nullable{System.Data.IsolationLevel})">
+            <summary> 执行事务(新开连接) </summary>
+            <param name="action"></param>
+            <param name="level"></param>
+            <param name="connectionName"></param>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.Increment``1(System.String,System.Object,System.String,System.Int32)">
+            <summary> 更新数量 </summary>
+            <param name="column"></param>
+            <param name="key"></param>
+            <param name="keyColumn"></param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.Domain.DRepository.Select``1(System.String,System.String,System.String[],System.String[],System.String)">
+            <summary> SELECT语句构建 </summary>
+            <param name="where">where</param>
+            <param name="orderby">order by</param>
+            <param name="excepts">排除字段</param>
+            <param name="includes">包含字段</param>
+            <param name="tableAlias">表别名</param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Dapper.SQL">
+            <summary> sql语句辅助 目前只支持Sql Server</summary>
+        </member>
+        <member name="M:Spear.Dapper.SQL.#ctor(System.String)">
+            <summary> 实例化 </summary>
+            <param name="sql"></param>
+        </member>
+        <member name="M:Spear.Dapper.SQL.Add(System.String)">
+            <summary> 追加sql </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.op_Addition(System.String,Spear.Dapper.SQL)">
+            <summary> 追加sql </summary>
+            <param name="subSql"></param>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.op_Addition(Spear.Dapper.SQL,System.String)">
+            <summary> 追加sql </summary>
+            <param name="sql"></param>
+            <param name="subSql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.op_Implicit(System.String)~Spear.Dapper.SQL">
+            <summary> 实例化sql </summary>
+            <param name="sql"></param>
+        </member>
+        <member name="P:Spear.Dapper.SQL.Item(System.String,System.Object)">
+            <summary> 添加参数 </summary>
+            <param name="name"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.IsChange">
+            <summary> 是否是更新操作 </summary>
+        </member>
+        <member name="M:Spear.Dapper.SQL.IsInsert">
+            <summary> 是否新增操作 </summary>
+        </member>
+        <member name="M:Spear.Dapper.SQL.IsSelect">
+            <summary> 是否是查询操作 </summary>
+        </member>
+        <member name="M:Spear.Dapper.SQL.Columns(System.String)">
+            <summary> 获取查询列 </summary>
+        </member>
+        <member name="M:Spear.Dapper.SQL.NoAliasColums(System.String)">
+            <summary> 查询最终的列名 </summary>
+            <param name="columns"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.Paged(System.Int32,System.Int32,System.Data.IDbConnection,System.Boolean,System.String)">
+            <summary> 构造分页语句 </summary>
+            <param name="page"></param>
+            <param name="size"></param>
+            <param name="conn"></param>
+            <param name="formatSql">格式化SQL</param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.Identity(System.Data.DbType)">
+            <summary> 自增主键 </summary>
+        </member>
+        <member name="M:Spear.Dapper.SQL.InsertIdentity``1(System.Data.IDbConnection,System.Object,System.Data.IDbTransaction)">
+            <summary> 插入自增主键数据 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="conn"></param>
+            <param name="param"></param>
+            <param name="transaction"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.PagedList``1(System.Data.IDbConnection,System.Int32,System.Int32,System.Object,System.Boolean)">
+            <summary> 分页列表 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="page"></param>
+            <param name="size"></param>
+            <param name="conn"></param>
+            <param name="param"></param>
+            <param name="formatSql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.PagedListAsync``1(System.Data.IDbConnection,System.Int32,System.Int32,System.Object,System.Boolean,System.String)">
+            <summary> 分页列表 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="page"></param>
+            <param name="size"></param>
+            <param name="conn"></param>
+            <param name="param"></param>
+            <param name="formatSql">格式化SQL</param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.Parameters">
+            <summary> 获取动态参数 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.SQL.ToString">
+            <summary> 返回sql语句 </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Dapper.SqlBuilder">
+            <summary> sql构造器 </summary>
+        </member>
+        <member name="P:Spear.Dapper.UnitOfWork.Id">
+            <inheritdoc />
+        </member>
+        <member name="P:Spear.Dapper.UnitOfWork.Connection">
+            <summary> 当前数据库连接 </summary>
+        </member>
+        <member name="P:Spear.Dapper.UnitOfWork.Transaction">
+            <summary> 当前事务 </summary>
+        </member>
+        <member name="P:Spear.Dapper.UnitOfWork.TransConnection">
+            <summary> 开启事务的连接或者当前连接 </summary>
+        </member>
+        <member name="P:Spear.Dapper.UnitOfWork.IsTransaction">
+            <summary> 是否开启事务 </summary>
+        </member>
+        <member name="M:Spear.Dapper.UnitOfWork.Begin(System.Nullable{System.Data.IsolationLevel})">
+            <summary> 开始事务 </summary>
+            <param name="level"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.UnitOfWork.CreateConnection">
+            <summary> 创建连接 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.UnitOfWork.Commit">
+            <summary> 提交事务 </summary>
+        </member>
+        <member name="M:Spear.Dapper.UnitOfWork.Rollback">
+            <summary> 回滚事务 </summary>
+        </member>
+        <member name="M:Spear.Dapper.UnitOfWork.TransDispose">
+            <summary> 释放事务 </summary>
+        </member>
+        <member name="M:Spear.Dapper.UnitOfWork.Dispose">
+            <summary> 资源释放 </summary>
+        </member>
+    </members>
+</doc>

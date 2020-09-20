@@ -2,20 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Company>成都爱车保信息技术有限公司</Company>
-    <Authors>icb@shay</Authors>
-    <Product>爱车保 - Dapper基础类</Product>
-    <Description>爱车保 - Dapper基础类</Description>
-    <Version>1.9.0</Version>
-    <PackageProjectUrl>https://github.com/i-cbao/Spear.Framework</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/i-cbao/Spear.Framework.git</RepositoryUrl>
+    <Product>Spear - Dapper</Product>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Title>爱车保 - Dapper基础类</Title>
-    <Owners>成都爱车保信息技术有限公司</Owners>
-    <Copyright>爱车保 © 2018-2020</Copyright>
-    <PackageReleaseNotes>1.添加基础Repository通用方法；</PackageReleaseNotes>
-    <AssemblyName>Spear.Dapper</AssemblyName>
-    <RootNamespace>Spear.Dapper</RootNamespace>
+    <PackageProjectUrl>https://github.com/shoy160/spear</PackageProjectUrl>
+    <Authors>shoy</Authors>
+    <Company>shoy</Company>
+    <RepositoryUrl>https://github.com/shoy160/spear.git</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <Version>0.2.3</Version>
+    <Description>Spear Dapper</Description>
+    <PackageReleaseNotes></PackageReleaseNotes>
+
+    <PackageLicenseUrl>https://github.com/shoy160/spear/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>shoy</Copyright>
+    <PackageIconUrl>https://nuget.cdn.azure.cn/v3-flatcontainer/spear.core/0.2.2/icon</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

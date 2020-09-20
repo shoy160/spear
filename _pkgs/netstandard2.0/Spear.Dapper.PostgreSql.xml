@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Dapper.PostgreSql</name>
+    </assembly>
+    <members>
+        <member name="P:Spear.Dapper.PostgreSql.PostgreSqlAdapter.ProviderName">
+            <summary> 适配器名称 </summary>
+        </member>
+        <member name="P:Spear.Dapper.PostgreSql.PostgreSqlAdapter.ConnectionType">
+            <summary> 连接类型 </summary>
+        </member>
+        <member name="M:Spear.Dapper.PostgreSql.PostgreSqlAdapter.FormatSql(System.String)">
+            <summary> SQL格式化 </summary>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.PostgreSql.PostgreSqlAdapter.PageSql(System.String,System.String,System.String,System.String)">
+            <summary> 构建分页SQL </summary>
+            <param name="sql"></param>
+            <param name="columns"></param>
+            <param name="order"></param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Dapper.PostgreSql.PostgreSqlAdapter.Create">
+            <summary> 创建数据库连接 </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -10,7 +9,7 @@ namespace Spear.Core.Micro.Services
     public class DefaultServiceRouter : DServiceFinder, IServiceRegister
     {
         private readonly Dictionary<string, List<ServiceAddress>> serviceCenter;
-        public DefaultServiceRouter(ILogger logger)
+        public DefaultServiceRouter(ILogger<DefaultServiceRouter> logger)
             : base(null, logger)
         {
             serviceCenter = new Dictionary<string, List<ServiceAddress>>();

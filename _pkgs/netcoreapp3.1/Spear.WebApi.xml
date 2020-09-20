@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.WebApi</name>
+    </assembly>
+    <members>
+        <member name="T:Spear.WebApi.Activators.PropertyControllerActivator">
+            <summary> 属性控制器 </summary>
+        </member>
+        <member name="M:Spear.WebApi.Activators.PropertyControllerActivator.Create(Microsoft.AspNetCore.Mvc.ControllerContext)">
+            <summary> 创建Controller </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.WebApi.DAuthorController`1">
+            <inheritdoc />
+            <summary> 基础身份验证 </summary>
+            <typeparam name="TTicket"></typeparam>
+        </member>
+        <member name="P:Spear.WebApi.DAuthorController`1.Client">
+            <summary> 当前用户 </summary>
+        </member>
+        <member name="T:Spear.WebApi.IClientTicket">
+            <summary> 客户端令牌接口 </summary>
+        </member>
+        <member name="P:Spear.WebApi.IClientTicket.UserId">
+            <summary> 用户Id </summary>
+        </member>
+        <member name="P:Spear.WebApi.IClientTicket.TenantId">
+            <summary> 租户Id </summary>
+        </member>
+        <member name="P:Spear.WebApi.IClientTicket.Name">
+            <summary> 用户名称 </summary>
+        </member>
+        <member name="P:Spear.WebApi.IClientTicket.Role">
+            <summary> 用户角色 </summary>
+        </member>
+        <member name="P:Spear.WebApi.IClientTicket.Ticket">
+            <summary> 令牌 </summary>
+        </member>
+        <member name="P:Spear.WebApi.IClientTicket.ExpiredTime">
+            <summary> 过期时间 </summary>
+        </member>
+        <member name="P:Spear.WebApi.IClientTicket.Timestamp">
+            <summary> 时间戳 </summary>
+        </member>
+        <member name="P:Spear.WebApi.ClientTicket.ExpiredTime">
+            <inheritdoc />
+            <summary> 过期时间 </summary>
+        </member>
+        <member name="P:Spear.WebApi.ClientTicket.Timestamp">
+            <inheritdoc />
+            <summary> 时间戳 </summary>
+        </member>
+        <member name="M:Spear.WebApi.ClientTicket.GenerateTicket">
+            <summary> 生成令牌 </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.WebApi.DClientTicket`1">
+            <inheritdoc />
+            <summary> 默认客户端令牌 </summary>
+        </member>
+        <member name="P:Spear.WebApi.DClientTicket`1.Id">
+            <summary> 用户ID </summary>
+        </member>
+        <member name="T:Spear.WebApi.DClientTicket">
+            <inheritdoc />
+            <summary>
+            默认客户端令牌
+            </summary>
+        </member>
+        <member name="T:Spear.WebApi.ClientTicketHelper">
+            <summary> 客户端密钥辅助类 </summary>
+        </member>
+        <member name="M:Spear.WebApi.ClientTicketHelper.Ticket(Spear.WebApi.ClientTicket)">
+            <summary> 获取凭证 </summary>
+            <param name="ticket"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.ClientTicketHelper.SetSession(Spear.WebApi.IClientTicket)">
+            <summary> 设置Session </summary>
+            <param name="client"></param>
+        </member>
+        <member name="M:Spear.WebApi.ClientTicketHelper.Client``1(System.String)">
+            <summary> 获取凭证信息(设置session) </summary>
+            <param name="ticket"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.ClientTicketHelper.VerifyTicket``1(Microsoft.AspNetCore.Http.HttpRequest,System.String)">
+            <summary> 验证令牌 </summary>
+            <param name="request"></param>
+            <param name="scheme"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.ClientTicketHelper.VerifyTicket``1(System.Net.Http.Headers.AuthenticationHeaderValue,System.String)">
+            <summary> 验证令牌 </summary>
+            <param name="authorize"></param>
+            <param name="scheme"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.WebApi.DController">
+            <summary> 控制器基类 </summary>
+        </member>
+        <member name="P:Spear.WebApi.DController.Current">
+            <summary> 当前请求上下文 </summary>
+        </member>
+        <member name="M:Spear.WebApi.DController.Resolve``1">
+            <summary> 获取IOC注入 </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.DController.AuthorizeValidate(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary> 身份验证 </summary>
+            <param name="context"></param>
+        </member>
+        <member name="P:Spear.WebApi.DController.Success">
+            <summary> 成功 </summary>
+        </member>
+        <member name="M:Spear.WebApi.DController.Error(System.String,System.Int32)">
+            <summary> 失败 </summary>
+            <param name="message"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.DController.Succ``1(``0)">
+            <summary> 成功 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.DController.Error``1(System.String,System.Int32)">
+            <summary> 失败 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="message"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.DController.Succ``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary> 成功 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="count"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.DController.Errors``1(System.String,System.Int32)">
+            <summary> 失败 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="message"></param>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="E:Spear.WebApi.DHost`1.Builder">
+            <summary> 宿主机构建器 </summary>
+        </member>
+        <member name="E:Spear.WebApi.DHost`1.ConfigBuilder">
+            <summary> 配置构建 </summary>
+        </member>
+        <member name="M:Spear.WebApi.DHost`1.Start(System.String[])">
+            <summary> 开启服务 </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Spear.WebApi.DHost`1.UseKestrel(Microsoft.Extensions.Hosting.IHostBuilder,System.Action{Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServerOptions})">
+            <summary> 使用Kestrel作为宿主服务 </summary>
+            <param name="builder"></param>
+            <param name="optionAction"></param>
+        </member>
+        <member name="M:Spear.WebApi.DHost`1.UseIIS(Microsoft.Extensions.Hosting.IHostBuilder)">
+            <summary> 使用IIS作为宿主服务 </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="F:Spear.WebApi.DStartup.Bootstrap">
+            <summary> 启动类 </summary>
+        </member>
+        <member name="M:Spear.WebApi.DStartup.#ctor(System.String,Spear.WebApi.DStartup.DocumentType)">
+            <summary> 构造函数 </summary>
+            <param name="name">默认文档名称</param>
+            <param name="docType">API文档类型</param>
+        </member>
+        <member name="M:Spear.WebApi.DStartup.DocGroups">
+            <summary> 接口分组 </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.WebApi.Filters.AppTicketAttribute">
+            <inheritdoc />
+            <summary> 内部基础验证 </summary>
+        </member>
+        <member name="T:Spear.WebApi.Filters.DAuthorizeAttribute">
+            <inheritdoc />
+            <summary> 默认身份认证过滤器 </summary>
+        </member>
+        <member name="M:Spear.WebApi.Filters.DAuthorizeAttribute.BaseValidate(Spear.WebApi.IClientTicket)">
+            <summary> 验证令牌 </summary>
+            <param name="ticket"></param>
+        </member>
+        <member name="T:Spear.WebApi.Filters.DExceptionFilter">
+            <inheritdoc />
+            <summary> 默认的异常处理 </summary>
+        </member>
+        <member name="F:Spear.WebApi.Filters.DExceptionFilter.ResultFilter">
+            <summary> 业务消息过滤 </summary>
+        </member>
+        <member name="M:Spear.WebApi.Filters.DExceptionFilter.OnExceptionAsync(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)">
+            <inheritdoc />
+            <summary> 异常处理 </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:Spear.WebApi.Filters.ValidateModelAttribute">
+            <summary> 模型验证过滤器 </summary>
+        </member>
+        <member name="M:Spear.WebApi.Filters.ValidateModelAttribute.#ctor(System.Boolean)">
+            <summary> 构造函数 </summary>
+            <param name="validation"></param>
+        </member>
+        <member name="M:Spear.WebApi.Filters.ValidateModelAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)">
+            <summary> 请求执行时验证模型 </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:Spear.WebApi.HttpContextWrap">
+            <summary> 请求上下文包装 </summary>
+        </member>
+        <member name="F:Spear.WebApi.HttpContextWrap.Current">
+            <summary> 当前上下文 </summary>
+        </member>
+        <member name="M:Spear.WebApi.HttpContextWrap.#ctor(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary> 当前上下文 </summary>
+            <param name="current"></param>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.RemoteIpAddress">
+            <summary> 客户端IP </summary>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.LocalIpAddress">
+            <summary> 本地IP </summary>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.RequestType">
+            <summary> 请求类型 </summary>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.Form">
+            <summary> 表单 </summary>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.Body">
+            <summary> 请求体 </summary>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.UserAgent">
+            <summary> 用户代理 </summary>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.Referer">
+            <summary> 来源 </summary>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.ContentType">
+            <summary> 内容类型 </summary>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.QueryString">
+            <summary> 参数 </summary>
+        </member>
+        <member name="M:Spear.WebApi.HttpContextWrap.GetRawUrl(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary> 获取原始Url </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.RawUrl">
+            <summary> 原始地址 </summary>
+        </member>
+        <member name="P:Spear.WebApi.HttpContextWrap.ClientIp">
+            <summary> 获取客户端IP </summary>
+        </member>
+        <member name="M:Spear.WebApi.HttpContextWrap.FromForm(Microsoft.AspNetCore.Http.IFormCollection)">
+            <summary> 字典化对象 </summary>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.HttpContextWrap.FromBody``1">
+            <summary> 请求体 </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.ServiceCollectionExtensions.AddPropertyIoc(Microsoft.Extensions.DependencyInjection.IMvcBuilder)">
+            <summary> 添加属性注入 </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.ServiceCollectionExtensions.MapEnums(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder,System.String,System.Func{System.Type,System.Boolean},System.Int32)">
+            <summary> 枚举路由 </summary>
+            <param name="builder"></param>
+            <param name="route">路由地址</param>
+            <param name="filter"></param>
+            <param name="duration">seconds</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.WebApi.ServiceCollectionExtensions.Replace``1(System.Collections.Generic.IList{Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinderProvider},Microsoft.AspNetCore.Mvc.ModelBinding.IModelBinderProvider,System.Boolean)">
+            <summary> 替换 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="providers"></param>
+            <param name="target"></param>
+            <param name="exist">必须存在</param>
+        </member>
+        <member name="T:Spear.WebApi.Validations.EmailAttribute">
+            <summary> 邮箱验证 </summary>
+        </member>
+        <member name="T:Spear.WebApi.Validations.GuidAttribute">
+            <summary> Guid验证 </summary>
+        </member>
+        <member name="P:Spear.WebApi.ViewModels.VPageAndTimeInput.Page">
+            <inheritdoc />
+            <summary> 当前页码 </summary>
+        </member>
+        <member name="P:Spear.WebApi.ViewModels.VPageAndTimeInput.Size">
+            <inheritdoc />
+            <summary> 每页数量 </summary>
+        </member>
+        <member name="P:Spear.WebApi.ViewModels.VPageInput.Page">
+            <inheritdoc />
+            <summary> 当前页码 </summary>
+        </member>
+        <member name="P:Spear.WebApi.ViewModels.VPageInput.Size">
+            <inheritdoc />
+            <summary> 每页数量 </summary>
+        </member>
+        <member name="T:Spear.WebApi.ViewModels.VSignature">
+            <inheritdoc />
+            <summary> 参数签名基类 </summary>
+        </member>
+        <member name="P:Spear.WebApi.ViewModels.VSignature.Sign">
+            <summary> 签名 </summary>
+        </member>
+        <member name="M:Spear.WebApi.ViewModels.VSignature.Validate(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+            <summary> 参数验证 </summary>
+            <param name="validationContext"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Spear.WebApi.ViewModels.VTimeInput.Begin">
+            <inheritdoc />
+            <summary> 开始时间（大于等于） </summary>   
+        </member>
+        <member name="P:Spear.WebApi.ViewModels.VTimeInput.End">
+            <inheritdoc />
+            <summary> 截止时间（小于） </summary>
+        </member>
+    </members>
+</doc>
