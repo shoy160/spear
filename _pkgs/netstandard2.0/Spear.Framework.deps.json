@@ -7,14 +7,14 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Spear.Framework/0.2.3": {
+      "Spear.Framework/0.2.5": {
         "dependencies": {
           "Autofac": "4.9.4",
           "Autofac.Extensions.DependencyInjection": "5.0.1",
           "Microsoft.Extensions.DependencyInjection": "3.1.8",
           "Microsoft.Extensions.Logging.Console": "3.1.8",
           "NETStandard.Library": "2.0.3",
-          "Spear.Core": "0.2.3"
+          "Spear.Core": "0.2.5"
         },
         "runtime": {
           "Spear.Framework.dll": {}
@@ -472,7 +472,7 @@
           }
         }
       },
-      "Spear.Core/0.2.3": {
+      "Spear.Core/0.2.5": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
           "Microsoft.Extensions.Caching.Abstractions": "3.1.2",
@@ -485,7 +485,7 @@
           "Microsoft.Extensions.Logging.Abstractions": "3.1.8",
           "Newtonsoft.Json": "12.0.3",
           "Polly": "7.2.0",
-          "Spear.ProxyGenerator": "0.2.3",
+          "Spear.ProxyGenerator": "0.2.5",
           "System.Reflection.Emit": "4.7.0",
           "System.Runtime.Loader": "4.3.0"
         },
@@ -493,7 +493,7 @@
           "Spear.Core.dll": {}
         }
       },
-      "Spear.ProxyGenerator/0.2.3": {
+      "Spear.ProxyGenerator/0.2.5": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.8",
           "System.Reflection.Emit": "4.7.0",
@@ -506,7 +506,7 @@
     }
   },
   "libraries": {
-    "Spear.Framework/0.2.3": {
+    "Spear.Framework/0.2.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -833,12 +833,12 @@
       "path": "system.threading.tasks.extensions/4.5.4",
       "hashPath": "system.threading.tasks.extensions.4.5.4.nupkg.sha512"
     },
-    "Spear.Core/0.2.3": {
+    "Spear.Core/0.2.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Spear.ProxyGenerator/0.2.3": {
+    "Spear.ProxyGenerator/0.2.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

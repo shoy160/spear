@@ -81,7 +81,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Framework", "src\Spea
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.WebApi", "src\Spear.WebApi\Spear.WebApi.csproj", "{AD1EF734-DFC1-4FDF-8DE5-50EE35B1FC39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.Tests.WebApi", "test\Spear.Tests.WebApi\Spear.Tests.WebApi.csproj", "{F3B6C8FD-6182-4D33-8098-9902C4A412CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spear.Tests.WebApi", "test\Spear.Tests.WebApi\Spear.Tests.WebApi.csproj", "{F3B6C8FD-6182-4D33-8098-9902C4A412CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spear.AutoMapper", "src\Spear.AutoMapper\Spear.AutoMapper.csproj", "{A582113F-AD17-41FF-8A26-E524AD75192A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -209,6 +211,10 @@ Global
 		{F3B6C8FD-6182-4D33-8098-9902C4A412CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3B6C8FD-6182-4D33-8098-9902C4A412CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3B6C8FD-6182-4D33-8098-9902C4A412CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A582113F-AD17-41FF-8A26-E524AD75192A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A582113F-AD17-41FF-8A26-E524AD75192A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A582113F-AD17-41FF-8A26-E524AD75192A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A582113F-AD17-41FF-8A26-E524AD75192A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -244,6 +250,7 @@ Global
 		{21014255-AC1C-4D77-AAE0-159977572E90} = {AC91C841-DFA8-433E-8A53-FC69D4A934C6}
 		{AD1EF734-DFC1-4FDF-8DE5-50EE35B1FC39} = {AC91C841-DFA8-433E-8A53-FC69D4A934C6}
 		{F3B6C8FD-6182-4D33-8098-9902C4A412CF} = {3D9793B2-FFDF-466B-8574-A6EC15B07CE2}
+		{A582113F-AD17-41FF-8A26-E524AD75192A} = {67C57E6D-E13C-4053-AA48-F72DD00FA398}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {80C90B42-B34C-4BE9-8695-96E316D751E9}

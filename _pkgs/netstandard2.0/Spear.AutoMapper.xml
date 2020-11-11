@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.AutoMapper</name>
+    </assembly>
+    <members>
+        <member name="T:Spear.AutoMapper.AutoMapperExtensions">
+            <summary> AutoMapper扩展 </summary>
+        </member>
+        <member name="M:Spear.AutoMapper.AutoMapperExtensions.MapTo``1(System.Object,Spear.AutoMapper.MapperType,System.Boolean)">
+            <summary> 映射实体 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <param name="mapperType"></param>
+            <param name="fromCache"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.AutoMapper.AutoMapperExtensions.MapTo``1(System.Collections.IEnumerable,Spear.AutoMapper.MapperType,System.Boolean)">
+            <summary> 映射实体 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <param name="mapperType"></param>
+            <param name="fromCache"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.AutoMapper.AutoMapperExtensions.MapPagedList``2(Spear.Core.PagedList{``1},Spear.AutoMapper.MapperType,System.Boolean)">
+            <summary> 映射成分页类型 </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TSource"></typeparam>
+            <param name="pagedList"></param>
+            <param name="mapperType"></param>
+            <param name="fromCache"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.AutoMapper.AutoMapperExtensions.DataReaderMapTo``1(System.Data.IDataReader)">
+            <summary> DataReader映射 </summary>
+        </member>
+        <member name="T:Spear.AutoMapper.MapperType">
+            <summary> 转换类型 </summary>
+        </member>
+        <member name="F:Spear.AutoMapper.MapperType.Normal">
+            <summary> 普通 </summary>
+        </member>
+        <member name="F:Spear.AutoMapper.MapperType.FromUrl">
+            <summary> 从url命名到驼峰命名 </summary>
+        </member>
+        <member name="F:Spear.AutoMapper.MapperType.ToUrl">
+            <summary> 从驼峰命名url命名 </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>netstandard2.0</TargetFramework>
+	  <Product>Spear AutoMapper</Product>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <PackageProjectUrl>https://github.com/shoy160/spear</PackageProjectUrl>
+	  <Authors>shoy</Authors>
+	  <Company>shoy</Company>
+	  <RepositoryUrl>https://github.com/shoy160/spear.git</RepositoryUrl>
+	  <RepositoryType>github</RepositoryType>
+	  <Version>0.2.5</Version>
+	  <Description>Spear轻量级微服务框架，高扩展性，目前已支持Json、MessagePack、ProtoBuf编解码器以及TCP、HTTP、WebSocket、GRpc服务协议。</Description>
+	  <PackageReleaseNotes>
+	  </PackageReleaseNotes>
+	  <PackageLicenseUrl>https://github.com/shoy160/spear/blob/master/LICENSE</PackageLicenseUrl>
+	  <Copyright>shoy</Copyright>
+	  <PackageIconUrl>https://nuget.cdn.azure.cn/v3-flatcontainer/spear.core/0.2.2/icon</PackageIconUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <DocumentationFile>..\..\_pkgs\netstandard2.0\Spear.AutoMapper.xml</DocumentationFile>
+	  <OutputPath>..\..\_pkgs\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spear.Core\Spear.Core.csproj" />
+  </ItemGroup>
+
+</Project>

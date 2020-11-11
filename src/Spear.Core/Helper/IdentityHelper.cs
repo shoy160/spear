@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Spear.Core.Dependency;
 
@@ -58,7 +60,83 @@ namespace Spear.Core.Helper
             }
         }
 
+        // 批量生成ID的时间刻度
+        private const long TimeScaleLong = 100000000;
+        // 批量生成ID的时间刻度
+        private const long TimeScaleInt = 1000000000;
+        // 生成ID的随机数长度
+        private const int RandomLengthLong = 5;
+        // 生成ID的随机数长度
+        private const int RandomLengthInt = 3;
+        // 计算时间间隔的开始时间
+        private static readonly DateTime BeginDatetime = new DateTime(2013, 10, 1);
+        // 随机数缓存
+        private static readonly Dictionary<long, long> DictLong = new Dictionary<long, long>();
+        // 随机数缓存
+        private static readonly Dictionary<int, int> DictInt = new Dictionary<int, int>();
+        // 时间戳缓存（上一次计算ID的系统时间按时间戳刻度取值）
+        private static long _lastEndDatetimeTicksLong;
+        // 时间戳缓存（上一次计算ID的系统时间按时间戳刻度取值）
+        private static int _lastEndDatetimeTicksInt;
+        // 静态随机数生成器
+        private static Random _random;
+
+        // 获取随机数
+        private static long GetRandomLong(int length)
+        {
+            if (_random == null)
+                _random = RandomHelper.Random();
+
+            const int min = 0;
+            var max = int.Parse(Math.Pow(10, length).ToString(CultureInfo.InvariantCulture));
+            return long.Parse(_random.Next(min, max).ToString(CultureInfo.InvariantCulture));
+        }
+
         /// <summary> 长整型ID </summary>
-        public static long LongId => CurrentIocManager.Resolve<IdWorker>().NextId();
+        public static long LongId
+        {
+            get
+            {
+                var timeStamp = (DateTime.Now.Ticks - BeginDatetime.Ticks) / TimeScaleLong;
+                if (timeStamp != _lastEndDatetimeTicksLong)
+                {
+                    DictLong.Clear();
+                }
+
+                var power = long.Parse(Math.Pow(10, RandomLengthLong).ToString(CultureInfo.InvariantCulture));
+                var rand = GetRandomLong(RandomLengthLong);
+                var result = timeStamp * power + rand;
+
+                if (DictLong.ContainsKey(result))
+                {
+                    var isRepeat = true;
+
+                    for (var i = 0; i < power; i++)
+                    {
+                        rand = GetRandomLong(RandomLengthLong);
+                        result = timeStamp * power + rand;
+
+                        if (!DictLong.ContainsKey(result))
+                        {
+                            DictLong.Add(result, result);
+                            isRepeat = false;
+                            break;
+                        }
+                    }
+
+                    if (isRepeat)
+                    {
+                        return 0L;
+                    }
+                }
+                else
+                {
+                    DictLong.Add(result, result);
+                }
+
+                _lastEndDatetimeTicksLong = timeStamp;
+                return result;
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@
     <Company>shoy</Company>
     <RepositoryUrl>https://github.com/shoy160/spear.git</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
-    <Version>0.2.3</Version>
+    <Version>0.2.5</Version>
     <Description>Spear Framework</Description>
     <PackageReleaseNotes></PackageReleaseNotes>
 

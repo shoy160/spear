@@ -7,11 +7,11 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Spear.Dapper.Mysql/0.2.3": {
+      "Spear.Dapper.Mysql/0.2.5": {
         "dependencies": {
           "MySql.Data": "8.0.18",
           "NETStandard.Library": "2.0.3",
-          "Spear.Core": "0.2.3"
+          "Spear.Core": "0.2.5"
         },
         "runtime": {
           "Spear.Dapper.Mysql.dll": {}
@@ -949,7 +949,7 @@
           }
         }
       },
-      "Spear.Core/0.2.3": {
+      "Spear.Core/0.2.5": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
           "Microsoft.Extensions.Caching.Abstractions": "3.1.2",
@@ -962,7 +962,7 @@
           "Microsoft.Extensions.Logging.Abstractions": "3.1.2",
           "Newtonsoft.Json": "12.0.3",
           "Polly": "7.2.0",
-          "Spear.ProxyGenerator": "0.2.3",
+          "Spear.ProxyGenerator": "0.2.5",
           "System.Reflection.Emit": "4.7.0",
           "System.Runtime.Loader": "4.3.0"
         },
@@ -970,7 +970,7 @@
           "Spear.Core.dll": {}
         }
       },
-      "Spear.ProxyGenerator/0.2.3": {
+      "Spear.ProxyGenerator/0.2.5": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.2",
           "System.Reflection.Emit": "4.7.0",
@@ -983,7 +983,7 @@
     }
   },
   "libraries": {
-    "Spear.Dapper.Mysql/0.2.3": {
+    "Spear.Dapper.Mysql/0.2.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -1583,12 +1583,12 @@
       "path": "system.xml.xpath.xmldocument/4.0.1",
       "hashPath": "system.xml.xpath.xmldocument.4.0.1.nupkg.sha512"
     },
-    "Spear.Core/0.2.3": {
+    "Spear.Core/0.2.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Spear.ProxyGenerator/0.2.3": {
+    "Spear.ProxyGenerator/0.2.5": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

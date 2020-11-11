@@ -4,5 +4,149 @@
         <name>Spear.Redis</name>
     </assembly>
     <members>
+        <member name="T:Spear.Redis.RedisConfig">
+            <summary> Redis连接配置 </summary>
+        </member>
+        <member name="T:Spear.Redis.RedisExtensions">
+            <summary> Redis扩展 </summary>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.Serialize(System.Object)">
+            <summary> 序列化对象 </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.Deserialize(StackExchange.Redis.RedisValue,System.Type)">
+            <summary> 反序列化对象 </summary>
+            <param name="value"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.Get``1(StackExchange.Redis.IDatabase,System.String)">
+            <summary> 获取缓存 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="database"></param>
+            <param name="key">缓存键</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.GetAsync``1(StackExchange.Redis.IDatabase,System.String)">
+            <summary> 获取缓存 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="database"></param>
+            <param name="key">缓存键</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.Get(StackExchange.Redis.IDatabase,System.String,System.Type)">
+            <summary> 获取缓存 </summary>
+            <param name="database"></param>
+            <param name="key">缓存键</param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.GetAsync(StackExchange.Redis.IDatabase,System.String)">
+            <summary> 获取缓存 </summary>
+            <param name="database"></param>
+            <param name="key">缓存键</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.Set``1(StackExchange.Redis.IDatabase,System.String,``0,System.Nullable{System.TimeSpan})">
+            <summary> 设置缓存 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="database"></param>
+            <param name="key">缓存键</param>
+            <param name="value">缓存值</param>
+            <param name="expired">过期时间</param>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.SetAsync``1(StackExchange.Redis.IDatabase,System.String,``0,System.Nullable{System.TimeSpan})">
+            <summary> 设置缓存 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="database"></param>
+            <param name="key">缓存键</param>
+            <param name="value">缓存值</param>
+            <param name="expired">过期时间</param>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.BatchDeleteAsync(StackExchange.Redis.IDatabase,System.String,System.Int32)">
+            <summary> 批量删除 </summary>
+            <param name="database"></param>
+            <param name="pattern"></param>
+            <param name="batch">批次</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.BatchUpdateAsync``1(StackExchange.Redis.IDatabase,System.String,``0)">
+            <summary> 批量更新 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="database"></param>
+            <param name="pattern"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.HashBatchDeleteAsync(StackExchange.Redis.IDatabase,System.String,System.String,System.Int32)">
+            <summary> 批量删除Hash集合 </summary>
+            <param name="database"></param>
+            <param name="hashId"></param>
+            <param name="pattern">为可使用正则表达式</param>
+            <param name="batch"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.HashBatchUpdateAsync``1(StackExchange.Redis.IDatabase,System.String,System.String,``0)">
+            <summary> 批量更新Hash集合 </summary>
+            <param name="database"></param>
+            <param name="hashId"></param>
+            <param name="pattern">为可使用正则表达式</param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisExtensions.SetBatchDeleteAsync(StackExchange.Redis.IDatabase,System.String,System.String,System.Int32)">
+            <summary> 批量删除Set集合 </summary>
+            <param name="database"></param>
+            <param name="key"></param>
+            <param name="pattern">可使用正则表达式</param>
+            <param name="batch"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Redis.RedisManager">
+            <summary> Redis管理器 </summary>
+        </member>
+        <member name="P:Spear.Redis.RedisManager.Instance">
+            <summary> 单例模式 </summary>
+        </member>
+        <member name="M:Spear.Redis.RedisManager.GetAllRedisServersFromSentinel(StackExchange.Redis.IConnectionMultiplexer,System.String)">
+            <summary> 获取哨兵模式所有服务节点 </summary>
+            <param name="sentinelConn"></param>
+            <param name="serviceName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisManager.GetDatabase(System.String,System.Int32)">
+            <summary> 获取Database </summary>
+            <param name="configName"></param>
+            <param name="defaultDb"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisManager.GetServer(System.String,System.Int32)">
+            <summary> 获取Server </summary>
+            <param name="configName">配置名称</param>
+            <param name="endPointsIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisManager.GetServer(System.String,System.String,System.Int32)">
+            <summary> 获取Server </summary>
+            <param name="configName">配置名称</param>
+            <param name="host">主机名</param>
+            <param name="port">端口</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisManager.GetSubscriber(System.String)">
+            <summary> 获取订阅 </summary>
+            <param name="configName">配置名称</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Redis.RedisManager.Dispose">
+            <summary> 释放资源 </summary>
+        </member>
+        <member name="M:Spear.Redis.ServiceCollectionExtension.UseCacheSync(System.IServiceProvider,System.String)">
+            <summary> 开启两级缓存同步 </summary>
+            <param name="provider"></param>
+            <param name="configName"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

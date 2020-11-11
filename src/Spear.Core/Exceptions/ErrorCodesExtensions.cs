@@ -58,17 +58,17 @@ namespace Spear.Core.Exceptions
         /// <param name="code"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static SpearException CodeException<T>(this int code, string message = null) where T : ErrorCodes
+        public static BusiException CodeException<T>(this int code, string message = null) where T : ErrorCodes
         {
             message = string.IsNullOrWhiteSpace(message) ? code.Message<T>() : message;
-            return new SpearException(message, code);
+            return new BusiException(message, code);
         }
 
         /// <summary> 错误编码对应的Exception </summary>
         /// <param name="code"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static SpearException CodeException(this int code, string message = null)
+        public static BusiException CodeException(this int code, string message = null)
         {
             return code.CodeException<ErrorCodes>(message);
         }
