@@ -59,7 +59,8 @@ namespace Spear.Core.Micro.Implementation
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "执行本地逻辑时候发生了错误。");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogError(ex, "执行本地逻辑时候发生了错误。");
                 messageResult.Message = ex.Message;
                 messageResult.Code = 500;
             }

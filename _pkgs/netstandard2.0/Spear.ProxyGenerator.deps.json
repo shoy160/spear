@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.0": {},
     ".NETStandard,Version=v2.0/": {
-      "Spear.ProxyGenerator/0.2.5": {
+      "Spear.ProxyGenerator/0.3.1": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "3.1.2",
           "NETStandard.Library": "2.0.3",
@@ -65,7 +65,7 @@
     }
   },
   "libraries": {
-    "Spear.ProxyGenerator/0.2.5": {
+    "Spear.ProxyGenerator/0.3.1": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

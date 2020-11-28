@@ -29,8 +29,8 @@ namespace Spear.Protocol.Http
         /// <returns></returns>
         public static IMicroClientBuilder AddHttpProtocol(this IMicroClientBuilder builder)
         {
-            builder.AddHttpClient();
-            builder.AddSingleton<IMicroClientFactory, HttpClientFactory>();
+            builder.Services.AddHttpClient();
+            builder.Services.AddSingleton<IMicroClientFactory, HttpClientFactory>();
             return builder;
         }
 
@@ -40,9 +40,9 @@ namespace Spear.Protocol.Http
         public static IMicroServerBuilder AddHttpProtocol(this IMicroServerBuilder builder)
         {
             Constants.Protocol = ServiceProtocol.Http;
-            builder.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.AddSession<HttpPrincipalAccessor>();
-            builder.AddSingleton<IMicroListener, HttpMicroListener>();
+            builder.Services.AddSingleton<IMicroListener, HttpMicroListener>();
             return builder;
         }
     }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Spear.Core;
 using Spear.Core.Config;
-using Spear.Core.Message;
 using Spear.Core.Micro;
 
 namespace Spear.Protocol.WebSocket
@@ -15,7 +13,7 @@ namespace Spear.Protocol.WebSocket
         public static IMicroServerBuilder AddWebSocketProtocol(this IMicroServerBuilder builder)
         {
             Constants.Protocol = ServiceProtocol.Ws;
-            builder.AddSingleton<IMicroListener, WebSocketListener>();
+            builder.Services.AddSingleton<IMicroListener, WebSocketListener>();
             return builder;
         }
 
@@ -24,7 +22,7 @@ namespace Spear.Protocol.WebSocket
         /// <returns></returns>
         public static IMicroClientBuilder AddWebSocketProtocol(this IMicroClientBuilder builder)
         {
-            builder.AddSingleton<IMicroClientFactory, WebSocketClientFactory>();
+            builder.Services.AddSingleton<IMicroClientFactory, WebSocketClientFactory>();
             return builder;
         }
     }

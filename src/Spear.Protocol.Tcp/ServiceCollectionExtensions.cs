@@ -13,7 +13,7 @@ namespace Spear.Protocol.Tcp
         public static IMicroServerBuilder AddTcpProtocol(this IMicroServerBuilder builder)
         {
             Constants.Protocol = ServiceProtocol.Tcp;
-            builder.AddSingleton<IMicroListener, DotNettyMicroListener>();
+            builder.Services.AddSingleton<IMicroListener, DotNettyMicroListener>();
             return builder;
         }
 
@@ -22,7 +22,7 @@ namespace Spear.Protocol.Tcp
         /// <returns></returns>
         public static IMicroClientBuilder AddTcpProtocol(this IMicroClientBuilder builder)
         {
-            builder.AddSingleton<IMicroClientFactory, DotNettyClientFactory>();
+            builder.Services.AddSingleton<IMicroClientFactory, DotNettyClientFactory>();
             return builder;
         }
     }

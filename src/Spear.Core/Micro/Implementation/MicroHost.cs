@@ -51,7 +51,8 @@ namespace Spear.Core.Micro.Implementation
                     await MicroListener.Start(serviceAddress);
                 });
 
-                _logger.LogInformation(
+                if (_logger.IsEnabled(LogLevel.Information))
+                    _logger.LogInformation(
                     $"服务已启动：{serviceAddress},Gzip:{serviceAddress.Gzip},Codec:{Constants.Codec},Protocol:{Constants.Protocol}");
             }
             catch (Exception ex)

@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Spear.Core.Data;
 using Spear.Core.Data.Config;
 using Spear.Core.Domain;
 using Spear.Core.Extensions;
@@ -12,6 +14,12 @@ namespace Spear.Dapper
         public static IServiceCollection AddDapper(this IServiceCollection services,
             Action<ConnectionConfig> configAction = null)
         {
+            services.TryAddSingleton(provider =>
+            {
+                var logger = provider.GetService<ILoggerFactory>()?.CreateLogger<ConnectionFactory>();
+                return new ConnectionFactory(logger);
+            });
+            services.TryAddSingleton<IDbConnectionProvider, DefaultDbConnectionProvider>();
             services.TryAddScoped<IUnitOfWork>(provider =>
             {
                 var config = ConnectionConfig.Config();
@@ -23,6 +31,8 @@ namespace Spear.Dapper
 
         public static IServiceCollection AddDapper(this IServiceCollection services, string configName)
         {
+            services.TryAddSingleton<ConnectionFactory>();
+            services.TryAddSingleton<IDbConnectionProvider, DefaultDbConnectionProvider>();
             services.TryAddScoped<IUnitOfWork>(provider =>
             {
                 var config = ConnectionConfig.Config(configName);

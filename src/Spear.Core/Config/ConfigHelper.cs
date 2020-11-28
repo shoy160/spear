@@ -4,6 +4,7 @@ using Spear.Core.Dependency;
 using Spear.Core.Extensions;
 using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
@@ -35,6 +36,18 @@ namespace Spear.Core.Config
         {
             _config = config;
             _callbackRegistration = _config.GetReloadToken().RegisterChangeCallback(OnConfigChanged, _config);
+        }
+
+        /// <summary> 添加配置 </summary>
+        /// <param name="source"></param>
+        /// <param name="predicate"></param>
+        public void AddProvider(IConfigurationSource source, Func<IConfigurationSource, bool> predicate = null)
+        {
+            predicate = predicate ?? (t => t.GetType() == source.GetType());
+            var config = Builder.Sources.FirstOrDefault(predicate);
+            if (config != null)
+                Builder.Sources.Remove(config);
+            Builder.Sources.Insert(0, source);
         }
 
         public void Build()

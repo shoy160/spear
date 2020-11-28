@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Spear.Core.Micro
 {
     /// <summary> Spear 服务构建器 </summary>
-    public interface IMicroBuilder : IServiceCollection
+    public interface IMicroBuilder
     {
+        /// <summary> 服务集合 </summary>
+        IServiceCollection Services { get; }
     }
 
     /// <summary> Spear客户端构建器 </summary>
@@ -15,16 +16,14 @@ namespace Spear.Core.Micro
     public interface IMicroServerBuilder : IMicroBuilder { }
 
     /// <summary> Spear构建器 </summary>
-    public class MicroBuilder : ServiceCollection, IMicroClientBuilder, IMicroServerBuilder
+    public class MicroBuilder : IMicroClientBuilder, IMicroServerBuilder
     {
-        public MicroBuilder() { }
-
-        public MicroBuilder(IServiceCollection services)
+        public MicroBuilder(IServiceCollection services = null)
         {
-            foreach (var service in services)
-            {
-                this.Add(service);
-            }
+            Services = services ?? new ServiceCollection();
         }
+
+        /// <summary> 服务集合 </summary>
+        public IServiceCollection Services { get; }
     }
 }

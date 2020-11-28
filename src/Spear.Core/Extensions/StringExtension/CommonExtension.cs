@@ -2,6 +2,7 @@
 using Spear.Core.Helper;
 //using Spear.Dapper.Config;
 using System;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Text;

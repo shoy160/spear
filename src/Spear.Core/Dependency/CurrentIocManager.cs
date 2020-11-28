@@ -1,5 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Net.Http;
+using Microsoft.AspNetCore.Http;
+using Spear.Core.Context;
+using Spear.Core.Extensions;
 
 namespace Spear.Core.Dependency
 {
@@ -96,5 +100,11 @@ namespace Spear.Core.Dependency
         {
             return Resolve<ILoggerFactory>()?.CreateLogger(type);
         }
+
+        /// <summary> 当前请求上下文 </summary>
+        public static HttpContext Context => Resolve<IHttpContextAccessor>()?.HttpContext;
+
+        /// <summary> 当前请求上下文封装 </summary>
+        public static HttpContextWrap ContextWrap => Context?.Wrap();
     }
 }

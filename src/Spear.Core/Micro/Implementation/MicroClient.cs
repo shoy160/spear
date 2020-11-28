@@ -52,7 +52,8 @@ namespace Spear.Core.Micro.Implementation
 
         private async Task<MessageResult> RegistCallbackAsync(string messageId)
         {
-            _logger.LogDebug($"准备获取Id为：{messageId}的响应内容。");
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug($"准备获取Id为：{messageId}的响应内容。");
             var task = new TaskCompletionSource<MessageResult>();
             _resultDictionary.TryAdd(messageId, task);
             try
@@ -72,20 +73,22 @@ namespace Spear.Core.Micro.Implementation
             var watch = Stopwatch.StartNew();
             try
             {
-                _logger.LogDebug("准备发送消息");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug("准备发送消息");
                 var callback = RegistCallbackAsync(message.Id);
                 if (_logger.IsEnabled(LogLevel.Debug))
                     _logger.LogDebug($"{_sender.GetType()}:send :{JsonConvert.SerializeObject(message)}");
                 //发送
                 await _sender.Send(message);
-
-                _logger.LogDebug("消息发送成功");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug("消息发送成功");
                 return await callback;
             }
             finally
             {
                 watch.Stop();
-                _logger.LogDebug($"send message {watch.ElapsedMilliseconds} ms");
+                if (_logger.IsEnabled(LogLevel.Debug))
+                    _logger.LogDebug($"send message {watch.ElapsedMilliseconds} ms");
             }
         }
 

@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Spear.Core;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Spear.Core.Dependency;
 using Spear.Core.Extensions;
 using Spear.Core.Helper;
 using Spear.Core.Session;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Spear.WebApi
+namespace Spear.Core.Context
 {
     /// <summary> 请求上下文包装 </summary>
     public class HttpContextWrap
@@ -24,7 +23,6 @@ namespace Spear.WebApi
         public HttpContextWrap(HttpContext current)
         {
             current?.Request?.EnableBuffering();
-            //current.Request.EnableRewind();
             Current = current;
         }
 

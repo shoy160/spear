@@ -215,63 +215,6 @@
             <summary> 请求执行时验证模型 </summary>
             <param name="context"></param>
         </member>
-        <member name="T:Spear.WebApi.HttpContextWrap">
-            <summary> 请求上下文包装 </summary>
-        </member>
-        <member name="F:Spear.WebApi.HttpContextWrap.Current">
-            <summary> 当前上下文 </summary>
-        </member>
-        <member name="M:Spear.WebApi.HttpContextWrap.#ctor(Microsoft.AspNetCore.Http.HttpContext)">
-            <summary> 当前上下文 </summary>
-            <param name="current"></param>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.RemoteIpAddress">
-            <summary> 客户端IP </summary>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.LocalIpAddress">
-            <summary> 本地IP </summary>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.RequestType">
-            <summary> 请求类型 </summary>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.Form">
-            <summary> 表单 </summary>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.Body">
-            <summary> 请求体 </summary>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.UserAgent">
-            <summary> 用户代理 </summary>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.Referer">
-            <summary> 来源 </summary>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.ContentType">
-            <summary> 内容类型 </summary>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.QueryString">
-            <summary> 参数 </summary>
-        </member>
-        <member name="M:Spear.WebApi.HttpContextWrap.GetRawUrl(Microsoft.AspNetCore.Http.HttpRequest)">
-            <summary> 获取原始Url </summary>
-            <returns></returns>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.RawUrl">
-            <summary> 原始地址 </summary>
-        </member>
-        <member name="P:Spear.WebApi.HttpContextWrap.ClientIp">
-            <summary> 获取客户端IP </summary>
-        </member>
-        <member name="M:Spear.WebApi.HttpContextWrap.FromForm(Microsoft.AspNetCore.Http.IFormCollection)">
-            <summary> 字典化对象 </summary>
-            <param name="source"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Spear.WebApi.HttpContextWrap.FromBody``1">
-            <summary> 请求体 </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
         <member name="M:Spear.WebApi.ServiceCollectionExtensions.AddPropertyIoc(Microsoft.Extensions.DependencyInjection.IMvcBuilder)">
             <summary> 添加属性注入 </summary>
             <param name="builder"></param>

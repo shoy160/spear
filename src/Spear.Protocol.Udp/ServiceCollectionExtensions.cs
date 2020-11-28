@@ -15,7 +15,7 @@ namespace Spear.Protocol.Udp
         public static IMicroServerBuilder AddUdpProtocol(this IMicroServerBuilder builder)
         {
             Constants.Protocol = ServiceProtocol.Udp;
-            builder.AddSingleton<IMicroListener>(provider =>
+            builder.Services.AddSingleton<IMicroListener>(provider =>
             {
                 var coderFactory = provider.GetService<IMessageCodec>();
                 var loggerFactory = provider.GetService<ILoggerFactory>();
@@ -29,7 +29,7 @@ namespace Spear.Protocol.Udp
         /// <returns></returns>
         public static IMicroClientBuilder AddUdpProtocol(this IMicroClientBuilder builder)
         {
-            builder.AddSingleton<IMicroClientFactory, UdpClientFactory>();
+            builder.Services.AddSingleton<IMicroClientFactory, UdpClientFactory>();
             return builder;
         }
     }

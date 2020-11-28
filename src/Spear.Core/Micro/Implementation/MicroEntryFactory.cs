@@ -107,12 +107,14 @@ namespace Spear.Core.Micro.Implementation
             var type = method.DeclaringType;
             if (type == null)
             {
-                _logger.LogWarning("方法的定义类型不能为空。");
+                if (_logger.IsEnabled(LogLevel.Warning))
+                    _logger.LogWarning("方法的定义类型不能为空。");
                 throw new ArgumentNullException(nameof(method.DeclaringType), "方法的定义类型不能为空。");
             }
 
             var id = method.ServiceKey();
-            _logger.LogDebug($"为方法：{method}生成服务Id：{id}。");
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug($"为方法：{method}生成服务Id：{id}。");
             return id;
         }
 

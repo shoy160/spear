@@ -9,8 +9,6 @@ using Spear.Core.Extensions;
 
 namespace Spear.Core.Micro.Services
 {
-
-
     public class ServiceAddress
     {
         /// <summary> IP </summary>
@@ -19,12 +17,26 @@ namespace Spear.Core.Micro.Services
         public ServiceProtocol Protocol { get; set; }
         /// <summary> Host </summary>
         public string Host { get; set; }
+
+        private int _port;
+
         /// <summary> 端口号 </summary>
-        public int Port { get; set; }
+        public int Port
+        {
+            get => _port > 80 ? _port : 5000;
+            set => _port = value;
+        }
+
+        private string _service;
 
         /// <summary> 对外注册的服务地址(ip或DNS) </summary>
-        public string Service { get; set; }
+        public string Service
+        {
+            get => string.IsNullOrWhiteSpace(_service) ? Host : _service;
+            set => _service = value;
+        }
 
+        /// <summary> 对外服务端口 </summary>
         public int ServicePort { get; set; }
 
         /// <summary> 权重 </summary>
@@ -49,15 +61,19 @@ namespace Spear.Core.Micro.Services
 
         public override string ToString()
         {
-            if (string.IsNullOrWhiteSpace(Host))
+            if (string.IsNullOrWhiteSpace(Host) && string.IsNullOrWhiteSpace(Service) && Ip != null)
                 Host = Ip.ToString();
             var port = ServicePort <= 0 ? Port : ServicePort;
             return $"{this.Address()}:{port}";
         }
     }
 
+    /// <summary> 服务地址扩展 </summary>
     public static class ServiceAddressExtensions
     {
+        /// <summary> 服务地址 </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
         public static string Address(this ServiceAddress address)
         {
             return $"{address.Protocol.ToString().ToLower()}://{address.IpAddress}";
@@ -73,7 +89,7 @@ namespace Spear.Core.Micro.Services
             var service = isServer ? address.Host : address.Service;
             var port = isServer ? address.Port : (address.ServicePort <= 0 ? address.Port : address.ServicePort);
 
-            if (string.IsNullOrWhiteSpace(service) || service == "localhost")
+            if (string.IsNullOrWhiteSpace(service) || service == "localhost" || service == "*")
             {
                 return new IPEndPoint(IPAddress.Any, port);
             }

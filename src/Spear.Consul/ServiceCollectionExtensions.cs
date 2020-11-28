@@ -20,8 +20,8 @@ namespace Spear.Consul
         /// <returns></returns>
         public static IMicroClientBuilder AddConsul(this IMicroClientBuilder builder, Action<ConsulOption> optionAction = null)
         {
-            builder.AddMemoryCache();
-            builder.AddSingleton<IServiceFinder>(provider =>
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSingleton<IServiceFinder>(provider =>
             {
                 var option = ConsulOption.Config();
                 optionAction?.Invoke(option);
@@ -41,7 +41,7 @@ namespace Spear.Consul
         /// <returns></returns>
         public static IMicroServerBuilder AddConsul(this IMicroServerBuilder builder, Action<ConsulOption> optionAction = null)
         {
-            builder.AddSingleton<IServiceRegister>(provider =>
+            builder.Services.AddSingleton<IServiceRegister>(provider =>
             {
                 var option = ConsulOption.Config();
                 optionAction?.Invoke(option);
@@ -59,8 +59,8 @@ namespace Spear.Consul
         public static IMicroClientBuilder AddConsul(this IMicroClientBuilder builder, string server,
             string token = null)
         {
-            builder.AddMemoryCache();
-            builder.AddSingleton<IServiceFinder>(provider =>
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSingleton<IServiceFinder>(provider =>
             {
                 var cache = provider.GetService<IMemoryCache>();
                 var logger = provider.GetService<ILogger<ConsulServiceFinder>>();
@@ -77,7 +77,7 @@ namespace Spear.Consul
         public static IMicroServerBuilder AddConsul(this IMicroServerBuilder builder, string server,
             string token = null)
         {
-            builder.AddSingleton<IServiceRegister>(provider =>
+            builder.Services.AddSingleton<IServiceRegister>(provider =>
             {
                 var logger = provider.GetService<ILogger<ConsulServiceRegister>>();
                 return new ConsulServiceRegister(logger, server, token);

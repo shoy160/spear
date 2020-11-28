@@ -14,8 +14,8 @@ namespace Spear.Codec.MessagePack
         public static IMicroServerBuilder AddMessagePackCodec(this IMicroServerBuilder builder)
         {
             Constants.Codec = ServiceCodec.MessagePack;
-            builder.AddSingleton<IMessageSerializer, MessagePackMessageSerializer>();
-            builder.AddSingleton<IMessageCodec, MessagePackCodec>(provider =>
+            builder.Services.AddSingleton<IMessageSerializer, MessagePackMessageSerializer>();
+            builder.Services.AddSingleton<IMessageCodec, MessagePackCodec>(provider =>
             {
                 var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.MessagePack);
                 var config = provider.GetService<SpearConfig>();
@@ -30,8 +30,8 @@ namespace Spear.Codec.MessagePack
         /// <returns>服务构建者。</returns>
         public static IMicroClientBuilder AddMessagePackCodec(this IMicroClientBuilder builder)
         {
-            builder.AddSingleton<IMessageSerializer, MessagePackMessageSerializer>();
-            builder.AddSingleton<IClientMessageCodec, MessagePackCodec>(provider =>
+            builder.Services.AddSingleton<IMessageSerializer, MessagePackMessageSerializer>();
+            builder.Services.AddSingleton<IClientMessageCodec, MessagePackCodec>(provider =>
             {
                 var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.MessagePack);
                 var config = provider.GetService<SpearConfig>();

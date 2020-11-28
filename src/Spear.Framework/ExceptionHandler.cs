@@ -62,16 +62,18 @@ namespace Spear.Framework
                     {
                         Message = ex.Message
                     };
-                    //if (AcbHttpContext.Current != null)
-                    //{
-                    //    msg.Url = AcbHttpContext.RawUrl;
-                    //    msg.ClientIp = AcbHttpContext.ClientIp;
-                    //    msg.UserAgent = AcbHttpContext.UserAgent;
-                    //    msg.Form = string.IsNullOrWhiteSpace(requestBody)
-                    //        ? await AcbHttpContext.FromBody<string>()
-                    //        : requestBody;
-                    //    msg.Token = AcbHttpContext.Authorization ?? string.Empty;
-                    //}
+                    if (CurrentIocManager.Context != null)
+                    {
+                        var context = CurrentIocManager.Context;
+                        var wrap = CurrentIocManager.ContextWrap;
+                        msg.Url = context.RawUrl();
+                        msg.ClientIp = wrap.ClientIp;
+                        msg.UserAgent = wrap.UserAgent;
+                        msg.Form = string.IsNullOrWhiteSpace(requestBody)
+                            ? await wrap.FromBody<string>()
+                            : requestBody;
+                        msg.Token = wrap.Authorization ?? string.Empty;
+                    }
                     Logger.LogError(ex, JsonHelper.ToJson(msg));
                     result = ErrorCodes.SystemError.CodeResult();
                     break;

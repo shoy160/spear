@@ -18,6 +18,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Spear.Core.Dependency;
 
 namespace Spear.Core
 {
@@ -75,8 +76,8 @@ namespace Spear.Core
         public static IMicroServerBuilder AddJsonCodec(this IMicroServerBuilder builder)
         {
             Constants.Codec = ServiceCodec.Json;
-            builder.AddSingleton<IMessageSerializer, JsonMessageSerializer>();
-            builder.AddSingleton<IMessageCodec, JsonCodec>(provider =>
+            builder.Services.AddSingleton<IMessageSerializer, JsonMessageSerializer>();
+            builder.Services.AddSingleton<IMessageCodec, JsonCodec>(provider =>
              {
                  var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.Json);
                  var config = provider.GetService<SpearConfig>();
@@ -90,8 +91,8 @@ namespace Spear.Core
         /// <returns>服务构建者。</returns>
         public static IMicroClientBuilder AddJsonCodec(this IMicroClientBuilder builder)
         {
-            builder.AddSingleton<IMessageSerializer, JsonMessageSerializer>();
-            builder.AddSingleton<IClientMessageCodec, JsonCodec>(provider =>
+            builder.Services.AddSingleton<IMessageSerializer, JsonMessageSerializer>();
+            builder.Services.AddSingleton<IClientMessageCodec, JsonCodec>(provider =>
             {
                 var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.Json);
                 var config = provider.GetService<SpearConfig>();
@@ -117,8 +118,8 @@ namespace Spear.Core
             where T : class, IPrincipalAccessor
         {
             //Session
-            builder.AddScoped<IPrincipalAccessor, T>();
-            builder.AddScoped<IMicroSession, ClaimMicroSession>();
+            builder.Services.AddScoped<IPrincipalAccessor, T>();
+            builder.Services.AddScoped<IMicroSession, ClaimMicroSession>();
             return builder;
         }
 
@@ -139,8 +140,8 @@ namespace Spear.Core
             where T : class, IPrincipalAccessor
         {
             //Session
-            builder.AddScoped<IPrincipalAccessor, T>();
-            builder.AddScoped<IMicroSession, ClaimMicroSession>();
+            builder.Services.AddScoped<IPrincipalAccessor, T>();
+            builder.Services.AddScoped<IMicroSession, ClaimMicroSession>();
             return builder;
         }
 
@@ -151,8 +152,8 @@ namespace Spear.Core
         /// <returns></returns>
         public static IMicroServerBuilder AddDefaultRouter(this IMicroServerBuilder builder, Action<DefaultServiceRouter> routerAction = null)
         {
-            builder.AddSingleton<DefaultServiceRouter>();
-            builder.AddSingleton<IServiceRegister>(provider =>
+            builder.Services.AddSingleton<DefaultServiceRouter>();
+            builder.Services.AddSingleton<IServiceRegister>(provider =>
             {
                 var router = provider.GetService<DefaultServiceRouter>();
                 routerAction?.Invoke(router);
@@ -168,8 +169,8 @@ namespace Spear.Core
         /// <returns></returns>
         public static IMicroClientBuilder AddDefaultRouter(this IMicroClientBuilder builder, Action<DefaultServiceRouter> routerAction = null)
         {
-            builder.AddSingleton<DefaultServiceRouter>();
-            builder.AddSingleton<IServiceFinder>(provider =>
+            builder.Services.AddSingleton<DefaultServiceRouter>();
+            builder.Services.AddSingleton<IServiceFinder>(provider =>
             {
                 var router = provider.GetService<DefaultServiceRouter>();
                 routerAction?.Invoke(router);
@@ -186,10 +187,10 @@ namespace Spear.Core
         public static MicroBuilder AddMicroClient(this MicroBuilder services, Action<IMicroClientBuilder> builderAction, Action<SpearConfig> configAction = null)
         {
             //services.TryAddSingleton<Counter>();
-            var config = "spear".Config<SpearConfig>() ?? new SpearConfig();
+            var config = SpearConfig.GetConfig();
             configAction?.Invoke(config);
-            services.AddSingleton(config);
-            services.AddProxy<ClientProxy>();
+            services.Services.AddSingleton(config);
+            services.Services.AddProxy<ClientProxy>();
             builderAction.Invoke(services);
             return services;
         }
@@ -204,13 +205,13 @@ namespace Spear.Core
         {
             var config = "spear".Config<SpearConfig>() ?? new SpearConfig();
             configAction?.Invoke(config);
-            services.AddSingleton(config);
-            services.AddSingleton<IAssemblyFinder, DefaultAssemblyFinder>();
-            services.AddSingleton<ITypeFinder, DefaultTypeFinder>();
-            services.AddSingleton<IMicroEntryFactory, MicroEntryFactory>();
+            services.Services.AddSingleton(config);
+            services.Services.AddSingleton<IAssemblyFinder, DefaultAssemblyFinder>();
+            services.Services.AddSingleton<ITypeFinder, DefaultTypeFinder>();
+            services.Services.AddSingleton<IMicroEntryFactory, MicroEntryFactory>();
             builderAction.Invoke(services);
-            services.AddSingleton<IMicroExecutor, MicroExecutor>();
-            services.AddSingleton<IMicroHost, MicroHost>();
+            services.Services.AddSingleton<IMicroExecutor, MicroExecutor>();
+            services.Services.AddSingleton<IMicroHost, MicroHost>();
             //services.TryAddSingleton<Counter>();
             return services;
         }
@@ -233,21 +234,15 @@ namespace Spear.Core
         /// <param name="provider"></param>
         /// <param name="addressAction"></param>
         /// <returns></returns>
-        public static void UseMicroService(this IServiceProvider provider, Action<ServiceAddress> addressAction)
+        public static void UseMicroService(this IServiceProvider provider, Action<ServiceAddress> addressAction = null)
         {
-            var address = new ServiceAddress();
+            if (CurrentIocManager.IocManager == null)
+                CurrentIocManager.SetIocManager(new DefaultIocManager(provider));
+
+            var address = SpearConfig.GetConfig().Service;
             addressAction?.Invoke(address);
             var host = provider.GetService<IMicroHost>();
             Task.Factory.StartNew(async () => await host.Start(address));
-        }
-
-        public static void AppendTo(this MicroBuilder builder, IServiceCollection services)
-        {
-            if (builder == null || services == null) return;
-            foreach (var service in builder)
-            {
-                services.Add(service);
-            }
         }
     }
 }

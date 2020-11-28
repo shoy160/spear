@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Spear.Core;
 using Spear.Core.Config;
@@ -16,8 +15,8 @@ namespace Spear.Protocol.Grpc
         public static IMicroServerBuilder AddGrpcProtocol(this IMicroServerBuilder builder)
         {
             Constants.Protocol = ServiceProtocol.Grpc;
-            builder.AddSingleton<IMicroEntryFactory, GrpcEntryFactory>();
-            builder.AddSingleton<IMicroListener>(provider =>
+            builder.Services.AddSingleton<IMicroEntryFactory, GrpcEntryFactory>();
+            builder.Services.AddSingleton<IMicroListener>(provider =>
             {
                 var loggerFactory = provider.GetService<ILoggerFactory>();
                 var entryFactory = provider.GetService<IMicroEntryFactory>();
@@ -31,8 +30,8 @@ namespace Spear.Protocol.Grpc
         /// <returns></returns>
         public static IMicroClientBuilder AddGrpcProtocol(this IMicroClientBuilder builder)
         {
-            builder.AddSingleton<IProxyFactory, GrpcProxyFactory>();
-            builder.AddSingleton<IMicroClientFactory, GrpcClientFactory>();
+            builder.Services.AddSingleton<IProxyFactory, GrpcProxyFactory>();
+            builder.Services.AddSingleton<IMicroClientFactory, GrpcClientFactory>();
             return builder;
         }
     }

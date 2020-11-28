@@ -255,7 +255,7 @@ namespace Spear.WebApi
 
         protected virtual void ConfigRoute(IEndpointRouteBuilder builder)
         {
-
+            
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -265,9 +265,7 @@ namespace Spear.WebApi
             Bootstrap.CreateContainer(container);
             if (EnableSwagger)
                 UseSwagger(app);
-            //var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
 
-            //AcbHttpContext.Configure(httpContextAccessor);
             app.UseRouting();
             app.UseCors("default");
 

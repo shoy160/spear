@@ -21,9 +21,9 @@ namespace Spear.Nacos
         public static IMicroClientBuilder AddNacos(this IMicroClientBuilder builder,
             Action<NacosConfig> configAction = null)
         {
-            builder.AddMemoryCache();
-            builder.AddNacosCore(configAction);
-            builder.AddSingleton<IServiceFinder>(provider =>
+            builder.Services.AddMemoryCache();
+            builder.Services.AddNacosCore(configAction);
+            builder.Services.AddSingleton<IServiceFinder>(provider =>
             {
                 var config = provider.GetService<NacosConfig>();
                 var client = provider.GetService<INacosClient>();
@@ -41,8 +41,8 @@ namespace Spear.Nacos
         public static IMicroServerBuilder AddNacos(this IMicroServerBuilder builder,
             Action<NacosConfig> configAction = null)
         {
-            builder.AddNacosCore(configAction);
-            builder.AddSingleton<IServiceRegister>(provider =>
+            builder.Services.AddNacosCore(configAction);
+            builder.Services.AddSingleton<IServiceRegister>(provider =>
             {
                 var config = provider.GetService<NacosConfig>();
                 var client = provider.GetService<INacosClient>();
@@ -104,7 +104,7 @@ namespace Spear.Nacos
             foreach (var configProvider in providers)
             {
                 var config = builder.Sources.FirstOrDefault(t => t is NacosConfigProvider nacos && nacos.App == configProvider.App);
-                if (config == null)
+                if (config != null)
                     builder.Sources.Remove(config);
 
                 builder.Sources.Insert(0, configProvider);

@@ -83,8 +83,8 @@ namespace Spear.Core.Proxy
             var retry = builder.RetryAsync(3, (result, count) =>
             {
                 _logger.LogWarning(result.Exception != null
-                    ? $"{service}{targetMethod.Name}:retry,{count},{result.Exception.Format()}"
-                    : $"{service}{targetMethod.Name}:retry,{count},{result.Result.Code}");
+                    ? $"{service},{targetMethod.ServiceKey()}:retry,{count},{result.Exception.Format()}"
+                    : $"{service},{targetMethod.ServiceKey()}:retry,{count},{result.Result.Code}");
                 services.Remove(service);
                 _serviceFinder.CleanCache(serviceType);
             });

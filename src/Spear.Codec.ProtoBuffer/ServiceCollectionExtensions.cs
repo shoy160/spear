@@ -14,8 +14,8 @@ namespace Spear.Codec.ProtoBuffer
         public static IMicroServerBuilder AddProtoBufCodec(this IMicroServerBuilder builder)
         {
             Constants.Codec = ServiceCodec.ProtoBuf;
-            builder.AddSingleton<IMessageSerializer, ProtoBufferSerializer>();
-            builder.AddSingleton<IMessageCodec, ProtoBufferCodec>(provider =>
+            builder.Services.AddSingleton<IMessageSerializer, ProtoBufferSerializer>();
+            builder.Services.AddSingleton<IMessageCodec, ProtoBufferCodec>(provider =>
             {
                 var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.ProtoBuf);
                 var config = provider.GetService<SpearConfig>();
@@ -29,8 +29,8 @@ namespace Spear.Codec.ProtoBuffer
         /// <returns>服务构建者。</returns>
         public static IMicroClientBuilder AddProtoBufCodec(this IMicroClientBuilder builder)
         {
-            builder.AddSingleton<IMessageSerializer, ProtoBufferSerializer>();
-            builder.AddSingleton<IClientMessageCodec, ProtoBufferCodec>(provider =>
+            builder.Services.AddSingleton<IMessageSerializer, ProtoBufferSerializer>();
+            builder.Services.AddSingleton<IClientMessageCodec, ProtoBufferCodec>(provider =>
             {
                 var serializer = provider.GetService<IMessageSerializer>(ServiceCodec.ProtoBuf);
                 var config = provider.GetService<SpearConfig>();
