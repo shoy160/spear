@@ -27,4 +27,12 @@
     <DocumentationFile>..\..\_pkgs\netstandard2.0\Spear.EventBus.RabbitMq.xml</DocumentationFile>
     <OutputPath>..\..\_pkgs\</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Spear.Core\Spear.Core.csproj" />
+  </ItemGroup>
 </Project>
