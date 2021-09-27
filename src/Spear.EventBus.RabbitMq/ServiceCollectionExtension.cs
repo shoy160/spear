@@ -1,8 +1,7 @@
-﻿using Spear.Core.EventBus;
-using Spear.Core.Message;
-using Spear.Core.Message.Codec;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Spear.Core.EventBus;
+using Spear.Core.Message;
 using Spear.Core.Message.Json;
 
 namespace Spear.RabbitMq
@@ -22,6 +21,7 @@ namespace Spear.RabbitMq
             }
             else
             {
+                services.TryAddSingleton<IMessageSerializer, JsonMessageSerializer>();
                 services.TryAddSingleton<IMessageCodec, JsonCodec>();
             }
 
@@ -41,6 +41,7 @@ namespace Spear.RabbitMq
         /// <returns></returns>
         public static IServiceCollection AddRabbitMqEventBus(this IServiceCollection services, RabbitMqConfig config)
         {
+            services.TryAddSingleton<IMessageSerializer, JsonMessageSerializer>();
             services.TryAddSingleton<IMessageCodec, JsonCodec>();
             services.TryAddSingleton<IEventBus>(provider =>
             {
