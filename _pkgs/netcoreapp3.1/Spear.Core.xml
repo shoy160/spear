@@ -74,6 +74,18 @@
         <member name="P:Spear.Core.Constants.Mode">
             <summary> 产品模式 </summary>
         </member>
+        <member name="P:Spear.Core.Constants.IsDev">
+            <summary> 是否开发环境 </summary>
+        </member>
+        <member name="P:Spear.Core.Constants.IsTest">
+            <summary> 是否测试环境 </summary>
+        </member>
+        <member name="P:Spear.Core.Constants.IsReady">
+            <summary> 是否预发布环境 </summary>
+        </member>
+        <member name="P:Spear.Core.Constants.IsProd">
+            <summary> 是否正式环境 </summary>
+        </member>
         <member name="M:Spear.Core.Constants.LocalIp">
             <summary> 获取本地IP </summary>
             <returns></returns>

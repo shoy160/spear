@@ -1,6 +1,5 @@
 ﻿using Spear.Core.Config;
 using Spear.Core.Extensions;
-using System;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -10,17 +9,30 @@ namespace Spear.Core
 {
     public static class Constants
     {
-        
 
         /// <summary> 产品模式 </summary>
         public static ProductMode Mode
         {
             get
             {
-                var mode = Environment.GetEnvironmentVariable("SPEAR_MODE");
-                return mode.CastTo(ProductMode.Dev);
+                var mode = "SPEAR_MODE".Env<ProductMode?>();
+                if (mode.HasValue)
+                    return mode.Value;
+                return "mode".Config(ProductMode.Dev);
             }
         }
+
+        /// <summary> 是否开发环境 </summary>
+        public static bool IsDev => Mode == ProductMode.Dev;
+
+        /// <summary> 是否测试环境 </summary>
+        public static bool IsTest => Mode == ProductMode.Test;
+
+        /// <summary> 是否预发布环境 </summary>
+        public static bool IsReady => Mode == ProductMode.Ready;
+
+        /// <summary> 是否正式环境 </summary>
+        public static bool IsProd => Mode == ProductMode.Prod;
 
         private static string _localIp;
 

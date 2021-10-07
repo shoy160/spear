@@ -4,5 +4,163 @@
         <name>Spear.EventBus.RabbitMq</name>
     </assembly>
     <members>
+        <member name="T:Spear.RabbitMq.EventBusRabbitMq">
+            <summary> RabbitMQ事件总线 </summary>
+        </member>
+        <member name="M:Spear.RabbitMq.EventBusRabbitMq.#ctor(Spear.RabbitMq.IRabbitMqConnection,Spear.Core.EventBus.ISubscribeManager,Spear.Core.Message.IMessageCodec)">
+            <summary> RabbitMQ事件总线 </summary>
+            <param name="connection"></param>
+            <param name="subsManager"></param>
+            <param name="messageCodec"></param>
+        </member>
+        <member name="M:Spear.RabbitMq.EventBusRabbitMq.GetSubscription(System.Type)">
+            <summary> 获取订阅的队列信息 </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.RabbitMq.EventBusRabbitMq.Publish(System.String,System.Byte[],Spear.Core.EventBus.Options.PublishOption)">
+            <summary> 发布消息 </summary>
+            <param name="key"></param>
+            <param name="message"></param>
+            <param name="option"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.RabbitMq.EventBusRabbitMq.DeclareAndBindQueue(System.String,System.String,Spear.RabbitMq.Options.RabbitMqSubscribeOption)">
+            <summary> 定义并绑定队列 </summary>
+            <param name="queue"></param>
+            <param name="key"></param>
+            <param name="option"></param>
+        </member>
+        <member name="M:Spear.RabbitMq.EventBusRabbitMq.ReceiveMessage(System.String,RabbitMQ.Client.Events.BasicDeliverEventArgs,Spear.RabbitMq.Options.RabbitMqSubscribeOption)">
+            <summary> 接收消息 </summary>
+            <param name="queue">队列</param>
+            <param name="ea"></param>
+            <param name="option"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.RabbitMq.EventBusRabbitMq.Subscribe``2(System.Func{``1},Spear.Core.EventBus.Options.SubscribeOption)">
+            <summary> 订阅消息 </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TH"></typeparam>
+            <param name="handler"></param>
+            <param name="option"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.RabbitMq.EventBusRabbitMq.Dispose">
+            <summary> 释放资源 </summary>
+        </member>
+        <member name="T:Spear.RabbitMq.IRabbitMqConnection">
+            <summary> MQ连接 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.IRabbitMqConnection.Broker">
+            <summary> 交换机 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.IRabbitMqConnection.IsConnected">
+            <summary> 是否连接 </summary>
+        </member>
+        <member name="M:Spear.RabbitMq.IRabbitMqConnection.TryConnect">
+            <summary> 尝试连接 </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.RabbitMq.IRabbitMqConnection.CreateModel">
+            <summary> 创建RabbitMQ Model </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.RabbitMq.Options.RabbitMqPublishOption">
+            <summary> 发布属性 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqPublishOption.Exchange">
+            <summary> 交换机 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqPublishOption.ExchangeType">
+            <summary> 交换机类型 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqPublishOption.Subscribe">
+            <summary> 订阅配置 </summary>
+        </member>
+        <member name="T:Spear.RabbitMq.Options.RabbitMqSubscribeOption">
+            <summary> 订阅属性 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqSubscribeOption.Queue">
+            <summary> 队列名称 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqSubscribeOption.RouteKey">
+            <summary> 路由键 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqSubscribeOption.Exchange">
+            <summary> 交换机 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqSubscribeOption.ExchangeType">
+            <summary> 交换机类型 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqSubscribeOption.XDeadExchange">
+            <summary> 死信队列交换机 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqSubscribeOption.XDeadRouteKey">
+            <summary> 死信队列路由键 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.Options.RabbitMqSubscribeOption.PrefetchCount">
+            <summary> 同时接收的消息数 </summary>
+        </member>
+        <member name="M:Spear.RabbitMq.Options.RabbitMqSubscribeOption.#ctor">
+            <summary> 构造函数 </summary>
+        </member>
+        <member name="M:Spear.RabbitMq.Options.RabbitMqSubscribeOption.#ctor(System.String,System.String)">
+            <inheritdoc />
+            <summary> 构造函数 </summary>
+            <param name="queue"></param>
+            <param name="routeKey"></param>
+        </member>
+        <member name="M:Spear.RabbitMq.RabbitMqExtensions.DeclareWithDlx(RabbitMQ.Client.IModel,System.String,System.String,System.String,Spear.RabbitMq.Options.RabbitMqSubscribeOption)">
+            <summary> 申明队列并设置死信队列 </summary>
+            <param name="channel"></param>
+            <param name="queue"></param>
+            <param name="exchange"></param>
+            <param name="routeKey"></param>
+            <param name="option"></param>
+        </member>
+        <member name="M:Spear.RabbitMq.RabbitMqExtensions.DelayPublish(RabbitMQ.Client.IModel,System.String,System.String,System.Byte[],System.TimeSpan,RabbitMQ.Client.IBasicProperties)">
+            <summary> 延迟发布 </summary>
+            <param name="channel"></param>
+            <param name="exchange"></param>
+            <param name="routeKey"></param>
+            <param name="body"></param>
+            <param name="prop"></param>
+            <param name="delay"></param>
+        </member>
+        <member name="M:Spear.RabbitMq.ServiceCollectionExtension.AddRabbitMqEventBus(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Spear.Core.Message.IMessageCodec)">
+            <summary> 使用RabbitMQ事件总线 </summary>
+            <param name="services"></param>
+            <param name="configName"></param>
+            <param name="messageCodec"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.RabbitMq.ServiceCollectionExtension.AddRabbitMqEventBus(Microsoft.Extensions.DependencyInjection.IServiceCollection,Spear.RabbitMq.RabbitMqConfig)">
+            <summary> 使用RabbitMQ事件总线 </summary>
+            <param name="services"></param>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.RabbitMq.SubscriptionAttribute">
+            <inheritdoc />
+            <summary> 订阅属性 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.SubscriptionAttribute.Option">
+            <summary> 订阅配置 </summary>
+        </member>
+        <member name="M:Spear.RabbitMq.SubscriptionAttribute.#ctor(System.String,System.String,System.Int32,System.Boolean,System.Int32[])">
+            <summary> 订阅属性 </summary>
+            <param name="queue">队列名称</param>
+            <param name="routeKey">路由键,默认为事件属性的RouteKey</param>
+            <param name="fetchCount">每次处理数量,小于等于0不限制，默认1</param>
+            <param name="retry">是否开启重试</param>
+            <param name="times">秒</param>
+        </member>
+        <member name="P:Spear.RabbitMq.SubscriptionAttribute.Queue">
+            <summary> 队列名称 </summary>
+        </member>
+        <member name="P:Spear.RabbitMq.SubscriptionAttribute.RouteKey">
+            <summary> 路由键 </summary>
+        </member>
     </members>
 </doc>

@@ -8,8 +8,8 @@
             url = undefined;
         }
         //重置样式
-        $('.logo__title').html('I车保文档');
-        $('.logo__img').attr('src', 'http://file.i-cbao.com//uploads/icb.png');
+        $('.logo__title').html('支付中心接口文档');
+        $('.logo__img').attr('src', 'http://file.i-cbao.com/uploads/icb.png');
 
         var $input = $('#input_baseUrl');
         var $routes = $('<select class="routes">');
