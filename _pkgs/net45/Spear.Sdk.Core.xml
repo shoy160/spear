@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Sdk.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Spear.Sdk.Core.Dtos.SdkRequestData">
+            <summary> 请求数据 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkRequestData.Url">
+            <summary> 请求URL </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkRequestData.Method">
+            <summary> 请求方法 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkRequestData.Content">
+            <summary> 内容 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkRequestData.Result">
+            <summary> 请求结果 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkRequestData.Code">
+            <summary> 状态码 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkRequestData.Headers">
+            <summary> 请求头 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkRequestData.Exception">
+            <summary> 异常 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkResult.Status">
+            <summary> 状态 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkResult.Code">
+            <summary> 状态码 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkResult.Message">
+            <summary> 错误消息 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkResults`1.Data">
+            <summary> 数据集合 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.Dtos.SdkResults`1.Total">
+            <summary> 总数 </summary>
+        </member>
+        <member name="T:Spear.Sdk.Core.Extensions">
+            <summary> 扩展类 </summary>
+        </member>
+        <member name="F:Spear.Sdk.Core.Extensions.ZoneTime">
+            <summary> 起始时间 </summary>
+        </member>
+        <member name="M:Spear.Sdk.Core.Extensions.Timestamp(System.DateTime,System.DateTimeKind)">
+            <summary> 时间戳 </summary>
+            <param name="dateTime"></param>
+            <param name="kind"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Sdk.Core.Extensions.Datetime(System.Int64)">
+            <summary> 时间戳转日期 </summary>
+            <param name="timestamp"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Sdk.Core.Extensions.ToLong(System.String,System.Int64)">
+            <summary> 长整型转换 </summary>
+            <param name="str"></param>
+            <param name="def"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Sdk.Core.Extensions.IsNullableType(System.Type)">
+            <summary>
+            判断类型是否为Nullable类型
+            </summary>
+            <param name="type"> 要处理的类型 </param>
+            <returns> 是返回True，不是返回False </returns>
+        </member>
+        <member name="M:Spear.Sdk.Core.Extensions.Md5(System.String)">
+            <summary> MD5 </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Sdk.Core.Extensions.ClientIp(System.Web.HttpContext)">
+            <summary> 获取IP地址 </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Sdk.Core.Helper.BeforeRequestHandler">
+            <summary> 请求委托 </summary>
+            <param name="req"></param>
+        </member>
+        <member name="T:Spear.Sdk.Core.Helper.RequestResultHandler">
+            <summary> 执行结果事件 </summary>
+            <param name="ex"></param>
+            <returns></returns>
+        </member>
+        <member name="E:Spear.Sdk.Core.Helper.HttpHelper.OnRequest">
+            <summary> 请求之前事件 </summary>
+        </member>
+        <member name="E:Spear.Sdk.Core.Helper.HttpHelper.OnResult">
+            <summary> 执行结果事件 </summary>
+        </member>
+        <member name="F:Spear.Sdk.Core.Helper.HttpHelper._defaultHeaders">
+            <summary> 默认请求头 </summary>
+        </member>
+        <member name="M:Spear.Sdk.Core.Helper.HttpHelper.RequestAsync(Spear.Sdk.Core.Dtos.SdkRequestDto)">
+            <summary> 发起请求 </summary>
+            <param name="dto"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spear.Sdk.Core.ISdkConfig">
+            <summary> 配置接口 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.ISdkConfig.Gateway">
+            <summary> 服务网关 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.ISdkConfig.Code">
+            <summary> 服务编码 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.ISdkConfig.Secret">
+            <summary> 服务密钥 </summary>
+        </member>
+        <member name="T:Spear.Sdk.Core.SdkConfig">
+            <summary> 基础配置 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.SdkConfig.Gateway">
+            <summary> 服务网关 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.SdkConfig.Code">
+            <summary> 服务编码 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.SdkConfig.Secret">
+            <summary> 服务密钥 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.SdkConfig.Notify">
+            <summary> 异步通知地址 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.SdkException.Code">
+            <summary> 错误码 </summary>
+        </member>
+        <member name="F:Spear.Sdk.Core.SdkService.Config">
+            <summary> 配置信息 </summary>
+        </member>
+        <member name="F:Spear.Sdk.Core.SdkService.HttpHelper">
+            <summary> 请求辅助 </summary>
+        </member>
+        <member name="E:Spear.Sdk.Core.SdkService.OnError">
+            <summary> 异常事件 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.SdkService.Current">
+            <summary> 当前请求上下文 </summary>
+        </member>
+        <member name="P:Spear.Sdk.Core.SdkService.Body">
+            <summary> 当前请求Body </summary>
+        </member>
+        <member name="M:Spear.Sdk.Core.SdkService.Json``1(System.String,``0)">
+            <summary> Json反序列化 </summary>
+            <typeparam name="T"></typeparam>
+            <param name="json"></param>
+            <param name="def"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Sdk.Core.SdkService.ToJson(System.Object,System.Boolean)">
+            <summary> Json序列化 </summary>
+            <param name="obj"></param>
+            <param name="indented"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Sdk.Core.SdkService.Validate(System.Object,System.Collections.Generic.Dictionary{System.Object,System.Object},System.Boolean)">
+            <summary> 模型验证 </summary>
+            <param name="obj"></param>
+            <param name="items"></param>
+            <param name="required"></param>
+        </member>
+        <member name="M:Spear.Sdk.Core.SdkService.IsSuccess(Spear.Sdk.Core.Dtos.SdkRequestData)">
+            <summary> 请求是否成功 </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Sdk.Core.SdkService.OnResult(Spear.Sdk.Core.Dtos.SdkRequestData)">
+            <summary> 请求结果 </summary>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

@@ -5,13 +5,12 @@ using Spear.Core;
 using Spear.Core.Dependency;
 using Spear.WebApi.Filters;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Spear.WebApi
 {
     /// <summary> 控制器基类 </summary>
     [ValidateModel(Order = 0)]
-    public abstract class DController : Controller
+    public abstract class DController : ControllerBase
     {
         /// <summary> 当前请求上下文 </summary>
         protected HttpContext Current => ControllerContext.HttpContext;

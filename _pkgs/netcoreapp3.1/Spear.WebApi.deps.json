@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "Spear.WebApi/0.3.1": {
+      "Spear.WebApi/0.3.2": {
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "3.1.8",
           "NSwag.AspNetCore": "13.2.0",
@@ -970,7 +970,7 @@
     }
   },
   "libraries": {
-    "Spear.WebApi/0.3.1": {
+    "Spear.WebApi/0.3.2": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

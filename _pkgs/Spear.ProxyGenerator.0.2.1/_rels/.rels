@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Type="http://schemas.microsoft.com/packaging/2010/07/manifest" Target="/Spear.ProxyGenerator.nuspec" Id="R90C2F2C04961DF57" />
-  <Relationship Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="/package/services/metadata/core-properties/e2ecae0f462f4d3bbd4d5b74900222c5.psmdcp" Id="R821263B688CB5813" />
-</Relationships>

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Reflection;
 
 namespace Spear.Core
@@ -23,7 +23,8 @@ namespace Spear.Core
             return type.AssemblyQualifiedName;
         }
 
-        private static readonly IDictionary<MethodInfo, string> RouteCache = new Dictionary<MethodInfo, string>();
+        private static readonly ConcurrentDictionary<MethodInfo, string> RouteCache =
+            new ConcurrentDictionary<MethodInfo, string>();
 
         /// <summary> 获取服务主键 </summary>
         /// <param name="method"></param>
@@ -47,7 +48,7 @@ namespace Spear.Core
             {
                 route = $"{method.DeclaringType?.Name}/{method.Name}".ToLower();
             }
-            RouteCache.Add(method, route);
+            RouteCache.TryAdd(method, route);
 
             return route;
         }

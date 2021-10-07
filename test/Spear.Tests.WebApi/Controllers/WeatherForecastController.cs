@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 using Spear.Core;
 using Spear.Core.Dependency;
-using Spear.Core.Timing;
 using Spear.Tests.WebApi.Domain;
 using Spear.WebApi;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Spear.Tests.WebApi.Controllers
 {
@@ -40,7 +37,7 @@ namespace Spear.Tests.WebApi.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             }).ToArray();
             //return Json(weathers);
-            return Json(CurrentIocManager.ContextWrap.RemoteIpAddress);
+            return new JsonResult(CurrentIocManager.ContextWrap.RemoteIpAddress);
         }
 
         [HttpPost]
