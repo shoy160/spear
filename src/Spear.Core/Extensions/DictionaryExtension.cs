@@ -253,14 +253,19 @@ namespace Spear.Core.Extensions
             var dict = new Dictionary<string, object>();
             if (type.IsValueType)
                 return dict;
+            var attr = type.GetCustomAttribute<NamingAttribute>();
+            var namingType = attr?.NamingType;
             var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var prop in props)
             {
-                dict.Add(prop.Name, prop.GetValue(source, null));
+                var key = prop.PropName(namingType);
+                if (key.IsNullOrEmpty())
+                    continue;
+                dict.Add(key, prop.GetValue(source, null));
             }
             return dict;
         }
 
-        
+
     }
 }
