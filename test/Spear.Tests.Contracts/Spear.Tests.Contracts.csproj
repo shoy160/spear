@@ -7,7 +7,7 @@
     <Protobuf Include="Protos\*.proto" ProtoRoot="Protos" OutputDir="%(RelativePath)Grpc" CompileOutputs="false" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.11.4" />
+    <PackageReference Include="Google.Protobuf" Version="3.15.0" />
     <PackageReference Include="Grpc.Core" Version="2.27.0" />
     <PackageReference Include="Grpc.Tools" Version="2.27.0">
       <PrivateAssets>all</PrivateAssets>
