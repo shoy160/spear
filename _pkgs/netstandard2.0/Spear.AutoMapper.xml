@@ -4,6 +4,12 @@
         <name>Spear.AutoMapper</name>
     </assembly>
     <members>
+        <member name="T:Spear.AutoMapper.Attributes.MapFromAttribute">
+            <summary> Map 字段映射 </summary>
+        </member>
+        <member name="P:Spear.AutoMapper.Attributes.MapFromAttribute.Name">
+            <summary>  映射字段  </summary>
+        </member>
         <member name="T:Spear.AutoMapper.AutoMapperExtensions">
             <summary> AutoMapper扩展 </summary>
         </member>

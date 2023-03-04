@@ -4,10 +4,16 @@
         <name>Spear.Core</name>
     </assembly>
     <members>
-        <member name="T:Spear.Core.ProtocolAttribute">
+        <member name="T:Spear.Core.Attributes.MapFromAttribute">
+            <summary> Map 字段映射 </summary>
+        </member>
+        <member name="P:Spear.Core.Attributes.MapFromAttribute.Name">
+            <summary>  映射字段  </summary>
+        </member>
+        <member name="T:Spear.Core.Attributes.ProtocolAttribute">
             <summary> 协议属性 </summary>
         </member>
-        <member name="P:Spear.Core.ProtocolAttribute.Protocol">
+        <member name="P:Spear.Core.Attributes.ProtocolAttribute.Protocol">
             <summary> 协议 </summary>
         </member>
         <member name="E:Spear.Core.Config.ConfigHelper.ConfigChanged">

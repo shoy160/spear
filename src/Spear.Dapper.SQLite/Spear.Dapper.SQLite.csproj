@@ -9,7 +9,7 @@
     <Company>shoy</Company>
     <RepositoryUrl>https://github.com/shoy160/spear.git</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
-    <Version>0.3.1</Version>
+    <Version>0.3.3</Version>
     <Description>Spear Dapper For SQLite</Description>
     <PackageReleaseNotes></PackageReleaseNotes>
 

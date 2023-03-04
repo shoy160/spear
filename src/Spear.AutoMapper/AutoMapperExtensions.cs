@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Spear.AutoMapper.Attributes;
 using Spear.Core;
 using Spear.Core.Extensions;
 using System;
@@ -27,11 +28,12 @@ namespace Spear.AutoMapper
                 {
                     foreach (var map in maps)
                     {
-                        config.CreateMap(map.SourceType, map.DestinationType);
+                        CreateMapWithAttribute(config, map.SourceType, map.DestinationType);
                     }
                 }
 
-                config.CreateMap(sourceType, destinationType);
+                CreateMapWithAttribute(config, sourceType, destinationType);
+
                 config.CreateMissingTypeMaps = true;
                 config.ValidateInlineMaps = false;
                 switch (mapperType)
@@ -45,6 +47,19 @@ namespace Spear.AutoMapper
                 }
             });
             return cfg.CreateMapper();
+        }
+
+        private static void CreateMapWithAttribute(IMapperConfigurationExpression config, Type sourceType, Type destinationType)
+        {
+            var express = config.CreateMap(sourceType, destinationType);
+
+            destinationType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Foreach(prop =>
+                {
+                    var mapfrom = prop.GetCustomAttribute<MapFromAttribute>();
+                    if (mapfrom != null)
+                        express.ForMember(prop.Name, opt => opt.MapFrom(mapfrom.Name));
+                });
         }
 
         private static IMapper CreateFromCache(Type sourceType, Type destinationType,

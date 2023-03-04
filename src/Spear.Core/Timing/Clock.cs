@@ -27,5 +27,14 @@ namespace Spear.Core.Timing
         {
             return _clockProvider.Normalize(dateTime);
         }
+
+        public static string ShowTime(this DateTime dateTime, string format = null)
+        {
+            var sp = Normalize(Now) - Normalize(dateTime);
+            if (sp.TotalMinutes < 1) return "刚刚";
+            if (sp.TotalHours < 1) return sp.Minutes + "分钟前";
+            if (sp.TotalDays < 1) return sp.Hours + "小时前";
+            return dateTime.ToString(format ?? "yyyy-MM-dd");
+        }
     }
 }

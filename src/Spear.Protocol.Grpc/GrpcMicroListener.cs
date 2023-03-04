@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Grpc.Core;
+﻿using Grpc.Core;
 using Microsoft.Extensions.Logging;
-using Spear.Core;
+using Spear.Core.Attributes;
 using Spear.Core.Config;
 using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Spear.Protocol.Grpc
 {

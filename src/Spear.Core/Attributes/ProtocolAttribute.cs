@@ -1,7 +1,7 @@
 ﻿using System;
 using Spear.Core.Config;
 
-namespace Spear.Core
+namespace Spear.Core.Attributes
 {
     /// <summary> 协议属性 </summary>
     [AttributeUsage(AttributeTargets.Class)]

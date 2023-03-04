@@ -20,6 +20,14 @@ namespace Spear.Core.Domain
         public TKey Key { get; set; }
         /// <summary> Value </summary>
         public TValue Value { get; set; }
+
+        public ValueDto() { }
+
+        public ValueDto(TKey key, TValue value)
+        {
+            Key = key;
+            Value = value;
+        }
     }
 
     /// <summary> id - name </summary>
@@ -39,6 +47,11 @@ namespace Spear.Core.Domain
 
         /// <summary> name </summary>
         public TName Name { get; set; }
+
+        public NameDto() { }
+        public NameDto(TId id, TName name)
+        { Id = id; Name = name; }
+
     }
 
     /// <summary> key - count </summary>
@@ -58,5 +71,12 @@ namespace Spear.Core.Domain
         public TKey Key { get; set; }
         /// <summary> count </summary>
         public TCount Count { get; set; }
+
+        public CountDto() { }
+        public CountDto(TKey key, TCount count)
+        {
+            Key = key;
+            Count = count;
+        }
     }
 }

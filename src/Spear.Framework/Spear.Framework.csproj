@@ -9,7 +9,7 @@
     <Company>shoy</Company>
     <RepositoryUrl>https://github.com/shoy160/spear.git</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
-    <Version>0.3.1</Version>
+    <Version>0.3.3</Version>
     <Description>Spear Framework</Description>
     <PackageReleaseNotes></PackageReleaseNotes>
 
@@ -26,7 +26,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.32" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.8" />
   </ItemGroup>
 

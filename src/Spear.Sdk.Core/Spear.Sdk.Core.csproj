@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageProjectUrl>https://github.com/shoy160/spear</PackageProjectUrl>
 		<Authors>shoy</Authors>
@@ -9,7 +9,7 @@
 		<Product>Spear - SDK CORE</Product>
 		<RepositoryUrl>https://github.com/shoy160/spear.git</RepositoryUrl>
 		<RepositoryType>github</RepositoryType>
-		<Version>0.3.2</Version>
+		<Version>0.3.3</Version>
 		<Description>Spear轻量级微服务框架，高扩展性，目前已支持Json、MessagePack、ProtoBuf编解码器以及TCP、HTTP、WebSocket、GRpc服务协议。</Description>
 		<PackageReleaseNotes>SDK CORE</PackageReleaseNotes>
 		<PackageLicenseUrl>https://github.com/shoy160/spear/blob/master/LICENSE</PackageLicenseUrl>
@@ -20,20 +20,19 @@
 		<DocumentationFile>..\..\_pkgs\netstandard2.0\Spear.Sdk.Core.xml</DocumentationFile>
 		<OutputPath>..\..\_pkgs\</OutputPath>
 	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
-		<DocumentationFile>..\..\_pkgs\net45\Spear.Sdk.Core.xml</DocumentationFile>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
+		<DocumentationFile>..\..\_pkgs\net48\Spear.Sdk.Core.xml</DocumentationFile>
 		<OutputPath>..\..\_pkgs\</OutputPath>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+	<ItemGroup Condition="'$(TargetFramework)' == 'net48'">
 		<Reference Include="System.Web"></Reference>
 		<PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -11,7 +11,8 @@ namespace Spear.Core.Domain
         /// <summary> 每页数量 </summary>
         public int Size { get; private set; }
 
-        private DPage(int page = 0, int size = 15)
+        public DPage() { }
+        public DPage(int page = 0, int size = 15)
         {
             if (page < 0) page = 0;
             if (page > MaxPage) page = MaxPage;

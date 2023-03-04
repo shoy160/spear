@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spear.Protocol.Http</name>
+    </assembly>
+    <members>
+        <member name="T:Spear.Protocol.Http.Filters.DExceptionFilter">
+            <inheritdoc />
+            <summary> 默认的异常处理 </summary>
+        </member>
+        <member name="M:Spear.Protocol.Http.Filters.DExceptionFilter.OnException(Microsoft.AspNetCore.Mvc.Filters.ExceptionContext)">
+            <inheritdoc />
+            <summary> 异常处理 </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Spear.Protocol.Http.HttpClientFactory.Create(Spear.Core.Micro.Services.ServiceAddress)">
+            <summary> 创建客户端 </summary>
+            <param name="serviceAddress"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Protocol.Http.ServiceCollectionExtensions.AddHttpProtocol(Spear.Core.Micro.IMicroClientBuilder)">
+            <summary> 使用Http传输协议 </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Spear.Protocol.Http.ServiceCollectionExtensions.AddHttpProtocol(Spear.Core.Micro.IMicroServerBuilder)">
+            <summary> 使用Http传输协议 </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

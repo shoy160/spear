@@ -1,12 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using DotNetty.Buffers;
+﻿using DotNetty.Buffers;
 using DotNetty.Codecs;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Microsoft.Extensions.Logging;
-using Spear.Core;
+using Spear.Core.Attributes;
 using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Message.Models;
@@ -14,6 +12,8 @@ using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Protocol.Tcp.Adapter;
 using Spear.Protocol.Tcp.Sender;
+using System;
+using System.Threading.Tasks;
 
 namespace Spear.Protocol.Tcp
 {

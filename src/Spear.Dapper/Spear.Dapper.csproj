@@ -9,7 +9,7 @@
     <Company>shoy</Company>
     <RepositoryUrl>https://github.com/shoy160/spear.git</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
-    <Version>0.3.1</Version>
+    <Version>0.3.3</Version>
     <Description>Spear Dapper</Description>
     <PackageReleaseNotes></PackageReleaseNotes>
 
@@ -46,8 +46,8 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.30" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.8" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.32" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.32" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
   </ItemGroup>
 

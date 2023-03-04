@@ -1,9 +1,6 @@
-﻿using System;
-using System.Net.WebSockets;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Spear.Core;
+using Spear.Core.Attributes;
 using Spear.Core.Config;
 using Spear.Core.Message;
 using Spear.Core.Message.Implementation;
@@ -12,6 +9,10 @@ using Spear.Core.Micro;
 using Spear.Core.Micro.Implementation;
 using Spear.Core.Micro.Services;
 using Spear.Protocol.WebSocket.Sender;
+using System;
+using System.Net.WebSockets;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Spear.Protocol.WebSocket
 {

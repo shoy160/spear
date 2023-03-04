@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Spear.AutoMapper\Spear.AutoMapper.csproj" />
     <ProjectReference Include="..\..\src\Spear.Consul\Spear.Consul.csproj" />
     <ProjectReference Include="..\..\src\Spear.Core\Spear.Core.csproj" />
     <ProjectReference Include="..\..\src\Spear.Framework\Spear.Framework.csproj" />
